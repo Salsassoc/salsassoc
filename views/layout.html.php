@@ -5,10 +5,16 @@
 	<title>Salsassoc: <?php echo h($page_title) ?></title>
 </head>
 <body>
-  <h1><?php echo h($page_title) ?></h1>
+  <?php if(isset($_SESSION['username'])){ ?>
+  <a href="<?php echo url_for('/people')?>">People</a> |
+  <a href="<?php echo url_for('/members')?>">Members</a> |
+  <?php   echo $_SESSION['username']; ?>
+  <a href="<?php echo url_for('/logout')?>">(Logout)</a>
+  <hr/>
+  <?php } ?>
   <div id="main">
     <!-- main content -->
-    <h2>Main content</h2>
+  	<h1><?php echo h($page_title) ?></h1><br/>
     <?php echo $content; ?>
   </div>
   <!--
