@@ -1,12 +1,28 @@
 <?php
 
-require_once 'lib/limonade/limonade.php';
+require_once 'lib/limonade/lib/limonade.php';
 
 require_once 'tools/tools.php';
 
+require_once 'controllers/PersonController.php';
+
 function configure()
 {
+/*
+    $env = $_SERVER['HTTP_HOST'] == "localhost" ? ENV_DEVELOPMENT : ENV_PRODUCTION;
 
+    option('env', $env);
+    if(option('env') > ENV_PRODUCTION)
+	{
+		options('dsn', 'sqlite:db/db.sqlite'));
+	}
+	else
+	{
+	    options('dsn', 'sqlite:db/db.sqlite'));
+	}
+*/
+	option('dsn', 'sqlite:db/db.sqlite');
+    $GLOBALS['db_connexion'] = new PDO(option('dsn'));
 }
 
 function before($route)
@@ -47,12 +63,11 @@ dispatch('/logout', 'logout');
 	redirect_to('/');
   }
 
-dispatch('/people', 'list_people');
-  function list_people()
-  {
-       set('page_title', "Login");
-   	   return html('people.html.php');
-  }
+dispatch('/style.css', 'getcss');
+function getcss()
+{
+    return css('style.css.php', null);
+}
 
 run();
 
