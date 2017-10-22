@@ -5,6 +5,7 @@ require_once 'lib/limonade/lib/limonade.php';
 require_once 'tools/tools.php';
 
 require_once 'controllers/PersonController.php';
+require_once 'controllers/CotisationsController.php';
 
 function configure()
 {
