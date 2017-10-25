@@ -1,40 +1,48 @@
-<table width="100%" class="list">
+<form method="POST" action=".">
+
+<fieldset>
+<legend>Global information</legend>
+
+<label>Lastname :</label>&nbsp;<input type="text" name="Lastname" value="<?php echo $person['lastname'] ?>" /><br/>
+<label>Firstname :</label>&nbsp;<input type="text" name="Firstname" value="<?php echo $person['firstname'] ?>" /><br/>
+<label>Birthdate :</label>&nbsp;<input type="text" name="Birthdate" value="<?php echo $person['birthdate'] ?>" /><br/>
+<label>E-mail :</label>&nbsp;<input type="text" name="Email" value="<?php echo $person['email'] ?>" /><br/>
+<label>Phonenumber :</label>&nbsp;<input type="text" name="Phonenumber" value="<?php echo $person['phonenumber'] ?>" /><br/>
+
+<label>Image rights :</label>&nbsp;
+<select name="Imagerights">
+<option value="">Unknown</option>
+<option value="1">Yes</option>
+<option value="0">No</option>
+</select>
+<br/>
+
+</fieldset>
+
+<br/>
+<input type="submit" value="Save">
+
+</form>
+
+<h2>Cotisations</h2>
+
+<table class="list">
 <thead>
 <tr>
-  <th>Lastname</th>
-  <th>Firstname</th>
-  <th>Birthdate</th>
-  <th>E-mail</th>
-  <th>Phonenumber</th>
-  <th>Image rights</th>
-  <th>Created</th>
-  <th>View</th>
+  <th>Cotisation</th>
+  <th>Date</th>
+  <th>Amount</th>
 </tr>
 </thead>
 <tbody>
 <?php
-    foreach  ($personlist as $person)
+    foreach  ($cotisations as $cotisation)
     {
 ?> 
 <tr>
-  <td><?php echo $person['lastname'] ?></td>
-  <td><?php echo $person['firstname'] ?></td>
-  <td><?php echo $person['birthdate'] ?></td>
-  <td><?php echo $person['email'] ?></td>
-  <td><?php echo $person['phonenumber'] ?></td>
-  <td>
-    <?php if($person['image_rights'] == null){ ?>
-     ?
-    <?php }elseif($person['image_rights'] == 0){ ?>
-     No
-    <?php }else{ ?>
-     Yes
-    <?php } ?>
-  </td>
-  <td><?php echo $person['creation_date'] ?></td>
-  <td>
-    <a href="<?php echo url_for('/members', $person['id'])?>">View</a>
-  </td>
+  <td><?php echo $cotisation['label'] ?></td>
+  <td><?php echo $cotisation['date'] ?></td>
+  <td><?php echo $cotisation['amount'] ?></td>
 </tr>
 <?php
     }

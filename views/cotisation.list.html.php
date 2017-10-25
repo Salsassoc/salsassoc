@@ -1,45 +1,35 @@
 <p align="right">
-Number of members : <?php echo count($personlist); ?>
+Number of cotisation : <?php echo count($cotisationlist); ?>
 </p>
 
 <table width="100%" class="list">
 <thead>
 <tr>
-  <th>Lastname</th>
-  <th>Firstname</th>
-  <th>Birthdate</th>
-  <th>E-mail</th>
-  <th>Phonenumber</th>
-  <th>Image rights</th>
-  <th>Created</th>
-  <th>Cotisation count</th>
+  <th>Label</th>
+  <th>Start date</th>
+  <th>End date</th>
+  <th>Amount</th>
+  <th>Members</th>
+  <th>Total amount</th>
   <th>View</th>
 </tr>
 </thead>
 <tbody>
 <?php
-    foreach  ($personlist as $person)
+    foreach  ($cotisationlist as $cotisation)
     {
 ?> 
 <tr>
-  <td><?php echo $person['lastname'] ?></td>
-  <td><?php echo $person['firstname'] ?></td>
-  <td><?php echo $person['birthdate'] ?></td>
-  <td><?php echo $person['email'] ?></td>
-  <td><?php echo $person['phonenumber'] ?></td>
+  <td><?php echo $cotisation['label'] ?></td>
+  <td><?php echo $cotisation['start_date'] ?></td>
+  <td><?php echo $cotisation['end_date'] ?></td>
+  <td><?php echo $cotisation['amount'] ?></td>
   <td>
-    <?php if($person['image_rights'] == null){ ?>
-     ?
-    <?php }elseif($person['image_rights'] == 0){ ?>
-     No
-    <?php }else{ ?>
-     Yes
-    <?php } ?>
+    <a href="<?php echo url_for('/cotisation', $cotisation['id'], 'members')?>"><?php echo $cotisation['cotisation_count'] ?> members</a>
   </td>
-  <td><?php echo $person['creation_date'] ?></td>
-  <td><?php echo $person['cotisation_count'] ?></td>
+  <td><?php echo $cotisation['cotisation_totalamount'] ?></td>
   <td>
-    <a href="<?php echo url_for('/members', $person['id'])?>">View</a>
+    <a href="<?php echo url_for('/cotisation', $cotisation['id'])?>">View</a>
   </td>
 </tr>
 <?php

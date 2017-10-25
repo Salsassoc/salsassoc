@@ -1,3 +1,7 @@
+<p align="right">
+Number of members : <?php echo count($personlist); ?>
+</p>
+
 <table width="100%" class="list">
 <thead>
 <tr>
@@ -8,6 +12,7 @@
   <th>Phonenumber</th>
   <th>Image rights</th>
   <th>Created</th>
+  <th>Cotisation count</th>
   <th>View</th>
 </tr>
 </thead>
@@ -32,6 +37,7 @@
     <?php } ?>
   </td>
   <td><?php echo $person['creation_date'] ?></td>
+  <td><?php echo $person['cotisation_count'] ?></td>
   <td>
     <a href="<?php echo url_for('/members', $person['id'])?>">View</a>
   </td>
