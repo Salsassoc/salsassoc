@@ -63,4 +63,45 @@ $sth->bindParam(':calories', 100, PDO::PARAM_INT);*/
     }
   }
 
+dispatch_post('/members/:id/edit', 'person_edit');
+  function person_edit()
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+	$res = false;
+
+    $id = params('id');
+    $conn = $GLOBALS['db_connexion'];
+    $sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights WHERE id=:id';
+
+	$stmt = $conn->prepare($sql);
+	if(!$stmt){
+		//print_r($conn->errorInfo());
+	}else{
+		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		$stmt->bindParam(':firstname', $_POST['Firstname'], PDO::PARAM_STR, 50);
+		$stmt->bindParam(':lastname', $_POST['Lastname'], PDO::PARAM_STR, 50);
+		$stmt->bindParam(':birthdate', $_POST['Birthdate'], PDO::PARAM_STR, 10);
+		$stmt->bindParam(':email', $_POST['Email'], PDO::PARAM_STR, 100);
+		$stmt->bindParam(':phonenumber', $_POST['Phonenumber'], PDO::PARAM_STR, 50);
+		$value = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
+		$stmt->bindParam(':image_rights', $value, PDO::PARAM_INT);
+		$res = $stmt->execute();
+		//print_r($stmt->errorInfo());
+	}
+
+	if($res){
+		redirect_to('/members/'.$id);
+		return;
+	}else{
+        set('page_title', "Bad request");
+        return html('error.html.php');
+	}
+}
+
+
+
 ?>

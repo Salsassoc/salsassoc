@@ -1,4 +1,4 @@
-<form method="POST" action=".">
+<form method="POST" action="<?php echo url_for('/members', $person['id'], 'edit'); ?>">
 
 <fieldset>
 <legend>Global information</legend>
@@ -12,8 +12,8 @@
 <label>Image rights :</label>&nbsp;
 <select name="Imagerights">
 <option value="">Unknown</option>
-<option value="1">Yes</option>
-<option value="0">No</option>
+<option value="1" <?php echo ($person['image_rights'] == 1 ? 'selected' : '') ?>>Yes</option>
+<option value="0" <?php echo ($person['image_rights'] == 0 ? 'selected' : '') ?>>No</option>
 </select>
 <br/>
 
