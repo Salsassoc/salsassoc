@@ -30,7 +30,7 @@ Number of members : <?php echo count($personlist); ?>
   <td>
     <?php if($person['image_rights'] == null){ ?>
      ?
-    <?php }elseif($person['image_rights'] == 0){ ?>
+    <?php }elseif($person['image_rights'] == 'false'){ ?>
      No
     <?php }else{ ?>
      Yes

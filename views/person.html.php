@@ -12,8 +12,8 @@
 <label>Image rights :</label>&nbsp;
 <select name="Imagerights">
 <option value="">Unknown</option>
-<option value="1" <?php echo ($person['image_rights'] == 1 ? 'selected' : '') ?>>Yes</option>
-<option value="0" <?php echo ($person['image_rights'] == 0 ? 'selected' : '') ?>>No</option>
+<option value="true" <?php echo ($person['image_rights'] == 'true' ? 'selected' : '') ?>>Yes</option>
+<option value="false" <?php echo ($person['image_rights'] == 'false' ? 'selected' : '') ?>>No</option>
 </select>
 <br/>
 

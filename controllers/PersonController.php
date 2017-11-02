@@ -88,7 +88,7 @@ dispatch_post('/members/:id/edit', 'person_edit');
 		$stmt->bindParam(':email', $_POST['Email'], PDO::PARAM_STR, 100);
 		$stmt->bindParam(':phonenumber', $_POST['Phonenumber'], PDO::PARAM_STR, 50);
 		$value = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
-		$stmt->bindParam(':image_rights', $value, PDO::PARAM_INT);
+		$stmt->bindParam(':image_rights', $value, PDO::PARAM_STR);
 		$res = $stmt->execute();
 		//print_r($stmt->errorInfo());
 	}
