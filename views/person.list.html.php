@@ -1,5 +1,7 @@
 <p align="right">
-Number of members : <?php echo count($personlist); ?>
+Number of members : <?php echo count($personlist); ?> 
+-
+<a href="<?php echo url_for('/members/add')?>">Add</a>
 </p>
 
 <table width="100%" class="list">

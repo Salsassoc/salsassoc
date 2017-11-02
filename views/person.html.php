@@ -1,4 +1,14 @@
-<form method="POST" action="<?php echo url_for('/members', $person['id'], 'edit'); ?>">
+<?php
+$formAction=url_for('/members/0/edit');
+$bAdd=true;
+if(isset($person['id'])){
+	$bAdd = false;
+	$formAction=url_for('/members', $person['id'], 'edit');
+}
+?>
+
+
+<form method="POST" action="<?php echo $formAction; ?>">
 
 <fieldset>
 <legend>Global information</legend>
@@ -25,9 +35,13 @@
 </fieldset>
 
 <br/>
-<input type="submit" value="Save">
+<input type="submit" value="<?php echo ($bAdd ? 'Add' : 'Save'); ?>">
 
 </form>
+
+<?php
+if(!$bAdd){
+?>
 
 <h2>Cotisations</h2>
 
@@ -55,3 +69,7 @@
 </tr>
 </tbody>
 </table>
+
+<?php
+}
+?>

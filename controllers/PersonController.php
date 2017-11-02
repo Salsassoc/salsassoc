@@ -29,6 +29,21 @@ dispatch('/members', 'person_list');
 
   }
 
+dispatch('/members/add', 'person_add');
+  function person_add()
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+	$person = array('firstname' => '', 'lastname' => '', 'birthdate' => '', 'email' => '', 'phonenumber' => '', 'image_rights' => '', 'comments' => '');
+	set('person', $person);
+
+    set('page_title', "Add member");
+    return html('person.html.php');
+  }
+
 dispatch('/members/:id', 'person_view');
   function person_view()
   {
@@ -44,12 +59,6 @@ dispatch('/members/:id', 'person_view');
 
     $sql =  'SELECT id, label, cotisation.amount AS cotisation_amount, start_date, end_date, date, cotisation_member.amount as amount, payment_method FROM cotisation, cotisation_member WHERE cotisation.id=cotisation_id AND person_id='.$id;
     $results2 = $conn->query($sql);
-
-
-   
-
-/*$sql = "SELECT * FROM fruit WHERE calories > :calories";
-$sth->bindParam(':calories', 100, PDO::PARAM_INT);*/
 
     if(count($results) == 1){
         set('person', $results->fetch());
@@ -75,15 +84,25 @@ dispatch_post('/members/:id/edit', 'person_edit');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
-    $sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, comments=:comments WHERE id=:id';
+	if($id==0){
+    	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, email, phonenumber, image_rights, comments, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :email, :phonenumber, :image_rights, :comments, date(\'now\'), 1)';
+	}else{
+    	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, comments=:comments WHERE id=:id';
+	}
 
 	$stmt = $conn->prepare($sql);
 	if(!$stmt){
-		//print_r($conn->errorInfo());
+		print_r($conn->errorInfo());
 	}else{
-		$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		if($id!=0){
+			$stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		}else{
+			//$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
+		}
 		$stmt->bindParam(':firstname', $_POST['Firstname'], PDO::PARAM_STR, 50);
 		$stmt->bindParam(':lastname', $_POST['Lastname'], PDO::PARAM_STR, 50);
+		$valueGender = 0;
+		$stmt->bindParam(':gender', $valueGender, PDO::PARAM_INT);
 		$stmt->bindParam(':birthdate', $_POST['Birthdate'], PDO::PARAM_STR, 10);
 		$stmt->bindParam(':email', $_POST['Email'], PDO::PARAM_STR, 100);
 		$stmt->bindParam(':phonenumber', $_POST['Phonenumber'], PDO::PARAM_STR, 50);
@@ -92,10 +111,13 @@ dispatch_post('/members/:id/edit', 'person_edit');
 		$valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
 		$stmt->bindParam(':comments', $valueComments, PDO::PARAM_STR);
 		$res = $stmt->execute();
-		//print_r($stmt->errorInfo());
+		print_r($stmt->errorInfo());
 	}
 
 	if($res){
+		if($id == 0){
+			$id = $conn->lastInsertId();
+		}
 		redirect_to('/members/'.$id);
 		return;
 	}else{
