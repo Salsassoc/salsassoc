@@ -17,6 +17,11 @@
 </select>
 <br/>
 
+<label>Comments :</label>&nbsp;
+<textarea name="Comments" cols="50" rows="10">
+<?php echo $person['comments']; ?>
+</textarea>
+
 </fieldset>
 
 <br/>

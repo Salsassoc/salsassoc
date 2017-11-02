@@ -39,7 +39,7 @@ dispatch('/members/:id', 'person_view');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
-    $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date FROM person WHERE id='.$id;
+    $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date, comments FROM person WHERE id='.$id;
     $results = $conn->query($sql);
 
     $sql =  'SELECT id, label, cotisation.amount AS cotisation_amount, start_date, end_date, date, cotisation_member.amount as amount, payment_method FROM cotisation, cotisation_member WHERE cotisation.id=cotisation_id AND person_id='.$id;
@@ -75,7 +75,7 @@ dispatch_post('/members/:id/edit', 'person_edit');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
-    $sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights WHERE id=:id';
+    $sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, comments=:comments WHERE id=:id';
 
 	$stmt = $conn->prepare($sql);
 	if(!$stmt){
@@ -87,8 +87,10 @@ dispatch_post('/members/:id/edit', 'person_edit');
 		$stmt->bindParam(':birthdate', $_POST['Birthdate'], PDO::PARAM_STR, 10);
 		$stmt->bindParam(':email', $_POST['Email'], PDO::PARAM_STR, 100);
 		$stmt->bindParam(':phonenumber', $_POST['Phonenumber'], PDO::PARAM_STR, 50);
-		$value = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
-		$stmt->bindParam(':image_rights', $value, PDO::PARAM_STR);
+		$valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
+		$stmt->bindParam(':image_rights', $valueImagerights, PDO::PARAM_STR);
+		$valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
+		$stmt->bindParam(':comments', $valueComments, PDO::PARAM_STR);
 		$res = $stmt->execute();
 		//print_r($stmt->errorInfo());
 	}
