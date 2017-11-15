@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS fiscal_year (
+   id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   start_date DATE NOT NULL,
+   end_date DATE NOT NULL
+);
+
+ALTER TABLE cotisation ADD COLUMN fiscal_year_id INTEGER NOT NULL DEFAULT 1;
+

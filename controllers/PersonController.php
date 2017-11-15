@@ -10,8 +10,8 @@ dispatch('/members', 'person_list');
 
     $conn = $GLOBALS['db_connexion'];
 
-    $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date, COUNT(cotisation_id) AS cotisation_count
-        FROM person LEFT JOIN cotisation_member ON person.id=person_id
+    $sql =  'SELECT person.id as id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(cotisation_id) AS cotisation_count
+        FROM person LEFT JOIN cotisation_member ON person.id=person_id LEFT JOIN cotisation ON cotisation.id = cotisation_id
         GROUP BY person.id
         ORDER BY lastname, firstname';
     $stmt = $conn->prepare($sql);

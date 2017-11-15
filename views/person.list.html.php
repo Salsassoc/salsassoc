@@ -14,7 +14,7 @@ Number of members : <?php echo count($personlist); ?>
   <th>Phonenumber</th>
   <th>Image rights</th>
   <th>Created</th>
-  <th>Cotisation count</th>
+  <th>Year count</th>
   <th>View</th>
 </tr>
 </thead>
@@ -39,7 +39,10 @@ Number of members : <?php echo count($personlist); ?>
     <?php } ?>
   </td>
   <td><?php echo $person['creation_date'] ?></td>
-  <td><?php echo $person['cotisation_count'] ?></td>
+  <td>
+	<?php echo $person['year_count'] ?> year
+	<!--(<?php echo $person['cotisation_count'] ?> cotis.)-->
+  </td>
   <td>
     <a href="<?php echo url_for('/members', $person['id'])?>">View</a>
   </td>
