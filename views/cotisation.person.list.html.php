@@ -22,9 +22,9 @@ Number of old members : <?php echo $iTotalOldMembers; ?> (<?php echo round(($iTo
   <th>E-mail</th>
   <th>Phonenumber</th>
   <th>Image rights</th>
-  <th>Cotisation</th>
-  <th>Created</th>
   <th>Was members</th>
+  <th>Created</th>
+  <th>Cotisation</th>
   <th>Payment</th>
   <th>View</th>
 </tr>
