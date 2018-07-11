@@ -1,5 +1,16 @@
 <p align="right">
-Number of members : <?php echo count($personlist); ?>
+<?php
+  $iTotalMembers = count($personlist);
+  $iTotalOldMembers = 0;
+  foreach ($personlist as $person)
+  {
+	if($person['cotisation_count'] > 0){
+		$iTotalOldMembers++;
+    }
+  }
+?>
+Number of members : <?php echo $iTotalMembers; ?>, 
+Number of old members : <?php echo $iTotalOldMembers; ?> (<?php echo round(($iTotalOldMembers/$iTotalMembers)*100); ?> %)
 </p>
 
 <table width="100%" class="list">
@@ -11,8 +22,9 @@ Number of members : <?php echo count($personlist); ?>
   <th>E-mail</th>
   <th>Phonenumber</th>
   <th>Image rights</th>
-  <th>Created</th>
   <th>Cotisation</th>
+  <th>Created</th>
+  <th>Was members</th>
   <th>Payment</th>
   <th>View</th>
 </tr>
@@ -32,6 +44,15 @@ Number of members : <?php echo count($personlist); ?>
     <?php if($person['image_rights'] == null){ ?>
      ?
     <?php }elseif($person['image_rights'] == 0){ ?>
+     No
+    <?php }else{ ?>
+     Yes
+    <?php } ?>
+  </td>
+  <td>
+    <?php if($person['cotisation_count'] == null){ ?>
+     No
+    <?php }elseif($person['cotisation_count'] == 0){ ?>
      No
     <?php }else{ ?>
      Yes
