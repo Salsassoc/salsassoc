@@ -44,10 +44,10 @@ dispatch('/cotisation/:id/members', 'cotisation_members_list');
         FROM person, cotisation_member 
         LEFT JOIN 
           (SELECT person_id, COUNT(cotisation_id) AS cotisation_count FROM cotisation_member, cotisation
-           WHERE cotisation.id = cotisation_id AND cotisation.fiscal_year_id < (SELECT fiscal_year_id FROM cotisation WHERE id=10)
+           WHERE cotisation.id = cotisation_id AND cotisation.fiscal_year_id < (SELECT fiscal_year_id FROM cotisation WHERE id='.$id.')
            GROUP BY person_id
           ) AS CotisationCount ON CotisationCount.person_id=person.id
-        WHERE person.id=cotisation_member.person_id AND cotisation_id=10
+        WHERE person.id=cotisation_member.person_id AND cotisation_id='.$id.'
         GROUP BY person.id
         ORDER BY lastname, firstname';
     $stmt = $conn->prepare($sql);
