@@ -7,6 +7,6 @@
 	<label>Password:</label><input type="password" size="10" name="Password" value="password">
 	<br/>
 	<input type="submit" value="Login">
-</fielset>
+</fieldset>
 
 </form>
