@@ -36,5 +36,15 @@ class TSHelper
 		}
 		return "";
 	}
+
+	public static function getPaymentMethod($method)
+	{
+		switch($method){
+		case 1: return TS::PaymentMethod_Check;
+		case 2: return TS::PaymentMethod_Cash;
+		default: break;
+		}
+		return "";
+	}
 };
 ?>

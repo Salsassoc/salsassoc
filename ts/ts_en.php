@@ -16,6 +16,7 @@ class TS {
 	const Main_Menu_Logout = "(Logout)";
 
 	// Cotisation
+	const Cotisation_Cotisation = "Cotisation";
 	const Cotisation_CotisationCount = "Cotisation count: %d";
 	const Cotisation_Label = "Label";
 	const Cotisation_Type = "Type";
@@ -42,5 +43,11 @@ class TS {
 	const Person_YearCount = "Year count";
 	const Person_View = "View";
 	const Person_YearCountText = "%d year(s)";
+	const Person_OldMember = "Old member";
+
+	// Payment
+	const Payment_Payment = "Payment";
+	const PaymentMethod_Check = "Check";
+	const PaymentMethod_Cash = "Cash";
 };
 ?>

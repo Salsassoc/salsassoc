@@ -16,6 +16,7 @@ class TS {
 	const Main_Menu_Logout = "(Déconnexion)";
 
 	// Cotisation
+	const Cotisation_Cotisation = "Cotisation";
 	const Cotisation_CotisationCount = "Nombre de cotisation : %d";
 	const Cotisation_Label = "Libellé";
 	const Cotisation_Type = "Type";
@@ -42,5 +43,11 @@ class TS {
 	const Person_YearCount = "Nombre d'année";
 	const Person_View = "Voir";
 	const Person_YearCountText = "%d an(s)";
+	const Person_OldMember = "Ancien membre";
+
+	// Payment
+	const Payment_Payment = "Paiement";
+	const PaymentMethod_Check = "Chèque";
+	const PaymentMethod_Cash = "Espèces";
 };
 ?>

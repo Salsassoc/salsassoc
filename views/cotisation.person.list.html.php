@@ -16,17 +16,17 @@ Number of old members : <?php echo $iTotalOldMembers; ?> (<?php echo round(($iTo
 <table width="100%" class="list">
 <thead>
 <tr>
-  <th>Lastname</th>
-  <th>Firstname</th>
-  <th>Birthdate</th>
-  <th>E-mail</th>
-  <th>Phonenumber</th>
-  <th>Image rights</th>
-  <th>Was members</th>
-  <th>Created</th>
-  <th>Cotisation</th>
-  <th>Payment</th>
-  <th>View</th>
+  <th><?php echo TS::Person_Lastname; ?></th>
+  <th><?php echo TS::Person_Firstname; ?></th>
+  <th><?php echo TS::Person_Birthdate; ?></th>
+  <th><?php echo TS::Person_Email; ?></th>
+  <th><?php echo TS::Person_Phonenumber; ?></th>
+  <th><?php echo TS::Person_ImageRights; ?></th>
+  <th><?php echo TS::Person_OldMember; ?></th>
+  <th><?php echo TS::Person_DateCreated; ?></th>
+  <th><?php echo TS::Cotisation_Cotisation; ?></th>
+  <th><?php echo TS::Payment_Payment; ?></th>
+  <th><?php echo TS::Person_View; ?></th>
 </tr>
 </thead>
 <tbody>
@@ -37,39 +37,16 @@ Number of old members : <?php echo $iTotalOldMembers; ?> (<?php echo round(($iTo
 <tr>
   <td><?php echo $person['lastname'] ?></td>
   <td><?php echo $person['firstname'] ?></td>
-  <td><?php echo $person['birthdate'] ?></td>
+  <td><?php echo TSHelper::getShortDateTextFromDBDate($person['birthdate']) ?></td>
   <td><?php echo $person['email'] ?></td>
   <td><?php echo $person['phonenumber'] ?></td>
+  <td><?php echo TSHelper::getYesNoUnknownText($person['image_rights']); ?></td>
+  <td><?php echo TSHelper::getYesNoUnknownText(($person['cotisation_count'] == null || $person['cotisation_count'] == 0) ? 'true' : 'false'); ?></td>
+  <td><?php echo TSHelper::getShortDateTextFromDBDate($person['creation_date']) ?></td>
+  <td><?php echo TSHelper::getCurrencyText($person['amount']); ?></td>
+  <td><?php echo TSHelper::getPaymentMethod($person['payment_method']); ?></td>
   <td>
-    <?php if($person['image_rights'] == null){ ?>
-     ?
-    <?php }elseif($person['image_rights'] == 0){ ?>
-     No
-    <?php }else{ ?>
-     Yes
-    <?php } ?>
-  </td>
-  <td>
-    <?php if($person['cotisation_count'] == null){ ?>
-     No
-    <?php }elseif($person['cotisation_count'] == 0){ ?>
-     No
-    <?php }else{ ?>
-     Yes
-    <?php } ?>
-  </td>
-  <td><?php echo $person['creation_date'] ?></td>
-  <td><?php echo $person['amount']; ?></td>
-  <td>
-    <?php
-        switch($person['payment_method']){
-        case 1: echo "Check"; break;
-        case 2: echo "Cash"; break;
-        }
-    ?>
-  </td>
-  <td>
-    <a href="<?php echo url_for('/members', $person['id'])?>">View</a>
+    <a href="<?php echo url_for('/members', $person['id'])?>"><?php echo TS::Person_View; ?></a>
   </td>
 </tr>
 <?php
