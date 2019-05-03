@@ -5,6 +5,8 @@ class TS {
 	// Global
 	const CurrencyText = "%0.2f %s";
 	const ShortDateText = "m/d/Y";
+	const Yes = "Yes";
+	const No = "No";
 
 	// Main
 	const Main_Welcome = "Welcome to ".AppName." manager !";
@@ -26,5 +28,19 @@ class TS {
 	const Cotisation_MembersCount = "%d members";
 	const Cotisation_Type_Membership = "Membership";
 	const Cotisation_Type_Course = "Course";
+
+	// Person
+	const Person_PersonCount = "Number of members: %d";
+	const Person_Add = "Add";
+	const Person_Lastname = "Lastname";
+	const Person_Firstname = "Firstname";
+	const Person_Birthdate = "Birthdate";
+	const Person_Email = "E-mail";
+	const Person_Phonenumber = "Phone number";
+	const Person_ImageRights = "Image rights";
+	const Person_DateCreated = "Creation date";
+	const Person_YearCount = "Year count";
+	const Person_View = "View";
+	const Person_YearCountText = "%d year(s)";
 };
 ?>

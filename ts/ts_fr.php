@@ -5,6 +5,8 @@ class TS {
 	// Global
 	const CurrencyText = "%0.2f %s";
 	const ShortDateText = "d/m/Y";
+	const Yes = "Oui";
+	const No = "Non";
 
 	// Main
 	const Main_Welcome = "Bienvenue dans le gestionnaire ".TS::AppName." !";
@@ -26,5 +28,19 @@ class TS {
 	const Cotisation_MembersCount = "%d membres";
 	const Cotisation_Type_Membership = "Adhésion";
 	const Cotisation_Type_Course = "Cours";
+
+	// Person
+	const Person_PersonCount = "Nombre d'adhérents : %d";
+	const Person_Add = "Ajouter";
+	const Person_Lastname = "Nom";
+	const Person_Firstname = "Prénom";
+	const Person_Birthdate = "Date de naissance";
+	const Person_Email = "E-mail";
+	const Person_Phonenumber = "Numéro de téléphone";
+	const Person_ImageRights = "Droit à l'image";
+	const Person_DateCreated = "Date de création";
+	const Person_YearCount = "Nombre d'année";
+	const Person_View = "Voir";
+	const Person_YearCountText = "%d an(s)";
 };
 ?>

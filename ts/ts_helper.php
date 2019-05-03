@@ -1,6 +1,14 @@
 <?php
 class TSHelper
 {
+	public static function getYesNoUnknownText($bool)
+	{
+		if($bool != null){
+			return ($bool == 'false' ? TS::No : TS::Yes);
+		}
+		return "?";
+	}
+
 	public static function getCurrencyText($amout, $currency = "EUR")
 	{
 		return sprintf(TS::CurrencyText, $amout, $currency);
@@ -8,7 +16,10 @@ class TSHelper
 
 	public static function getShortDateTextFromDBDate($dbdate)
 	{
-		return date(TS::ShortDateText, strtotime($dbdate));
+		if($dbdate != null){
+			return date(TS::ShortDateText, strtotime($dbdate));
+		}
+		return "";
 	}
 
 	public static function getShortDateText($timestamp)

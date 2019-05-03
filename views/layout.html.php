@@ -22,8 +22,12 @@
   </div>
   <div id="main" class="content">
     <!-- main content -->
-    <h1><?php echo h($page_title) ?></h1>
-    <?php echo $content; ?>
+	<div class="content-top">
+    	<h1><?php echo h($page_title) ?></h1>
+	</div>
+	<div class="content-body">
+    	<?php echo $content; ?>
+	</div>
   </div>
   <!--
     $sidebar contains the content_for('sidebar') captured content.

@@ -47,6 +47,10 @@ a:hover {
 	text-decoration:underline;
 }
 
+h1 {
+	margin:5px 0px 5px 0px;
+}
+
 .list
 {
 	border-collapse: collapse;
