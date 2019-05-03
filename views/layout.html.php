@@ -7,11 +7,11 @@
 </head>
 <body>
   <?php if(isset($_SESSION['username'])){ ?>
-  <a href="<?php echo url_for('/members')?>">Members</a> |
-  <a href="<?php echo url_for('/people')?>">People</a> |
-  <a href="<?php echo url_for('/cotisations')?>">Cotisations</a> |
+  <a href="<?php echo url_for('/members')?>"><?php echo TS::Main_Menu_Members; ?></a> |
+  <a href="<?php echo url_for('/people')?>"><?php echo TS::Main_Menu_People; ?></a> |
+  <a href="<?php echo url_for('/cotisations')?>"><?php echo TS::Main_Menu_Cotisations; ?></a> |
   <?php   echo $_SESSION['username']; ?>
-  <a href="<?php echo url_for('/logout')?>">(Logout)</a>
+  <a href="<?php echo url_for('/logout')?>"><?php echo TS::Main_Menu_Logout; ?></a>
   <hr/>
   <?php } ?>
   <div id="main">

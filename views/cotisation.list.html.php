@@ -1,5 +1,5 @@
 <p align="right">
-<?php echo TS::Cotisation_CotisationCount.count($cotisationlist); ?>
+<?php printf(TS::Cotisation_CotisationCount, count($cotisationlist)); ?>
 </p>
 
 <table width="100%" class="list">
@@ -25,7 +25,7 @@
   <td><?php echo $cotisation['end_date'] ?></td>
   <td><?php echo $cotisation['amount'] ?></td>
   <td>
-    <a href="<?php echo url_for('/cotisation', $cotisation['id'], 'members')?>"><?php echo $cotisation['cotisation_count'] ?> members</a>
+    <a href="<?php echo url_for('/cotisation', $cotisation['id'], 'members')?>"><?php printf(TS::Cotisation_MembersCount, $cotisation['cotisation_count']) ?></a>
   </td>
   <td><?php echo $cotisation['cotisation_totalamount'] ?></td>
   <td>

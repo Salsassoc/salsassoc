@@ -1,1 +1,1 @@
-<p>Welcome to Salsassoc manager !</p>
+<p><?php echo TS::Main_Welcome; ?></p>
