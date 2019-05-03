@@ -1,22 +1,28 @@
 <!DOCTYPE HTML>
 <html lang="fr-FR">
 <head>
-	<meta charset="UTF-8">
-	<title>Salsassoc: <?php echo h($page_title) ?></title>
+    <meta charset="UTF-8">
+    <title>Salsassoc: <?php echo h($page_title) ?></title>
     <link rel="stylesheet" type="text/css" href="<?php echo url_for('/style.css')?>">
 </head>
 <body>
-  <?php if(isset($_SESSION['username'])){ ?>
-  <a href="<?php echo url_for('/members')?>"><?php echo TS::Main_Menu_Members; ?></a> |
-  <a href="<?php echo url_for('/people')?>"><?php echo TS::Main_Menu_People; ?></a> |
-  <a href="<?php echo url_for('/cotisations')?>"><?php echo TS::Main_Menu_Cotisations; ?></a> |
-  <?php   echo $_SESSION['username']; ?>
-  <a href="<?php echo url_for('/logout')?>"><?php echo TS::Main_Menu_Logout; ?></a>
-  <hr/>
-  <?php } ?>
-  <div id="main">
+  <div class="menu">
+    <div class="menu-left">
+      <span class="title"><?php echo TS::Main_Welcome; ?></span>
+    </div>
+    <div class="menu-right">
+      <?php if(isset($_SESSION['username'])){ ?>
+      <a href="<?php echo url_for('/members')?>"><?php echo TS::Main_Menu_Members; ?></a> |
+      <a href="<?php echo url_for('/people')?>"><?php echo TS::Main_Menu_People; ?></a> |
+      <a href="<?php echo url_for('/cotisations')?>"><?php echo TS::Main_Menu_Cotisations; ?></a> |
+      <?php   echo $_SESSION['username']; ?>
+      <a href="<?php echo url_for('/logout')?>"><?php echo TS::Main_Menu_Logout; ?></a>
+      <?php } ?>
+    </div>
+  </div>
+  <div id="main" class="content">
     <!-- main content -->
-  	<h1><?php echo h($page_title) ?></h1>
+    <h1><?php echo h($page_title) ?></h1>
     <?php echo $content; ?>
   </div>
   <!--

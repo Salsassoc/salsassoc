@@ -1,7 +1,7 @@
 <?php
 class TS {
 	const AppName = "Salsassoc";
-	const Main_Welcome = "Bienvenue dans le gestionnaire ".AppName." !";
+	const Main_Welcome = "Bienvenue dans le gestionnaire ".TS::AppName." !";
 	const Main_Menu_Members = "Membres";
 	const Main_Menu_People = "Personnes";
 	const Main_Menu_Cotisations = "Cotisations";
