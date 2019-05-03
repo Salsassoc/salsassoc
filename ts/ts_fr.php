@@ -16,12 +16,15 @@ class TS {
 	// Cotisation
 	const Cotisation_CotisationCount = "Nombre de cotisation : %d";
 	const Cotisation_Label = "Libellé";
+	const Cotisation_Type = "Type";
 	const Cotisation_StartDate = "Date début";
 	const Cotisation_EndDate = "Date de fin";
-	const Cotisation_Price = "Tarif";
+	const Cotisation_BasicPrice = "Tarif de base";
 	const Cotisation_Members = "Membres";
-	const Cotisation_TotalAmount = "Montant total";
+	const Cotisation_AmountCollected = "Montant perçu";
 	const Cotisation_View = "Voir";
 	const Cotisation_MembersCount = "%d membres";
+	const Cotisation_Type_Membership = "Adhésion";
+	const Cotisation_Type_Course = "Cours";
 };
 ?>

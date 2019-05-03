@@ -16,12 +16,15 @@ class TS {
 	// Cotisation
 	const Cotisation_CotisationCount = "Cotisation count: %d";
 	const Cotisation_Label = "Label";
+	const Cotisation_Type = "Type";
 	const Cotisation_StartDate = "Start date";
 	const Cotisation_EndDate = "End date";
-	const Cotisation_Price = "Price";
+	const Cotisation_BasicPrice = "Basic price";
 	const Cotisation_Members = "Members";
-	const Cotisation_TotalAmount = "Total amount";
+	const Cotisation_AmountCollected = "Amount collected";
 	const Cotisation_View = "View";
 	const Cotisation_MembersCount = "%d members";
+	const Cotisation_Type_Membership = "Membership";
+	const Cotisation_Type_Course = "Course";
 };
 ?>

@@ -15,5 +15,15 @@ class TSHelper
 	{
 		return date(TS::ShortDateText, $timestamp);
 	}
+
+	public static function getCotisationType($type)
+	{
+		switch($type){
+		case 1: return TS::Cotisation_Type_Membership;
+		case 2: return TS::Cotisation_Type_Course;
+		default: break;
+		}
+		return "";
+	}
 };
 ?>

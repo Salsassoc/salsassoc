@@ -10,10 +10,10 @@ dispatch('/cotisations', 'cotisation_list');
 
     $conn = $GLOBALS['db_connexion'];
 
-    $sql =  'SELECT id, label, start_date, end_date, cotisation.amount AS amount, COUNT(cotisation_id) AS cotisation_count, SUM(cotisation_member.amount) AS cotisation_totalamount
+    $sql =  'SELECT id, label, type, start_date, end_date, cotisation.amount AS amount, COUNT(cotisation_id) AS cotisation_count, SUM(cotisation_member.amount) AS cotisation_totalamount
         FROM cotisation LEFT JOIN cotisation_member ON cotisation.id=cotisation_id
         GROUP BY cotisation.id
-        ORDER BY start_date';
+        ORDER BY start_date DESC';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
