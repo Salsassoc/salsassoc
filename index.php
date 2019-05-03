@@ -7,6 +7,12 @@ require_once 'tools/tools.php';
 require_once 'controllers/PersonController.php';
 require_once 'controllers/CotisationsController.php';
 
+// Setup locale
+$lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
+$acceptLang = ['fr', 'en']; 
+$lang = in_array($lang, $acceptLang) ? $lang : 'en';
+require_once "ts/ts_{$lang}.php";
+
 function configure()
 {
 /*

@@ -1,17 +1,17 @@
 <p align="right">
-Number of cotisation : <?php echo count($cotisationlist); ?>
+<?php echo TS::Cotisation_CotisationCount.count($cotisationlist); ?>
 </p>
 
 <table width="100%" class="list">
 <thead>
 <tr>
-  <th>Label</th>
-  <th>Start date</th>
-  <th>End date</th>
-  <th>Amount</th>
-  <th>Members</th>
-  <th>Total amount</th>
-  <th>View</th>
+  <th><?php echo TS::Cotisation_Label; ?></th>
+  <th><?php echo TS::Cotisation_StartDate; ?></th>
+  <th><?php echo TS::Cotisation_EndDate; ?></th>
+  <th><?php echo TS::Cotisation_Amount; ?></th>
+  <th><?php echo TS::Cotisation_Members; ?></th>
+  <th><?php echo TS::Cotisation_TotalAmount; ?></th>
+  <th><?php echo TS::Cotisation_View; ?></th>
 </tr>
 </thead>
 <tbody>
