@@ -31,6 +31,7 @@ class TS {
 	const Cotisation_Type_Course = "Course";
 
 	// Person
+	const Person_Members = "Members";
 	const Person_PersonCount = "Number of members: %d";
 	const Person_Add = "Add";
 	const Person_Lastname = "Lastname";

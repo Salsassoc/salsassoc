@@ -20,7 +20,7 @@ dispatch('/members', 'person_list');
         $results = $stmt->fetchAll();
         set('personlist', $results);
 
-        set('page_title', "Members");
+        set('page_title', TS::Person_Members);
         return html('person.list.html.php');
     }
 
