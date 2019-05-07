@@ -1,8 +1,6 @@
-<p align="right">
+<div class="list-top-infos">
 <?php printf(TS::Person_PersonCount, count($personlist)); ?>
- -
-<a href="<?php echo url_for('/members/add')?>"><?php echo TS::Person_Add; ?></a>
-</p>
+</div>
 
 <table width="100%" class="list">
 <thead>

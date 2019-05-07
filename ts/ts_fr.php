@@ -32,6 +32,9 @@ class TS {
 
 	// Person
 	const Person_Members = "Membres";
+	const Person_CurrentMembers = "Membres actuels";
+	const Person_AllMembers = "Tous les membres";
+	const Person_AddMembers = "Ajouter un membre";
 	const Person_PersonCount = "Nombre d'adhérents : %d";
 	const Person_Add = "Ajouter";
 	const Person_Lastname = "Nom";

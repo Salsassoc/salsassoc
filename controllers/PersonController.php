@@ -1,32 +1,61 @@
 <?php
 
-dispatch('/members', 'person_list');
-  function person_list()
+  function getSubMenus()
+  {
+	$submenus = array();
+	$submenus["/members"] = TS::Person_CurrentMembers;
+	$submenus["/members/all"] = TS::Person_AllMembers;
+	$submenus["/members/add"] = TS::Person_AddMembers;
+	return $submenus;
+  }
+
+  function person_list($bCurrentOnly)
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
 		redirect_to('/login'); return;
 	}
 
+	// Compute filter
+	$filter = "";
+	if($bCurrentOnly){
+		$filter .= " WHERE fiscal_year_id = (SELECT id FROM fiscal_year ORDER BY end_date LIMIT 1)";
+	}
+
     $conn = $GLOBALS['db_connexion'];
 
     $sql =  'SELECT person.id as id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(cotisation_id) AS cotisation_count
-        FROM person LEFT JOIN cotisation_member ON person.id=person_id LEFT JOIN cotisation ON cotisation.id = cotisation_id
-        GROUP BY person.id
-        ORDER BY lastname, firstname';
+        FROM person LEFT JOIN cotisation_member ON person.id=person_id LEFT JOIN cotisation ON cotisation.id = cotisation_id';
+	$sql .= $filter;
+    $sql .= ' GROUP BY person.id';
+    $sql .= ' ORDER BY lastname, firstname';
+
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
         $results = $stmt->fetchAll();
         set('personlist', $results);
-
+        set('page_id', "person_list");
         set('page_title', TS::Person_Members);
+        set('page_submenus', getSubMenus());
         return html('person.list.html.php');
     }
 
     set('page_title', "Bad request");
     return html('error.html.php');
 
+  }
+
+dispatch('/members', 'person_list_current');
+  function person_list_current()
+  {
+	 return person_list(true);
+  }
+
+dispatch('/members/all', 'person_list_all');
+  function person_list_all()
+  {
+	 return person_list(false);
   }
 
 dispatch('/members/add', 'person_add');
@@ -41,6 +70,7 @@ dispatch('/members/add', 'person_add');
 	set('person', $person);
 
     set('page_title', "Add member");
+    set('page_submenus', getSubMenus());
     return html('person.html.php');
   }
 
@@ -65,6 +95,7 @@ dispatch('/members/:id', 'person_view');
         set('cotisations', $results2);
 
         set('page_title', "Member #$id");
+        set('page_submenus', getSubMenus());
         return html('person.html.php');
     }else{
         set('page_title', "Bad request");

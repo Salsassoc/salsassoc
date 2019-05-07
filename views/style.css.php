@@ -3,9 +3,10 @@ body {
 }
 
 .menu {
+	display: table;
+	width:100%;
 	background-color:#22A1C4;
 	color:#FFFFFF;
-	padding:10px;
 }
 
 .menu .title {
@@ -26,11 +27,37 @@ body {
 }
 
 .menu-left {
-	float:left;
+	display: table-cell;
+	padding:10px;
 }
 
 .menu-right {
-	text-align:right;
+	display: table-cell;
+	text-align: right;
+	padding:10px;
+}
+
+.submenu {
+	display: table;
+	width:100%;
+}
+
+.submenu-left {
+	display: table-cell;
+	padding:10px;
+}
+
+.submenu-right {
+	display: table-cell;
+	text-align: right;
+	vertical-align: top;
+	color:#22A1C4;
+	padding:10px;
+}
+
+.page-title {
+	font-size: 24px;
+	font-weight: bold;
 }
 
 .content {
@@ -88,4 +115,11 @@ h1 {
     text-align: center;
     border-bottom: 1px solid #D4D4D4;
     border-top: 1px solid #D4D4D4;
+}
+
+.list-top-infos
+{
+	width: 100%;
+	text-align: right;
+	padding-bottom: 5px;
 }

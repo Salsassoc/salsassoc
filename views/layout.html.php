@@ -20,11 +20,27 @@
       <?php } ?>
     </div>
   </div>
-  <div id="main" class="content">
-    <!-- main content -->
-	<div class="content-top">
-    	<h1><?php echo h($page_title) ?></h1>
+  <div class="submenu">
+	<div class="submenu-left">
+    	<span class="page-title"><?php echo h($page_title) ?></span>
 	</div>
+    <div class="submenu-right">
+      <?php if(isset($page_submenus)){
+			 $iCount = 0;
+			 foreach($page_submenus as $link => $label){
+				if($iCount != 0){
+					echo " | ";
+				}
+	  ?>
+      <a href="<?php echo url_for($link)?>"><?php echo $label; ?></a>
+      <?php  
+               $iCount++;
+             }
+      } ?>
+	</div>
+  </div>
+  <!-- main content -->
+  <div id="main" class="content">
 	<div class="content-body">
     	<?php echo $content; ?>
 	</div>
