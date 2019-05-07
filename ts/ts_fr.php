@@ -7,6 +7,7 @@ class TS {
 	const ShortDateText = "d/m/Y";
 	const Yes = "Oui";
 	const No = "Non";
+	const Unknown = "Inconnu";
 
 	// Main
 	const Main_Welcome = "Bienvenue dans le gestionnaire ".TS::AppName." !";
@@ -32,9 +33,10 @@ class TS {
 
 	// Person
 	const Person_Members = "Membres";
+	const Person_MemberNum = "Membre #%d";
 	const Person_CurrentMembers = "Membres actuels";
 	const Person_AllMembers = "Tous les membres";
-	const Person_AddMembers = "Ajouter un membre";
+	const Person_AddMember = "Ajouter un membre";
 	const Person_PersonCount = "Nombre d'adhérents : %d";
 	const Person_Add = "Ajouter";
 	const Person_Lastname = "Nom";
@@ -48,6 +50,8 @@ class TS {
 	const Person_View = "Voir";
 	const Person_YearCountText = "%d an(s)";
 	const Person_OldMember = "Ancien membre";
+	const Person_Form_GlobalInfo = "Informations globales";
+	const Person_Comments = "Commentaires";
 
 	// Payment
 	const Payment_Payment = "Paiement";

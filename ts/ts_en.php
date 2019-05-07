@@ -7,6 +7,7 @@ class TS {
 	const ShortDateText = "m/d/Y";
 	const Yes = "Yes";
 	const No = "No";
+	const Unknown = "Unknown";
 
 	// Main
 	const Main_Welcome = "Welcome to ".AppName." manager !";
@@ -32,9 +33,10 @@ class TS {
 
 	// Person
 	const Person_Members = "Members";
+	const Person_MemberNum = "Member #%d";
 	const Person_CurrentMembers = "Actual members";
 	const Person_AllMembers = "All members";
-	const Person_AddMembers = "Add a member";
+	const Person_AddMember = "Add a member";
 	const Person_PersonCount = "Number of members: %d";
 	const Person_Add = "Add";
 	const Person_Lastname = "Lastname";
@@ -48,6 +50,8 @@ class TS {
 	const Person_View = "View";
 	const Person_YearCountText = "%d year(s)";
 	const Person_OldMember = "Old member";
+	const Person_Form_GlobalInfo = "Global information";
+	const Person_Comments = "Comments";
 
 	// Payment
 	const Payment_Payment = "Payment";
