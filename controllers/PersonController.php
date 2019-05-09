@@ -127,7 +127,7 @@ dispatch('/members/:id', 'person_view');
     }
   }
 
-  function person_save($conn, $id, $person, &$errors)
+  function person_save($conn, $id, &$person, &$errors)
   {
     $res = true;
 
@@ -158,17 +158,19 @@ dispatch('/members/:id', 'person_view');
 			    //$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
 		    }
 		    $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
-		    $stmt->bindParam(':lastname', $_POST['Lastname'], PDO::PARAM_STR, 50);
-		    $stmt->bindParam(':gender', $valueGender, PDO::PARAM_INT);
-		    $stmt->bindParam(':birthdate', $_POST['Birthdate'], PDO::PARAM_STR, 10);
-		    $stmt->bindParam(':email', $_POST['Email'], PDO::PARAM_STR, 100);
-		    $stmt->bindParam(':phonenumber', $_POST['Phonenumber'], PDO::PARAM_STR, 50);
-		    $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
-		    $stmt->bindParam(':image_rights', $valueImagerights, PDO::PARAM_STR);
-		    $valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
-		    $stmt->bindParam(':comments', $valueComments, PDO::PARAM_STR);
+		    $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
+		    $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
+		    $stmt->bindParam(':birthdate', $person['birthdate'], PDO::PARAM_STR, 10);
+		    $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
+		    $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
+		    $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);
+		    $stmt->bindParam(':comments', $person['comments'], PDO::PARAM_STR);
 		    $res = $stmt->execute();
             if($res){
+                if($id!=0){
+			        $person["id"] = $conn->lastInsertId();
+                }
+            }else{
 		        $errors[] = $conn->errorInfo();
             }
 	    }

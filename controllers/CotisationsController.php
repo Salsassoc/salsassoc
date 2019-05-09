@@ -2,24 +2,56 @@
 
   function cotisation_member_load()
   {
-    $$cotisation_members = array();
-
-        
+    $cotisation_members = array();
     
-    $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
-	$valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
-    $person = array(
-        'firstname' => $_POST['Firstname'],
-        'lastname' => $_POST['Lastname'],
-        'gender' => $valueGender,
-        'birthdate' => $_POST['Birthdate'],
-        'email' => $_POST['Email'],
-        'phonenumber' => $_POST['Phonenumber'],
-        'image_rights' => $valueImagerights,
-        'comments' => $valueComments 
-    );
-    return $person;
+    $cotisation_members["payment_method"] = $_POST['CotisationMember_PaymentMethod'];
+    $cotisation_members["date"] = $_POST['CotisationMember_Date'];
+    $cotisation_members["cotisations"] = array();
+
+    $count = $_POST['CotisationCount'];
+    for($i = 0; $i < $count; $i++){
+        $key = "CotisationMember['.$i.'][CotisationId]";
+        $cotisation_id = $_POST[$key];
+        $key = "CotisationMember['.$i.'][Amount]";
+        $cotisation_amount = $_POST[$key];
+        $cotisation = array("id" => $cotisation_id, "amount" => $cotisation_amount);
+        $cotisation_members["cotisations"][$i] = $cotisation;
+    }
+    
+    return $cotisation_members;
   }
+
+  function person_save($conn, &$id, $cotisation_members, &$errors)
+  {
+    $res = true;
+
+    // Check data
+    if($cotisation_members['payment_method'] == ""){
+        $errors[] = "Payment method cannot be empty";
+        $res = false;
+    }
+
+    if($res){
+        $sql =  'INSERT INTO cotisation_member (person_id, cotisation_id, date, amount, payment_method) VALUES (:person_id, :cotisation_id, :date, :amount, :payment_method)';
+	    $stmt = $conn->prepare($sql);
+	    if(!$stmt){
+            $res = false;
+		    $errors[] = $conn->errorInfo();
+	    }
+    }
+
+    if($res){
+	    $stmt->bindParam(':person_id', $person['firstname'], PDO::PARAM_STR, 50);
+	    $stmt->bindParam(':cotisation_id', $cotisation_members[0]['payment_method'], PDO::PARAM_STR, 50);
+	    $stmt->bindParam(':date', $cotisation_members['date'], PDO::PARAM_INT);
+	    $stmt->bindParam(':amount', $_POST['Birthdate'], PDO::PARAM_STR, 10);
+	    $stmt->bindParam(':payment_method', $cotisation_members['payment_method'], PDO::PARAM_STR, 100);
+	    $res = $stmt->execute();
+        if(!$res){
+	        $errors[] = $conn->errorInfo();
+        }
+    }
+    return $res;
 
   function cotisation_list($membershipOnly)
   {
@@ -161,6 +193,9 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
         $conn->beginTransaction();
         $res = person_save($conn, $person['id'], $person, $errors);
         if($res){
+
+        }
+        if($res){
             $conn->commit();
         }else{
             $conn->rollBack();
@@ -172,6 +207,7 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
     }else{
 	    set('person', $person);
 	    set('cotisations', $cotisations);
+        set('cotisation_members', $cotisation_members);
 
 	    set('page_title', TS::Cotisation_CotisationRegister);
 	    set('page_submenus', getSubMenus("cotisations"));
