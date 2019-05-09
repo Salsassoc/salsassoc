@@ -18,6 +18,9 @@ class TS {
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
+	const Cotisation_CotisationAll = "All cotisations";
+	const Cotisation_CotisationMembership = "Membership only";
+	const Cotisation_CotisationRegister = "Register a membership";
 	const Cotisation_CotisationCount = "Cotisation count: %d";
 	const Cotisation_Label = "Label";
 	const Cotisation_Type = "Type";

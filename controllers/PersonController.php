@@ -1,14 +1,5 @@
 <?php
 
-  function getSubMenus()
-  {
-	$submenus = array();
-	$submenus["/members"] = TS::Person_CurrentMembers;
-	$submenus["/members/all"] = TS::Person_AllMembers;
-	$submenus["/members/add"] = TS::Person_AddMember;
-	return $submenus;
-  }
-
   function person_list($bCurrentOnly)
   {
 	$webuser = loadWebUser();
@@ -37,7 +28,7 @@
         set('personlist', $results);
         set('page_id', "person_list");
         set('page_title', TS::Person_Members);
-        set('page_submenus', getSubMenus());
+        set('page_submenus', getSubMenus("members"));
         return html('person.list.html.php');
     }
 
@@ -70,7 +61,7 @@ dispatch('/members/add', 'person_add');
 	set('person', $person);
 
     set('page_title', TS::Person_AddMember);
-    set('page_submenus', getSubMenus());
+    set('page_submenus', getSubMenus("members"));
     return html('person.html.php');
   }
 
@@ -95,7 +86,7 @@ dispatch('/members/:id', 'person_view');
         set('cotisations', $results2);
 
         set('page_title', sprintf(TS::Person_MemberNum, $id));
-        set('page_submenus', getSubMenus());
+        set('page_submenus', getSubMenus("members"));
         return html('person.html.php');
     }else{
         set('page_title', "Bad request");

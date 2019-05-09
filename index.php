@@ -14,6 +14,23 @@ $lang = in_array($lang, $acceptLang) ? $lang : 'en';
 require_once "ts/ts_{$lang}.php";
 require_once "ts/ts_helper.php";
 
+
+function getSubMenus($menu)
+{
+	$submenus = array();
+	if($menu == "members"){
+		$submenus["/members"] = TS::Person_CurrentMembers;
+		$submenus["/members/all"] = TS::Person_AllMembers;
+		$submenus["/members/add"] = TS::Person_AddMember;
+	}
+	if($menu == "cotisations"){
+		$submenus["/cotisations"] = TS::Cotisation_CotisationAll;
+		$submenus["/cotisations/membership"] = TS::Cotisation_CotisationMembership;
+		$submenus["/cotisations/register"] = TS::Cotisation_CotisationRegister;
+	}
+	return $submenus;
+}
+
 function configure()
 {
 /*

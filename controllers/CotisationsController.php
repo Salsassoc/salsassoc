@@ -1,7 +1,6 @@
 <?php
 
-dispatch('/cotisations', 'cotisation_list');
-  function cotisation_list()
+  function cotisation_list($membershipOnly)
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
@@ -11,9 +10,11 @@ dispatch('/cotisations', 'cotisation_list');
     $conn = $GLOBALS['db_connexion'];
 
     $sql =  'SELECT id, label, type, start_date, end_date, cotisation.amount AS amount, COUNT(cotisation_id) AS cotisation_count, SUM(cotisation_member.amount) AS cotisation_totalamount
-        FROM cotisation LEFT JOIN cotisation_member ON cotisation.id=cotisation_id
-        GROUP BY cotisation.id
-        ORDER BY start_date DESC';
+        FROM cotisation LEFT JOIN cotisation_member ON cotisation.id=cotisation_id ';
+	if($membershipOnly){
+		$sql .= 'WHERE cotisation.type = 1 ';
+	}
+	$sql .= 'GROUP BY cotisation.id ORDER BY start_date DESC';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
@@ -21,11 +22,24 @@ dispatch('/cotisations', 'cotisation_list');
         set('cotisationlist', $results);
 
         set('page_title', "Cotisations");
+        set('page_submenus', getSubMenus("cotisations"));
         return html('cotisation.list.html.php');
     }
 
     set('page_title', "Bad request");
     return html('error.html.php');
+  }
+
+dispatch('/cotisations', 'cotisation_list_all');
+  function cotisation_list_all()
+  {
+	return cotisation_list(false);
+  }
+
+dispatch('/cotisations/membership', 'cotisation_list_membership');
+  function cotisation_list_membership()
+  {
+	return cotisation_list(true);
   }
 
 dispatch('/cotisation/:id/members', 'cotisation_members_list');
