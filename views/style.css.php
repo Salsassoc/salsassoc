@@ -124,6 +124,10 @@ h1 {
 	padding-bottom: 5px;
 }
 
+.form {
+	width: 50%;
+}
+
 .form-row {
   margin-bottom: 10px;
   display: flex;

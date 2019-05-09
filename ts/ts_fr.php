@@ -8,6 +8,7 @@ class TS {
 	const Yes = "Oui";
 	const No = "Non";
 	const Unknown = "Inconnu";
+	const Currency = "EUR";
 
 	// Main
 	const Main_Welcome = "Bienvenue dans le gestionnaire ".TS::AppName." !";
@@ -33,6 +34,8 @@ class TS {
 	const Cotisation_MembersCount = "%d membres";
 	const Cotisation_Type_Membership = "Adhésion";
 	const Cotisation_Type_Course = "Cours";
+	const Cotisation_CotisationMemberInfos = "Informations du membre";
+	const Cotisation_CotisationList = "Liste des cotisations";
 
 	// Person
 	const Person_Members = "Membres";

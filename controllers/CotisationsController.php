@@ -42,7 +42,70 @@ dispatch('/cotisations/membership', 'cotisation_list_membership');
 	return cotisation_list(true);
   }
 
-dispatch('/cotisation/:id/members', 'cotisation_members_list');
+  function cotisation_register($person_id)
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $conn = $GLOBALS['db_connexion'];
+
+	// Load cotisation list
+    $sql =  'SELECT cotisation.id AS id, label, amount
+        FROM cotisation, fiscal_year 
+        WHERE fiscal_year.id=fiscal_year_id
+		AND fiscal_year_id = (SELECT fiscal_year_id FROM cotisation ORDER BY fiscal_year_id DESC LIMIT 1)
+        ORDER BY type, id';
+    $stmt = $conn->prepare($sql);
+    $res = $stmt->execute();
+    if ($res) {
+		$cotisations = $stmt->fetchAll();
+	}
+
+	// Load person
+	if($res){
+		if($person_id != null){
+		  $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, comments
+				FROM person
+				WHERE id = '.$person_id;
+		  $stmt = $conn->prepare($sql);
+		  $res = $stmt->execute();
+		  if ($res) {
+            $person = $stmt->fetch();
+          }
+		}else{
+			$person = array('firstname' => '', 'lastname' => '', 'birthdate' => '', 'email' => '', 'phonenumber' => '', 'image_rights' => '', 'comments' => '');
+		}
+	}
+
+	if($res){
+		set('person', $person);
+		set('cotisations', $cotisations);
+
+		set('page_title', TS::Cotisation_CotisationRegister);
+		set('page_submenus', getSubMenus("cotisations"));
+		return html('cotisation.register.html.php');
+	}
+
+    set('page_title', "Bad request");
+    return html('error.html.php');
+  }
+
+dispatch('/cotisations/register', 'cotisation_register_new');
+  function cotisation_register_new()
+  {
+	return cotisation_register(null);
+  }
+
+dispatch('/cotisations/register/member/:id', 'cotisation_register_member');
+  function cotisation_register_member()
+  {
+    $id = params('id');
+	return cotisation_register($id);
+  }
+
+dispatch('/cotisations/:id/members', 'cotisation_members_list');
   function cotisation_members_list()
   {
 	$webuser = loadWebUser();
@@ -77,5 +140,6 @@ dispatch('/cotisation/:id/members', 'cotisation_members_list');
     set('page_title', "Bad request");
     return html('error.html.php');
   }
+
 
 ?>

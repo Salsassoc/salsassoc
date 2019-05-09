@@ -8,6 +8,7 @@ class TS {
 	const Yes = "Yes";
 	const No = "No";
 	const Unknown = "Unknown";
+	const Currency = "EUR";
 
 	// Main
 	const Main_Welcome = "Welcome to ".AppName." manager !";
@@ -33,6 +34,8 @@ class TS {
 	const Cotisation_MembersCount = "%d members";
 	const Cotisation_Type_Membership = "Membership";
 	const Cotisation_Type_Course = "Course";
+	const Cotisation_CotisationMemberInfos = "Member informations";
+	const Cotisation_CotisationList = "Cotisations list";
 
 	// Person
 	const Person_Members = "Members";
