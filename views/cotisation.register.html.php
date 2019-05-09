@@ -1,5 +1,5 @@
 <?php
-$formAction=url_for('/cotisation/register');
+$formAction=url_for('/cotisations/register');
 ?>
 
 <div>

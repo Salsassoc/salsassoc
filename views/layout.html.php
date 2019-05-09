@@ -41,6 +41,19 @@
   </div>
   <!-- main content -->
   <div id="main" class="content">
+	<?php
+        if(count($errors) > 0){
+    ?>
+	<div class="content-errors">
+       <ul>
+    <?php foreach($errors as $error){ ?>
+         <li><?php echo $error; ?></li>
+    <?php } ?>
+       </ul>
+	</div><br/>
+    <?php
+        }
+    ?>
 	<div class="content-body">
     	<?php echo $content; ?>
 	</div>

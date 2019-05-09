@@ -51,42 +51,42 @@ dispatch('/cotisations/membership', 'cotisation_list_membership');
 
     $conn = $GLOBALS['db_connexion'];
 
-	// Load cotisation list
+    // Load cotisation list
     $sql =  'SELECT cotisation.id AS id, label, amount
         FROM cotisation, fiscal_year 
         WHERE fiscal_year.id=fiscal_year_id
-		AND fiscal_year_id = (SELECT fiscal_year_id FROM cotisation ORDER BY fiscal_year_id DESC LIMIT 1)
+	    AND fiscal_year_id = (SELECT fiscal_year_id FROM cotisation ORDER BY fiscal_year_id DESC LIMIT 1)
         ORDER BY type, id';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
-		$cotisations = $stmt->fetchAll();
-	}
+	    $cotisations = $stmt->fetchAll();
+    }
 
-	// Load person
-	if($res){
-		if($person_id != null){
-		  $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, comments
-				FROM person
-				WHERE id = '.$person_id;
-		  $stmt = $conn->prepare($sql);
-		  $res = $stmt->execute();
-		  if ($res) {
+    // Load person
+    if($res){
+	    if($person_id != null){
+	      $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, comments
+			    FROM person
+			    WHERE id = '.$person_id;
+	      $stmt = $conn->prepare($sql);
+	      $res = $stmt->execute();
+	      if ($res) {
             $person = $stmt->fetch();
           }
-		}else{
-			$person = array('firstname' => '', 'lastname' => '', 'birthdate' => '', 'email' => '', 'phonenumber' => '', 'image_rights' => '', 'comments' => '');
-		}
-	}
+	    }else{
+		    $person = array('firstname' => '', 'lastname' => '', 'birthdate' => '', 'email' => '', 'phonenumber' => '', 'image_rights' => '', 'comments' => '');
+	    }
+    }
 
-	if($res){
-		set('person', $person);
-		set('cotisations', $cotisations);
+    if($res){
+	    set('person', $person);
+	    set('cotisations', $cotisations);
 
-		set('page_title', TS::Cotisation_CotisationRegister);
-		set('page_submenus', getSubMenus("cotisations"));
-		return html('cotisation.register.html.php');
-	}
+	    set('page_title', TS::Cotisation_CotisationRegister);
+	    set('page_submenus', getSubMenus("cotisations"));
+	    return html('cotisation.register.html.php');
+    }
 
     set('page_title', "Bad request");
     return html('error.html.php');
@@ -103,6 +103,59 @@ dispatch('/cotisations/register/member/:id', 'cotisation_register_member');
   {
     $id = params('id');
 	return cotisation_register($id);
+  }
+
+dispatch_post('/cotisations/register', 'cotisation_register_save');
+  function cotisation_register_save()
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $res = true;
+
+    $conn = $GLOBALS['db_connexion'];
+
+    // Load cotisation list
+    if($res){
+        $sql =  'SELECT cotisation.id AS id, label, amount
+            FROM cotisation, fiscal_year 
+            WHERE fiscal_year.id=fiscal_year_id
+	        AND fiscal_year_id = (SELECT fiscal_year_id FROM cotisation ORDER BY fiscal_year_id DESC LIMIT 1)
+            ORDER BY type, id';
+        $stmt = $conn->prepare($sql);
+        $res = $stmt->execute();
+        if ($res) {
+	        $cotisations = $stmt->fetchAll();
+        }
+    }
+
+    // Save data
+    if($res){
+        $person = person_load();
+        $errors = array();    
+
+        $conn->beginTransaction();
+        $res = person_save($conn, $person['id'], $person, $errors);
+        if($res){
+            $conn->commit();
+        }else{
+            $conn->rollBack();
+        }
+    }
+
+    if($res){
+		redirect_to('/members/'.$id);
+    }else{
+	    set('person', $person);
+	    set('cotisations', $cotisations);
+
+	    set('page_title', TS::Cotisation_CotisationRegister);
+	    set('page_submenus', getSubMenus("cotisations"));
+        set('errors', $errors);
+	    return html('cotisation.register.html.php');
+    }
   }
 
 dispatch('/cotisations/:id/members', 'cotisation_members_list');

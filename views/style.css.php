@@ -65,6 +65,11 @@ body {
 	padding-right:10px;
 }
 
+.content-errors {
+    border: 1px solid #E7E7E7;
+    background-color: #D6D9DC;
+}
+
 a {
 	color:#22A1C4;
 	text-decoration:none;

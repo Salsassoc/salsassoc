@@ -1,5 +1,38 @@
 <?php
 
+  function person_create()
+  {
+    $person = array(
+        'firstname' => '',
+        'lastname' => '',
+        'gender' => 0,
+        'birthdate' => null,
+        'email' => null,
+        'phonenumber' => null,
+        'image_rights' => null,
+        'comments' => null 
+    );
+    return $person;
+  }
+
+  function person_load()
+  {
+    $valueGender = 0;
+    $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
+	$valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
+    $person = array(
+        'firstname' => $_POST['Firstname'],
+        'lastname' => $_POST['Lastname'],
+        'gender' => $valueGender,
+        'birthdate' => $_POST['Birthdate'],
+        'email' => $_POST['Email'],
+        'phonenumber' => $_POST['Phonenumber'],
+        'image_rights' => $valueImagerights,
+        'comments' => $valueComments 
+    );
+    return $person;
+  }
+
   function person_list($bCurrentOnly)
   {
 	$webuser = loadWebUser();
@@ -57,7 +90,7 @@ dispatch('/members/add', 'person_add');
 		redirect_to('/login'); return;
 	}
 
-	$person = array('firstname' => '', 'lastname' => '', 'birthdate' => '', 'email' => '', 'phonenumber' => '', 'image_rights' => '', 'comments' => '');
+	$person = person_create();
 	set('person', $person);
 
     set('page_title', TS::Person_AddMember);
@@ -94,6 +127,55 @@ dispatch('/members/:id', 'person_view');
     }
   }
 
+  function person_save($conn, $id, $person, &$errors)
+  {
+    $res = true;
+
+    // Check data
+    if($person['firstname'] == ""){
+        $errors[] = "Firstname cannot be empty";
+        $res = false;
+    }
+    if($person['lastname'] == ""){
+        $errors[] = "Lastname cannot be empty";
+        $res = false;
+    }
+
+    if($res){
+        if($id==0){
+        	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, email, phonenumber, image_rights, comments, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :email, :phonenumber, :image_rights, :comments, date(\'now\'), 1)';
+	    }else{
+        	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, comments=:comments WHERE id=:id';
+	    }
+
+	    $stmt = $conn->prepare($sql);
+	    if(!$stmt){
+		    $errors[] = $conn->errorInfo();
+	    }else{
+		    if($id!=0){
+			    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+		    }else{
+			    //$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
+		    }
+		    $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
+		    $stmt->bindParam(':lastname', $_POST['Lastname'], PDO::PARAM_STR, 50);
+		    $stmt->bindParam(':gender', $valueGender, PDO::PARAM_INT);
+		    $stmt->bindParam(':birthdate', $_POST['Birthdate'], PDO::PARAM_STR, 10);
+		    $stmt->bindParam(':email', $_POST['Email'], PDO::PARAM_STR, 100);
+		    $stmt->bindParam(':phonenumber', $_POST['Phonenumber'], PDO::PARAM_STR, 50);
+		    $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
+		    $stmt->bindParam(':image_rights', $valueImagerights, PDO::PARAM_STR);
+		    $valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
+		    $stmt->bindParam(':comments', $valueComments, PDO::PARAM_STR);
+		    $res = $stmt->execute();
+            if($res){
+		        $errors[] = $conn->errorInfo();
+            }
+	    }
+    }
+    return $res;
+  }
+
 dispatch_post('/members/:id/edit', 'person_edit');
   function person_edit()
   {
@@ -106,35 +188,11 @@ dispatch_post('/members/:id/edit', 'person_edit');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
-	if($id==0){
-    	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, email, phonenumber, image_rights, comments, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :email, :phonenumber, :image_rights, :comments, date(\'now\'), 1)';
-	}else{
-    	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, comments=:comments WHERE id=:id';
-	}
 
-	$stmt = $conn->prepare($sql);
-	if(!$stmt){
-		print_r($conn->errorInfo());
-	}else{
-		if($id!=0){
-			$stmt->bindParam(':id', $id, PDO::PARAM_INT);
-		}else{
-			//$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
-		}
-		$stmt->bindParam(':firstname', $_POST['Firstname'], PDO::PARAM_STR, 50);
-		$stmt->bindParam(':lastname', $_POST['Lastname'], PDO::PARAM_STR, 50);
-		$valueGender = 0;
-		$stmt->bindParam(':gender', $valueGender, PDO::PARAM_INT);
-		$stmt->bindParam(':birthdate', $_POST['Birthdate'], PDO::PARAM_STR, 10);
-		$stmt->bindParam(':email', $_POST['Email'], PDO::PARAM_STR, 100);
-		$stmt->bindParam(':phonenumber', $_POST['Phonenumber'], PDO::PARAM_STR, 50);
-		$valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
-		$stmt->bindParam(':image_rights', $valueImagerights, PDO::PARAM_STR);
-		$valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
-		$stmt->bindParam(':comments', $valueComments, PDO::PARAM_STR);
-		$res = $stmt->execute();
-		print_r($stmt->errorInfo());
-	}
+    $person = person_load();
+    $errors = array();
+
+    $res = person_save($conn, $id, $person, $errors);
 
 	if($res){
 		if($id == 0){
@@ -143,8 +201,12 @@ dispatch_post('/members/:id/edit', 'person_edit');
 		redirect_to('/members/'.$id);
 		return;
 	}else{
-        set('page_title', "Bad request");
-        return html('error.html.php');
+        set('person', $person);
+        set('errors', $errors);
+
+        set('page_title', TS::Person_AddMember);
+        set('page_submenus', getSubMenus("members"));
+        return html('person.html.php');
 	}
 }
 
