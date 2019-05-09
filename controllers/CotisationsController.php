@@ -1,5 +1,26 @@
 <?php
 
+  function cotisation_member_load()
+  {
+    $$cotisation_members = array();
+
+        
+    
+    $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
+	$valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
+    $person = array(
+        'firstname' => $_POST['Firstname'],
+        'lastname' => $_POST['Lastname'],
+        'gender' => $valueGender,
+        'birthdate' => $_POST['Birthdate'],
+        'email' => $_POST['Email'],
+        'phonenumber' => $_POST['Phonenumber'],
+        'image_rights' => $valueImagerights,
+        'comments' => $valueComments 
+    );
+    return $person;
+  }
+
   function cotisation_list($membershipOnly)
   {
 	$webuser = loadWebUser();
@@ -134,6 +155,7 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
     // Save data
     if($res){
         $person = person_load();
+        $cotisation_member = cotisation_member_load();
         $errors = array();    
 
         $conn->beginTransaction();

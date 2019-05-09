@@ -9,6 +9,7 @@ class TS {
 	const No = "No";
 	const Unknown = "Unknown";
 	const Currency = "EUR";
+	const Date = "Date";
 
 	// Main
 	const Main_Welcome = "Welcome to ".TS::AppName." manager !";

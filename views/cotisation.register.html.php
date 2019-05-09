@@ -49,6 +49,8 @@ $formAction=url_for('/cotisations/register');
 <fieldset>
     <legend><?php echo TS::Cotisation_CotisationList; ?></legend>
 
+    <input type="hidden" name="CotisationCount" value="<?php echo count($cotisations); ?>" />
+
 	<table>
 <?php
 	foreach($cotisations as $cotisation){
@@ -56,19 +58,29 @@ $formAction=url_for('/cotisations/register');
 ?>
       <tr>
         <td><?php echo $cotisation["label"]; ?></td>
-        <td><input type="hidden" name="Cotisation['<?php $count; ?>'][Id]" value="<?php echo $cotisation["id"] ?>" /></td>
-        <td>
-           <select name="Cotisation['<?php $count; ?>'][PaymentMethod]">
-             <option value="">-- <?php echo TS::Unknown ?> --</option>
-             <option value="1"><?php echo TS::PaymentMethod_Check ?></option>
-             <option value="2"><?php echo TS::PaymentMethod_Cash ?></option>
-           </select>
-        </td>
-        <td><input type="Text" name="Cotisation['<?php $count; ?>'][Amount]" value="<?php echo $cotisation["amount"] ?>" /> <?php echo TS::Currency; ?></td>
+        <td><input type="hidden" name="CotisationMember['<?php $count; ?>'][CotisationId]" value="<?php echo $cotisation["id"] ?>" /></td>
+        <td><input type="Text" name="CotisationMember['<?php $count; ?>'][Amount]" value="<?php echo $cotisation["amount"] ?>" /> <?php echo TS::Currency; ?></td>
       </tr>
 <?php
 	}	
 ?>
+      <tr>
+        <td><?php echo  TS::Payment_Payment; ?></td>
+        <td colspan="2">
+            <select name="CotisationMember_PaymentMethod">
+                <option value="">-- <?php echo TS::Unknown ?> --</option>
+                <option value="1"><?php echo TS::PaymentMethod_Check ?></option>
+                <option value="2"><?php echo TS::PaymentMethod_Cash ?></option>
+            </select>
+        </td>
+      </tr>
+      <tr>
+        <td><?php echo TS::Date; ?></td>
+        <td colspan="2">
+            <input type="Text" name="CotisationMember_Date" value="<?php echo date("Y-m-d") ?>" />
+        </td>
+      </tr>
+
 	</table>
 
 </fieldset>
