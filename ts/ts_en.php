@@ -11,7 +11,7 @@ class TS {
 	const Currency = "EUR";
 
 	// Main
-	const Main_Welcome = "Welcome to ".AppName." manager !";
+	const Main_Welcome = "Welcome to ".TS::AppName." manager !";
 	const Main_Menu_Members = "Members";
 	const Main_Menu_People = "People";
 	const Main_Menu_Cotisations = "Cotisations";
