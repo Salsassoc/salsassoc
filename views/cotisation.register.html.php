@@ -20,7 +20,7 @@ $formAction=url_for('/cotisations/register');
     </div>
     <div class='form-row'>
       <label><?php echo TS::Person_Birthdate; ?></label>
-      <input type="text" name="Birthdate" value="<?php echo $person['birthdate'] ?>" />
+      <input type="text" name="Birthdate" value="<?php echo $person['birthdate'] ?>" placeholder="YYYY-MM-DD" />
     </div>
     <div class='form-row'>
       <label><?php echo TS::Person_Email; ?></label>
@@ -40,9 +40,7 @@ $formAction=url_for('/cotisations/register');
     </div>
     <div class='form-row'>
       <label><?php echo TS::Person_Comments; ?></label>
-      <textarea name="Comments" cols="50" rows="10">
-        <?php echo $person['comments']; ?>
-      </textarea>
+      <textarea name="Comments" cols="50" rows="10"><?php echo $person['comments']; ?></textarea>
     </div>
 </fieldset>
 
@@ -53,15 +51,17 @@ $formAction=url_for('/cotisations/register');
 
 	<table>
 <?php
+	$count = 0;
 	foreach($cotisations as $cotisation){
-		$count = 0;
 ?>
       <tr>
         <td><?php echo $cotisation["label"]; ?></td>
-        <td><input type="hidden" name="CotisationMember['<?php $count; ?>'][CotisationId]" value="<?php echo $cotisation["id"] ?>" /></td>
-        <td><input type="Text" name="CotisationMember['<?php $count; ?>'][Amount]" value="<?php echo $cotisation["amount"] ?>" /> <?php echo TS::Currency; ?></td>
+        <td><input type="hidden" name="CotisationMember_<?php echo $count; ?>_CotisationId" value="<?php echo $cotisation["id"] ?>" /></td>
+        <td><input type="text" name="CotisationMember_<?php echo $count; ?>_Amount" value="<?php echo $cotisation["amount"] ?>" /> <?php echo TS::Currency; ?></td>
       </tr>
 <?php
+
+        $count++;
 	}	
 ?>
       <tr>

@@ -23,7 +23,7 @@ if(isset($person['id'])){
     </div>
     <div class='form-row'>
       <label><?php echo TS::Person_Birthdate; ?></label>
-      <input type="text" name="Birthdate" value="<?php echo $person['birthdate'] ?>" />
+      <input type="text" name="Birthdate" value="<?php echo $person['birthdate'] ?>" placeholder="YYYY-MM-DD" />
     </div>
     <div class='form-row'>
       <label><?php echo TS::Person_Email; ?></label>
@@ -43,9 +43,7 @@ if(isset($person['id'])){
     </div>
     <div class='form-row'>
       <label><?php echo TS::Person_Comments; ?></label>
-      <textarea name="Comments" cols="50" rows="10">
-        <?php echo $person['comments']; ?>
-      </textarea>
+      <textarea name="Comments" cols="50" rows="10"><?php echo $person['comments']; ?></textarea>
     </div>
 </fieldset>
 

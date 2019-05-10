@@ -46,5 +46,11 @@ class TSHelper
 		}
 		return "";
 	}
+
+
+	public static function pdoErrorText($pdoErrors)
+	{
+		return sprintf(TS::DatabaseError, $pdoErrors[0], $pdoErrors[1], $pdoErrors[2]);
+	}
 };
 ?>

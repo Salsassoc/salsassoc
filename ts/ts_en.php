@@ -11,6 +11,8 @@ class TS {
 	const Currency = "EUR";
 	const Date = "Date";
 
+	const DatabaseError = "Database error : %s => %s : %s";
+
 	// Main
 	const Main_Welcome = "Welcome to ".TS::AppName." manager !";
 	const Main_Menu_Members = "Members";

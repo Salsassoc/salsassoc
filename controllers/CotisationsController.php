@@ -1,57 +1,70 @@
 <?php
 
-  function cotisation_member_load()
+  function cotisations_member_load()
   {
-    $cotisation_members = array();
+    $cotisations_member = array();
     
-    $cotisation_members["payment_method"] = $_POST['CotisationMember_PaymentMethod'];
-    $cotisation_members["date"] = $_POST['CotisationMember_Date'];
-    $cotisation_members["cotisations"] = array();
+    $cotisations_member["payment_method"] = $_POST['CotisationMember_PaymentMethod'];
+    $cotisations_member["date"] = $_POST['CotisationMember_Date'];
+    $cotisations_member["cotisations"] = array();
 
     $count = $_POST['CotisationCount'];
     for($i = 0; $i < $count; $i++){
-        $key = "CotisationMember['.$i.'][CotisationId]";
+        $key = "CotisationMember_${i}_CotisationId";
         $cotisation_id = $_POST[$key];
-        $key = "CotisationMember['.$i.'][Amount]";
+        $key = "CotisationMember_${i}_Amount";
         $cotisation_amount = $_POST[$key];
         $cotisation = array("id" => $cotisation_id, "amount" => $cotisation_amount);
-        $cotisation_members["cotisations"][$i] = $cotisation;
+        $cotisations_member["cotisations"][$i] = $cotisation;
     }
     
-    return $cotisation_members;
+    return $cotisations_member;
   }
 
-  function person_save($conn, &$id, $cotisation_members, &$errors)
+  function cotisations_member_save($conn, $person_id, $cotisations_member, &$errors)
   {
     $res = true;
 
     // Check data
-    if($cotisation_members['payment_method'] == ""){
+    if($cotisations_member['payment_method'] == ""){
         $errors[] = "Payment method cannot be empty";
         $res = false;
     }
 
+	$stmt = null;
     if($res){
-        $sql =  'INSERT INTO cotisation_member (person_id, cotisation_id, date, amount, payment_method) VALUES (:person_id, :cotisation_id, :date, :amount, :payment_method)';
+        $sql = 'INSERT INTO cotisation_member (person_id, cotisation_id, date, amount, payment_method) VALUES (:person_id, :cotisation_id, :date, :amount, :payment_method)';
 	    $stmt = $conn->prepare($sql);
 	    if(!$stmt){
             $res = false;
-		    $errors[] = $conn->errorInfo();
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
 	    }
     }
 
-    if($res){
-	    $stmt->bindParam(':person_id', $person['firstname'], PDO::PARAM_STR, 50);
-	    $stmt->bindParam(':cotisation_id', $cotisation_members[0]['payment_method'], PDO::PARAM_STR, 50);
-	    $stmt->bindParam(':date', $cotisation_members['date'], PDO::PARAM_INT);
-	    $stmt->bindParam(':amount', $_POST['Birthdate'], PDO::PARAM_STR, 10);
-	    $stmt->bindParam(':payment_method', $cotisation_members['payment_method'], PDO::PARAM_STR, 100);
-	    $res = $stmt->execute();
-        if(!$res){
-	        $errors[] = $conn->errorInfo();
-        }
+	if($res){
+		print_r($cotisations_member);
+
+		$stmt->bindParam(':person_id', $person_id, PDO::PARAM_INT);
+		$stmt->bindParam(':date', $cotisations_member["date"], PDO::PARAM_STR);
+		$stmt->bindParam(':payment_method', $cotisations_member['payment_method'], PDO::PARAM_INT);
+		foreach($cotisations_member["cotisations"] as $cotisation_member){
+
+			if($cotisation_member['amount'] != ""){
+				$cotisation_id = $cotisation_member['id'];
+				$cotisation_amount = $cotisation_member['amount'];
+
+				$stmt->bindParam(':cotisation_id', $cotisation_id, PDO::PARAM_INT);
+				$stmt->bindParam(':amount', $cotisation_amount, PDO::PARAM_INT);
+				$res = $stmt->execute();
+				if(!$res){
+					$errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+					break;
+				}
+			}
+		}
     }
     return $res;
+  }
 
   function cotisation_list($membershipOnly)
   {
@@ -119,7 +132,7 @@ dispatch('/cotisations/membership', 'cotisation_list_membership');
     // Load person
     if($res){
 	    if($person_id != null){
-	      $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, comments
+	      $sql = 'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, comments
 			    FROM person
 			    WHERE id = '.$person_id;
 	      $stmt = $conn->prepare($sql);
@@ -167,6 +180,7 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
 	}
 
     $res = true;
+    $errors = array();
 
     $conn = $GLOBALS['db_connexion'];
 
@@ -187,13 +201,12 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
     // Save data
     if($res){
         $person = person_load();
-        $cotisation_member = cotisation_member_load();
-        $errors = array();    
+        $cotisations_member = cotisations_member_load();
 
         $conn->beginTransaction();
-        $res = person_save($conn, $person['id'], $person, $errors);
+        $res = person_save($conn, (isset($person['id']) ? $person['id'] : null), $person, $errors);
         if($res){
-
+        	$res = cotisations_member_save($conn, $person['id'], $cotisations_member, $errors);
         }
         if($res){
             $conn->commit();
@@ -207,7 +220,7 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
     }else{
 	    set('person', $person);
 	    set('cotisations', $cotisations);
-        set('cotisation_members', $cotisation_members);
+        set('cotisations_member', $cotisations_member);
 
 	    set('page_title', TS::Cotisation_CotisationRegister);
 	    set('page_submenus', getSubMenus("cotisations"));

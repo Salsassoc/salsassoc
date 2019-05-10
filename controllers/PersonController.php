@@ -141,6 +141,8 @@ dispatch('/members/:id', 'person_view');
         $res = false;
     }
 
+	// Prepare the query
+	$stmt = null;
     if($res){
         if($id==0){
         	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, email, phonenumber, image_rights, comments, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :email, :phonenumber, :image_rights, :comments, date(\'now\'), 1)';
@@ -150,31 +152,37 @@ dispatch('/members/:id', 'person_view');
 
 	    $stmt = $conn->prepare($sql);
 	    if(!$stmt){
-		    $errors[] = $conn->errorInfo();
-	    }else{
-		    if($id!=0){
-			    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-		    }else{
-			    //$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
-		    }
-		    $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
-		    $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
-		    $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
-		    $stmt->bindParam(':birthdate', $person['birthdate'], PDO::PARAM_STR, 10);
-		    $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
-		    $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
-		    $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);
-		    $stmt->bindParam(':comments', $person['comments'], PDO::PARAM_STR);
-		    $res = $stmt->execute();
-            if($res){
-                if($id!=0){
-			        $person["id"] = $conn->lastInsertId();
-                }
-            }else{
-		        $errors[] = $conn->errorInfo();
-            }
+			$res = false;
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
 	    }
+
+	}
+
+	// Execute the query
+	if($res){
+	    if($id!=0){
+		    $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+	    }else{
+		    //$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
+	    }
+	    $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
+	    $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
+	    $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
+	    $stmt->bindParam(':birthdate', $person['birthdate'], PDO::PARAM_STR, 10);
+	    $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
+	    $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
+	    $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);
+	    $stmt->bindParam(':comments', $person['comments'], PDO::PARAM_STR);
+	    $res = $stmt->execute();
+        if($res){
+            if($id==0){
+		        $person["id"] = $conn->lastInsertId();
+            }
+        }else{
+	        $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
     }
+
     return $res;
   }
 
