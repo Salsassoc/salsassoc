@@ -21,6 +21,7 @@
     $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
 	$valueComments = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
     $person = array(
+        'id' => $_POST['PersonId'],
         'firstname' => $_POST['Firstname'],
         'lastname' => $_POST['Lastname'],
         'gender' => $valueGender,
@@ -30,6 +31,7 @@
         'image_rights' => $valueImagerights,
         'comments' => $valueComments 
     );
+
     return $person;
   }
 
