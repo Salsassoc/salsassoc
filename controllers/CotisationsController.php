@@ -47,19 +47,17 @@
 		$stmt->bindParam(':person_id', $person_id, PDO::PARAM_INT);
 		$stmt->bindParam(':date', $cotisations_member["date"], PDO::PARAM_STR);
 		$stmt->bindParam(':payment_method', $cotisations_member['payment_method'], PDO::PARAM_INT);
-		foreach($cotisations_member["cotisations"] as $cotisation_member){
+		foreach($cotisations_member["cotisations"] as $cotisation_member)
+        {
+			$cotisation_id = $cotisation_member['id'];
+			$cotisation_amount = $cotisation_member['amount'];
 
-			if($cotisation_member['amount'] != ""){
-				$cotisation_id = $cotisation_member['id'];
-				$cotisation_amount = $cotisation_member['amount'];
-
-				$stmt->bindParam(':cotisation_id', $cotisation_id, PDO::PARAM_INT);
-				$stmt->bindParam(':amount', $cotisation_amount, PDO::PARAM_INT);
-				$res = $stmt->execute();
-				if(!$res){
-					$errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-					break;
-				}
+			$stmt->bindParam(':cotisation_id', $cotisation_id, PDO::PARAM_INT);
+			$stmt->bindParam(':amount', $cotisation_amount, PDO::PARAM_INT);
+			$res = $stmt->execute();
+			if(!$res){
+				$errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+				break;
 			}
 		}
     }
