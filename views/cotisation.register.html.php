@@ -2,6 +2,17 @@
 $formAction=url_for('/cotisations/register');
 ?>
 
+
+    <?php
+        if(isset($person['id'])){
+    ?>
+    <div class='form-row'>
+      <span><?php echo sprintf(TS::Person_MemberId, $person['id']); ?></span>
+    </div>
+    <?php
+        }
+    ?>
+
 <div>
   <form method="POST" action="<?php echo $formAction; ?>" class="form">
 

@@ -49,6 +49,7 @@ class TS {
 	const Person_AddMember = "Add a member";
 	const Person_PersonCount = "Number of members: %d";
 	const Person_Add = "Add";
+    const Person_MemberId = "Member #%d";
 	const Person_Lastname = "Lastname";
 	const Person_Firstname = "Firstname";
 	const Person_Birthdate = "Birthdate";

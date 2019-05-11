@@ -49,6 +49,7 @@ class TS {
 	const Person_AddMember = "Ajouter un membre";
 	const Person_PersonCount = "Nombre d'adhérents : %d";
 	const Person_Add = "Ajouter";
+    const Person_MemberId = "Membre #%d";
 	const Person_Lastname = "Nom";
 	const Person_Firstname = "Prénom";
 	const Person_Birthdate = "Date de naissance";
