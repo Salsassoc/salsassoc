@@ -40,6 +40,7 @@ class TSHelper
 	public static function getPaymentMethod($method)
 	{
 		switch($method){
+		case 0: return TS::PaymentMethod_None;
 		case 1: return TS::PaymentMethod_Check;
 		case 2: return TS::PaymentMethod_Cash;
 		default: break;

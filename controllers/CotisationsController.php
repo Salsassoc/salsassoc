@@ -12,9 +12,11 @@
     for($i = 0; $i < $count; $i++){
         $key = "CotisationMember_${i}_CotisationId";
         $cotisation_id = $_POST[$key];
+        $key = "CotisationMember_${i}_Enabled";
+        $cotisation_enabled = isset($_POST[$key]);
         $key = "CotisationMember_${i}_Amount";
         $cotisation_amount = $_POST[$key];
-        $cotisation = array("id" => $cotisation_id, "amount" => $cotisation_amount);
+        $cotisation = array("id" => $cotisation_id, "enabled" => $cotisation_enabled, "amount" => $cotisation_amount);
         $cotisations_member["cotisations"][$i] = $cotisation;
     }
     
@@ -49,15 +51,17 @@
 		$stmt->bindParam(':payment_method', $cotisations_member['payment_method'], PDO::PARAM_INT);
 		foreach($cotisations_member["cotisations"] as $cotisation_member)
         {
-			$cotisation_id = $cotisation_member['id'];
-			$cotisation_amount = $cotisation_member['amount'];
+			if($cotisation_member['enabled']){
+				$cotisation_id = $cotisation_member['id'];
+				$cotisation_amount = $cotisation_member['amount'];
 
-			$stmt->bindParam(':cotisation_id', $cotisation_id, PDO::PARAM_INT);
-			$stmt->bindParam(':amount', $cotisation_amount, PDO::PARAM_INT);
-			$res = $stmt->execute();
-			if(!$res){
-				$errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-				break;
+				$stmt->bindParam(':cotisation_id', $cotisation_id, PDO::PARAM_INT);
+				$stmt->bindParam(':amount', $cotisation_amount, PDO::PARAM_INT);
+				$res = $stmt->execute();
+				if(!$res){
+					$errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+					break;
+				}
 			}
 		}
     }

@@ -66,6 +66,7 @@ class TS {
 
 	// Payment
 	const Payment_Payment = "Paiement";
+	const PaymentMethod_None = "Aucun";
 	const PaymentMethod_Check = "Chèque";
 	const PaymentMethod_Cash = "Espèces";
 };
