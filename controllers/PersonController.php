@@ -45,7 +45,7 @@
 	// Compute filter
 	$filter = "";
 	if($bCurrentOnly){
-		$filter .= " WHERE fiscal_year_id = (SELECT id FROM fiscal_year ORDER BY end_date LIMIT 1)";
+		$filter .= " WHERE fiscal_year_id = (SELECT id FROM fiscal_year WHERE is_current IS 'true' ORDER BY end_date LIMIT 1)";
 	}
 
     $conn = $GLOBALS['db_connexion'];
