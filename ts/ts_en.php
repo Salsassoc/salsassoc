@@ -18,7 +18,17 @@ class TS {
 	const Main_Menu_Members = "Members";
 	const Main_Menu_People = "People";
 	const Main_Menu_Cotisations = "Cotisations";
+	const Main_Menu_FiscalYears = "Fiscal years";
 	const Main_Menu_Logout = "(Logout)";
+
+	// Fiscal years
+	const FiscalYear_FiscalYearCount = "Fiscal year count: %d";
+	const FiscalYear_Label = "Label";
+	const FiscalYear_StartDate = "Start date";
+	const FiscalYear_EndDate = "End date";
+	const FiscalYear_Members = "Members";
+	const FiscalYear_MembershipAmount = "Membership amount";
+	const FiscalYear_View = "View";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";

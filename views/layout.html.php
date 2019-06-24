@@ -15,6 +15,7 @@
       <a href="<?php echo url_for('/members')?>"><?php echo TS::Main_Menu_Members; ?></a> |
      <!-- <a href="<?php echo url_for('/people')?>"><?php echo TS::Main_Menu_People; ?></a> |-->
       <a href="<?php echo url_for('/cotisations')?>"><?php echo TS::Main_Menu_Cotisations; ?></a> |
+      <a href="<?php echo url_for('/fiscalyears')?>"><?php echo TS::Main_Menu_FiscalYears; ?></a> |
       <?php   echo $_SESSION['username']; ?>
       <a href="<?php echo url_for('/logout')?>"><?php echo TS::Main_Menu_Logout; ?></a>
       <?php } ?>

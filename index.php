@@ -6,6 +6,7 @@ require_once 'tools/tools.php';
 
 require_once 'controllers/PersonController.php';
 require_once 'controllers/CotisationsController.php';
+require_once 'controllers/FiscalYearController.php';
 
 // Setup locale
 $lang = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2);
@@ -27,6 +28,9 @@ function getSubMenus($menu)
 		$submenus["/cotisations"] = TS::Cotisation_CotisationAll;
 		$submenus["/cotisations/membership"] = TS::Cotisation_CotisationMembership;
 		$submenus["/cotisations/register"] = TS::Cotisation_CotisationRegister;
+	}
+	if($menu == "fiscalyears"){
+		//$submenus["/fiscalyears"] = TS::FiscalYears_FiscalYears;
 	}
 	return $submenus;
 }

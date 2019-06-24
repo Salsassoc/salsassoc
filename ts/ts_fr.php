@@ -18,7 +18,17 @@ class TS {
 	const Main_Menu_Members = "Membres";
 	const Main_Menu_People = "Personnes";
 	const Main_Menu_Cotisations = "Cotisations";
+	const Main_Menu_FiscalYears = "Années fiscales";
 	const Main_Menu_Logout = "(Déconnexion)";
+
+	// Fiscal years
+	const FiscalYear_FiscalYearCount = "Nombre d'année fiscale : %d";
+	const FiscalYear_Label = "Libellé";
+	const FiscalYear_StartDate = "Date début";
+	const FiscalYear_EndDate = "Date de fin";
+	const FiscalYear_Members = "Membres";
+	const FiscalYear_MembershipAmount = "Montant des adhésions";
+	const FiscalYear_View = "Voir";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
@@ -39,6 +49,9 @@ class TS {
 	const Cotisation_Type_Course = "Cours";
 	const Cotisation_CotisationMemberInfos = "Informations du membre";
 	const Cotisation_CotisationList = "Liste des cotisations";
+
+	// Fiscal years
+	const FiscalYears_FiscalYears = "Années fiscales";
 
 	// Person
 	const Person_Members = "Membres";
