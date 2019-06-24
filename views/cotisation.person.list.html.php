@@ -46,7 +46,8 @@ Number of old members : <?php echo $iTotalOldMembers; ?> (<?php echo round(($iTo
   <td><?php echo TSHelper::getCurrencyText($person['amount']); ?></td>
   <td><?php echo TSHelper::getPaymentMethod($person['payment_method']); ?></td>
   <td>
-    <a href="<?php echo url_for('/members', $person['id'])?>"><?php echo TS::Person_View; ?></a>
+    <a href="<?php echo url_for('/members', $person['id'])?>"><?php echo TS::Person_View; ?></a> - 
+    <a href="<?php echo url_for('/cotisations/register/member', $person['id'])?>"><?php echo TS::Cotisation_NewRegister; ?></a>
   </td>
 </tr>
 <?php

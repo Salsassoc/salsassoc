@@ -35,6 +35,7 @@ class TS {
 	const Cotisation_CotisationAll = "Toutes les cotisations";
 	const Cotisation_CotisationMembership = "Adhésions uniquement";
 	const Cotisation_CotisationRegister = "Enregistrer une adhésion";
+	const Cotisation_NewRegister = "Nouvelle adhésion";
 	const Cotisation_CotisationCount = "Nombre de cotisation : %d";
 	const Cotisation_Label = "Libellé";
 	const Cotisation_Type = "Type";
@@ -61,6 +62,7 @@ class TS {
 	const Person_AddMember = "Ajouter un membre";
 	const Person_PersonCount = "Nombre d'adhérents : %d";
 	const Person_Add = "Ajouter";
+    const Person_MemberId = "Membre #%d";
 	const Person_Lastname = "Nom";
 	const Person_Firstname = "Prénom";
 	const Person_Birthdate = "Date de naissance";
@@ -77,6 +79,7 @@ class TS {
 
 	// Payment
 	const Payment_Payment = "Paiement";
+	const PaymentMethod_None = "Aucun";
 	const PaymentMethod_Check = "Chèque";
 	const PaymentMethod_Cash = "Espèces";
 };

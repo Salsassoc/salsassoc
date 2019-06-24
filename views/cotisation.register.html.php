@@ -2,6 +2,17 @@
 $formAction=url_for('/cotisations/register');
 ?>
 
+
+    <?php
+        if(isset($person['id'])){
+    ?>
+    <div class='form-row'>
+      <span><?php echo sprintf(TS::Person_MemberId, $person['id']); ?></span>
+    </div>
+    <?php
+        }
+    ?>
+
 <div>
   <form method="POST" action="<?php echo $formAction; ?>" class="form">
 
@@ -57,7 +68,9 @@ $formAction=url_for('/cotisations/register');
       <tr>
         <td><?php echo $cotisation["label"]; ?></td>
         <td><input type="hidden" name="CotisationMember_<?php echo $count; ?>_CotisationId" value="<?php echo $cotisation["id"] ?>" /></td>
-        <td><input type="text" name="CotisationMember_<?php echo $count; ?>_Amount" value="<?php echo $cotisation["amount"] ?>" /> <?php echo TS::Currency; ?></td>
+        <td>
+            <input type="checkbox" name="CotisationMember_<?php echo $count; ?>_Enabled" checked="checked" />
+            <input type="text" name="CotisationMember_<?php echo $count; ?>_Amount" value="<?php echo $cotisation["amount"] ?>" /> <?php echo TS::Currency; ?></td>
       </tr>
 <?php
 
@@ -69,6 +82,7 @@ $formAction=url_for('/cotisations/register');
         <td colspan="2">
             <select name="CotisationMember_PaymentMethod">
                 <option value="">-- <?php echo TS::Unknown ?> --</option>
+                <option value="0"><?php echo TS::PaymentMethod_None ?></option>
                 <option value="1"><?php echo TS::PaymentMethod_Check ?></option>
                 <option value="2"><?php echo TS::PaymentMethod_Cash ?></option>
             </select>

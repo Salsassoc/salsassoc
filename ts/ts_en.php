@@ -35,6 +35,7 @@ class TS {
 	const Cotisation_CotisationAll = "All cotisations";
 	const Cotisation_CotisationMembership = "Membership only";
 	const Cotisation_CotisationRegister = "Register a membership";
+	const Cotisation_NewRegister = "New membership";
 	const Cotisation_CotisationCount = "Cotisation count: %d";
 	const Cotisation_Label = "Label";
 	const Cotisation_Type = "Type";
@@ -58,6 +59,7 @@ class TS {
 	const Person_AddMember = "Add a member";
 	const Person_PersonCount = "Number of members: %d";
 	const Person_Add = "Add";
+    const Person_MemberId = "Member #%d";
 	const Person_Lastname = "Lastname";
 	const Person_Firstname = "Firstname";
 	const Person_Birthdate = "Birthdate";
@@ -74,6 +76,7 @@ class TS {
 
 	// Payment
 	const Payment_Payment = "Payment";
+	const PaymentMethod_None = "None";
 	const PaymentMethod_Check = "Check";
 	const PaymentMethod_Cash = "Cash";
 };
