@@ -30,6 +30,10 @@ class TS {
 	const FiscalYear_Members = "Membres";
 	const FiscalYear_MembershipAmount = "Montant des adhésions";
 	const FiscalYear_View = "Voir";
+	const FiscalYear_Form_GlobalInfo = "Informations globales";
+	const FiscalYear_Title = "Titre";
+	const FiscalYear_IsCurrent = "Année en cours";
+	const FiscalYear_EditFiscalYear = "Modification d'une année fiscale";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
