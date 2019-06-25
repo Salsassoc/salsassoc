@@ -24,6 +24,7 @@ class TS {
 	// Fiscal years
 	const FiscalYear_FiscalYearCount = "Fiscal year count: %d";
 	const FiscalYear_Label = "Label";
+	const FiscalYear_YearTitle = "Year #%d";
 	const FiscalYear_StartDate = "Start date";
 	const FiscalYear_EndDate = "End date";
 	const FiscalYear_Members = "Members";

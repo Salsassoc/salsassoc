@@ -107,7 +107,7 @@ dispatch('/fiscalyears', 'fiscalyears_list');
     $conn = $GLOBALS['db_connexion'];
 
 	// Get fiscal years list
-    $sql =  'SELECT id, start_date, end_date, is_current FROM fiscal_year';
+    $sql =  'SELECT id, title, start_date, end_date, is_current FROM fiscal_year';
 	$sql .= ' ORDER BY start_date DESC';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();

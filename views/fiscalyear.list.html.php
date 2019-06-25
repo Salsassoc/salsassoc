@@ -29,13 +29,20 @@
 		$tabFiscalYearsAmount[$fiscalyearamount['fiscal_year_id']] = $fiscalyearamount['total_amount'];
 	}
 
-
     foreach  ($fiscalyears as $fiscalyear)
     {
 		$fiscalyear_id = $fiscalyear['id'];
 ?> 
 <tr>
-  <td><?php echo $fiscalyear['id'] ?></td>
+  <td>
+    <?php
+	  $title = $fiscalyear['title'];
+      if($title == ""){
+		$title = sprintf(TS::FiscalYear_YearTitle, $fiscalyear_id);
+	  }
+      echo $title;
+	?>
+  </td>
   <td><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['start_date']) ?></td>
   <td><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['end_date']) ?></td>
   <td>
