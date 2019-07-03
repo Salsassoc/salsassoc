@@ -19,6 +19,7 @@ class TS {
 	const Main_Menu_People = "People";
 	const Main_Menu_Cotisations = "Cotisations";
 	const Main_Menu_FiscalYears = "Fiscal years";
+	const Main_Menu_Accounting = "Accounting";
 	const Main_Menu_Logout = "(Logout)";
 
 	// Fiscal years
@@ -78,6 +79,22 @@ class TS {
 	const Person_OldMember = "Old member";
 	const Person_Form_GlobalInfo = "Global information";
 	const Person_Comments = "Comments";
+
+    // Accounting
+    const Accounting_OperationAll = "All operations";
+
+    // Accounting operation
+    const AccountingOperation_OperationCount = "Operation count: %d";
+    const AccountingOperation_Label = "Label";
+    const AccountingOperation_Category = "Category";
+    const AccountingOperation_DateValue = "Date";
+    const AccountingOperation_Type = "Type";
+    const AccountingOperation_Amount = "Amount";
+    const AccountingOperation_View = "View";
+
+    // Accounting operation type
+    const AccountingOperationType_Debit = "Debit";
+    const AccountingOperationType_Credit = "Credit";
 
 	// Payment
 	const Payment_Payment = "Payment";

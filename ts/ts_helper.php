@@ -48,6 +48,15 @@ class TSHelper
 		return "";
 	}
 
+	public static function getAccountingOperationType($type)
+	{
+		switch($type){
+		case 1: return TS::AccountingOperationType_Debit;
+		case 2: return TS::AccountingOperationType_Credit;
+		default: break;
+		}
+		return "";
+	}
 
 	public static function pdoErrorText($pdoErrors)
 	{
