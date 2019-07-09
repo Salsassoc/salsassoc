@@ -8,7 +8,6 @@
   <th><?php echo TS::AccountingOperation_Label; ?></th>
   <th><?php echo TS::AccountingOperation_Category; ?></th>
   <th><?php echo TS::AccountingOperation_DateValue; ?></th>
-  <th><?php echo TS::AccountingOperation_Type; ?></th>
   <th><?php echo TS::AccountingOperation_Amount; ?></th>
   <th><?php echo TS::AccountingOperation_View; ?></th>
 </tr>
@@ -27,15 +26,9 @@
   </td>
   <td><?php echo $operation['category'] ?></td>
   <td><?php echo TSHelper::getShortDateTextFromDBDate($operation['date_value']) ?></td>
-  <td><?php echo TSHelper::getAccountingOperationType($operation['operation_type']) ?></td>
   <td>
 	<?php
-		$amount=0.0;
-		if($operation['operation_type'] == 1){
-			$amount = -$operation['amount'];
-		}else{
-			$amount = $operation['amount'];
-        }
+		$amount = $operation['amount'];
 		echo TSHelper::getCurrencyText($amount);
 	?>
   </td>

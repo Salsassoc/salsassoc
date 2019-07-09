@@ -36,7 +36,7 @@ dispatch('/accounting', 'accounting_operation_list');
     $conn = $GLOBALS['db_connexion'];
 
 	// Get foperation list
-    $sql =  'SELECT id, label, category, operation_type, date_value, amount FROM accounting_operation';
+    $sql =  'SELECT id, label, category, date_value, amount FROM accounting_operation';
 	$sql .= ' ORDER BY date_value DESC';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();

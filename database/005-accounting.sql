@@ -14,7 +14,6 @@ CREATE TABLE IF NOT EXISTS accounting_operation (
    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
    label VARCHAR(100) NOT NULL,
    category INTEGER NULL,
-   operation_type INTEGER NOT NULL,
    date_value DATE NOT NULL,
    amount FLOAT NOT NULL,
    payment_method INTEGER NULL,
