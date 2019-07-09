@@ -1,8 +1,7 @@
 CREATE TABLE IF NOT EXISTS accounting_account (
    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
    label VARCHAR(100) NOT NULL,
-   type INTEGER NOT NULL,
-   initial_amount FLOAT NOT NULL,
+   type INTEGER NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS accounting_operation_category (

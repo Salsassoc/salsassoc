@@ -31,7 +31,8 @@ function getSubMenus($menu)
 		$submenus["/cotisations/register"] = TS::Cotisation_CotisationRegister;
 	}
 	if($menu == "accounting"){
-		$submenus["/accounting"] = TS::Accounting_OperationAll;
+		$submenus["/accounting/operations"] = TS::Accounting_OperationAll;
+		$submenus["/accounting/accounts"] = TS::Accounting_Accounts;
 	}
 	if($menu == "fiscalyears"){
 		//$submenus["/fiscalyears"] = TS::FiscalYears_FiscalYears;

@@ -85,6 +85,7 @@ class TS {
 
     // Accounting
     const Accounting_OperationAll = "Toutes les opérations";
+    const Accounting_Accounts = "Comptes";
 
     // Accounting operation
     const AccountingOperation_OperationCount = "Nombre d'opération : %d";
@@ -98,6 +99,13 @@ class TS {
     // Accounting operation type
     const AccountingOperationType_Debit = "Débit";
     const AccountingOperationType_Credit = "Crédit";
+
+    // Accountint account
+    const AccountingAccount_AccountCount = "Nombre de compte: %d";
+    const AccountingAccount_Label = "Libellé";
+    const AccountingAccount_Type = "Type";
+    const AccountingAccount_Amount = "Montant";
+    const AccountingAccount_View = "Voir";
 
 	// Payment
 	const Payment_Payment = "Paiement";

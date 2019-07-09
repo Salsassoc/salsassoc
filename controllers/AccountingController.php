@@ -26,6 +26,7 @@
   }
 
 dispatch('/accounting', 'accounting_operation_list');
+dispatch('/accounting/operations', 'accounting_operation_list');
   function accounting_operation_list()
   {
 	$webuser = loadWebUser();
@@ -51,6 +52,38 @@ dispatch('/accounting', 'accounting_operation_list');
         set('page_title', "Accounting");
         set('page_submenus', getSubMenus("accounting"));
         return html('accounting.operation.list.html.php');
+    }
+
+    set('page_title', "Bad request");
+    return html('error.html.php');
+  }
+
+dispatch('/accounting/accounts', 'accounting_account_list');
+  function accounting_account_list()
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $conn = $GLOBALS['db_connexion'];
+
+	// Get foperation list
+    $sql =  'SELECT id, label, type FROM accounting_account';
+	$sql .= ' ORDER BY type, label';
+    $stmt = $conn->prepare($sql);
+    $res = $stmt->execute();
+    if ($res) {
+        $results = $stmt->fetchAll();
+        set('accounts', $results);
+
+	}
+
+	// Render data
+	if($res){
+        set('page_title', "Accounts");
+        set('page_submenus', getSubMenus("accounting"));
+        return html('accounting.account.list.html.php');
     }
 
     set('page_title', "Bad request");
