@@ -130,7 +130,7 @@ h1 {
 }
 
 .form {
-	width: 50%;
+	min-width: 800px;
 }
 
 .form-row {
@@ -152,4 +152,27 @@ h1 {
 
 .form-row label {
   margin-bottom: 5px;
+}
+
+
+legend {
+  margin: 5px 0px 5px 0px;
+  font-weight: bold;
+}
+
+.table-column-left
+{
+    
+}
+
+.table-column-left
+{
+    padding-right: 4px;
+    vertical-align: top;
+}
+
+.table-column-right
+{
+    padding-left: 4px;
+    vertical-align: top;
 }

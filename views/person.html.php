@@ -7,7 +7,12 @@ if(isset($person['id'])){
 }
 ?>
 
-<div>
+<table class="table-column">
+<tr>
+
+<!-- left side -->
+<td class="table-column-left">
+
   <form method="POST" action="<?php echo $formAction; ?>" class="form">
 
   <fieldset>
@@ -50,13 +55,18 @@ if(isset($person['id'])){
 <input type="submit" value="<?php echo ($bAdd ? 'Add' : 'Save'); ?>">
 
 </form>
-</div>
+
+</td>
+
+<!-- right side -->
+<td class="table-column-right">
 
 <?php
 if(!$bAdd){
 ?>
 
-<h2>Cotisations</h2>
+  <fieldset>
+    <legend><?php echo TS::Cotisation_Cotisation; ?></legend>
 
 <table class="list">
 <thead>
@@ -78,11 +88,17 @@ if(!$bAdd){
 </tr>
 <?php
     }
-?> 
+?>
 </tr>
 </tbody>
 </table>
 
+  </fieldset>
+
 <?php
 }
 ?>
+
+</td>
+</tr>
+</table>
