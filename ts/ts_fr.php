@@ -112,5 +112,10 @@ class TS {
 	const PaymentMethod_None = "Aucun";
 	const PaymentMethod_Check = "Chèque";
 	const PaymentMethod_Cash = "Espèces";
+
+	// Account type
+	const AccountType_Unknown = "Inconnue";
+	const AccountType_CashBox = "Caisse";
+	const AccountType_BankAccount = "Compte bancaire";
 };
 ?>

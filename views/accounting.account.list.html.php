@@ -23,7 +23,7 @@
       echo $account['label'];
 	?>
   </td>
-  <td><?php echo $account['type'] ?></td>
+  <td><?php echo TSHelper::getAccountType($account['type']) ?></td>
   <td>
 	<?php
 		$amount = 0.0;

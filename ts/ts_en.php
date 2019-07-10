@@ -109,5 +109,11 @@ class TS {
 	const PaymentMethod_None = "None";
 	const PaymentMethod_Check = "Check";
 	const PaymentMethod_Cash = "Cash";
+
+	// Account type
+	const AccountType_Unknown = "Unknown";
+	const AccountType_CashBox = "Cash Box";
+	const AccountType_BankAccount = "Bank account";
+
 };
 ?>

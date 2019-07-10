@@ -58,6 +58,16 @@ class TSHelper
 		return "";
 	}
 
+	public static function getAccountType($type)
+	{
+		switch($type){
+		case 1: return TS::AccountType_CashBox;
+		case 2: return TS::AccountType_BankAccount;
+		default: break;
+		}
+		return TS::AccountType_Unknown;
+	}
+
 	public static function pdoErrorText($pdoErrors)
 	{
 		return sprintf(TS::DatabaseError, $pdoErrors[0], $pdoErrors[1], $pdoErrors[2]);
