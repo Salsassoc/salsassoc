@@ -1,27 +1,24 @@
 <?php
 
-  function account_create()
+  function operation_category_create()
   {
     $model = array(
-        'label' => '',
-        'type' => ''
+        'label' => ''
     );
     return $model;
   }
 
-  function account_load()
+  function operation_category_load()
   {
-    $title = ($_POST['Title'] != "" ? $_POST['Title'] : null);
     $model = array(
-        'id' => $_POST['AccountId'],
-        'label' => $_POST['Label'],
-        'type' => $_POST['Type'],
+        'id' => $_POST['Id'],
+        'label' => $_POST['Label']
     );
 
     return $model;
   }
 
- function account_save($conn, $id, &$model, &$errors)
+ function operation_category_save($conn, $id, &$model, &$errors)
   {
     $res = true;
 
@@ -30,18 +27,14 @@
         $errors[] = "Label cannot be empty";
         $res = false;
     }
-    if($model['type'] == ""){
-        $errors[] = "Type cannot be empty";
-        $res = false;
-    }
 
 	// Prepare the query
 	$stmt = null;
     if($res){
         if($id==0){
-        	$sql =  'INSERT INTO accounting_account (label, type) VALUES (:label, :type)';
+        	$sql =  'INSERT INTO accounting_operation_category (label) VALUES (:label)';
 	    }else{
-        	$sql =  'UPDATE accounting_account SET label=:label, type=:type WHERE id=:id';
+        	$sql =  'UPDATE accounting_operation_category SET label=:label WHERE id=:id';
 	    }
 
 	    $stmt = $conn->prepare($sql);
@@ -60,7 +53,6 @@
 		    //$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
 	    }
 	    $stmt->bindParam(':label', $model['label'], PDO::PARAM_STR, 50);
-	    $stmt->bindParam(':type', $model['type'], PDO::PARAM_INT);
 	    $res = $stmt->execute();
         if($res){
             if($id==0){
@@ -74,8 +66,8 @@
     return $res;
   }
 
-dispatch('/accounting/accounts', 'accounting_account_list');
-  function accounting_account_list()
+dispatch('/accounting/operationcategories', 'accounting_operation_category_list');
+  function accounting_operation_category_list()
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
@@ -85,45 +77,45 @@ dispatch('/accounting/accounts', 'accounting_account_list');
     $conn = $GLOBALS['db_connexion'];
 
 	// Get foperation list
-    $sql =  'SELECT id, label, type FROM accounting_account';
-	$sql .= ' ORDER BY type, label';
+    $sql =  'SELECT id, label FROM accounting_operation_category';
+	$sql .= ' ORDER BY label';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
         $results = $stmt->fetchAll();
-        set('accounts', $results);
+        set('operationcategories', $results);
 
 	}
 
 	// Render data
 	if($res){
-        set('page_title', TS::AccountingAccount_List);
+        set('page_title', TS::AccountingOperationCategory_List);
         set('page_submenus', getSubMenus("accounting"));
-        return html('accounting.account.list.html.php');
+        return html('accounting.operationcategory.list.html.php');
     }
 
     set('page_title', "Bad request");
     return html('error.html.php');
   }
 
-dispatch('/accounting/accounts/add', 'account_add');
-  function account_add()
+dispatch('/accounting/operationcategories/add', 'operation_category_add');
+  function operation_category_add()
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
 		redirect_to('/login'); return;
 	}
 
-	$account = account_create();
-	set('account', $account);
+	$operationcategory = operation_category_create();
+	set('operationcategory', $operationcategory);
 
-    set('page_title', TS::Accounting_AccountAdd);
+    set('page_title', TS::AccountingOperationCategory_AddCategory);
     set('page_submenus', getSubMenus("members"));
-    return html('accounting.account.html.php');
+    return html('accounting.operationcategory.html.php');
   }
 
-dispatch('/accounting/accounts/:id', 'account_view');
-  function account_view()
+dispatch('/accounting/operationcategories/:id', 'operation_category_view');
+  function operation_category_view()
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
@@ -132,23 +124,23 @@ dispatch('/accounting/accounts/:id', 'account_view');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
-    $sql = 'SELECT id, label, type FROM accounting_account WHERE id='.$id;
+    $sql = 'SELECT id, label FROM accounting_operation_category WHERE id='.$id;
     $results = $conn->query($sql);
 
     if(count($results) == 1){
-        set('account', $results->fetch());
+        set('operationcategory', $results->fetch());
 
-        set('page_title', sprintf(TS::AccountingAccount_View, $id));
+        set('page_title', sprintf(TS::AccountingOperationCategory_ViewCategory, $id));
         set('page_submenus', getSubMenus("accounting"));
-        return html('accounting.account.html.php');
+        return html('accounting.operationcategory.html.php');
     }else{
         set('page_title', "Bad request");
         return html('error.html.php');
     }
   }
 
-dispatch_post('/accounting/accounts/:id/edit', 'account_edit');
-  function account_edit()
+dispatch_post('/accounting/operationcategories/:id/edit', 'operation_category_edit');
+  function operation_category_edit()
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
@@ -160,24 +152,24 @@ dispatch_post('/accounting/accounts/:id/edit', 'account_edit');
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
 
-    $account = account_load();
+    $operationcategory = operation_category_load();
     $errors = array();
 
-    $res = account_save($conn, $id, $account, $errors);
+    $res = operation_category_save($conn, $id, $operationcategory, $errors);
 
 	if($res){
 		if($id == 0){
 			$id = $conn->lastInsertId();
 		}
-		redirect_to('/accounting/accounts/'.$id);
+		redirect_to('/accounting/operationcategories/'.$id);
 		return;
 	}else{
-        set('account', $account);
+        set('operationcategory', $operationcategory);
         set('errors', $errors);
 
-        set('page_title', TS::AccountingAccount_Add);
+        set('page_title', TS::AccountingOperationCategory_ViewCategory);
         set('page_submenus', getSubMenus("accounting"));
-        return html('accounting.account.html.php');
+        return html('accounting.operationcategory.html.php');
 	}
   }
 

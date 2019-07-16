@@ -87,6 +87,8 @@ class TS {
     const Accounting_OperationAll = "Toutes les opérations";
     const Accounting_Accounts = "Comptes";
     const Accounting_AccountAdd = "Ajouter un compte";
+    const Accounting_OperationCategoryList = "Catégories";
+    const Accounting_OperationCategoryAdd = "Ajouter une categorie";
 
     // Accounting operation
     const AccountingOperation_OperationCount = "Nombre d'opération : %d";
@@ -101,7 +103,17 @@ class TS {
     const AccountingOperationType_Debit = "Débit";
     const AccountingOperationType_Credit = "Crédit";
 
+    // Accountint operation category
+    const AccountingOperationCategory_AddCategory = "Ajouter une categorie";
+    const AccountingOperationCategory_ViewCategory = "Categorie #%d";
+    const AccountingOperationCategory_List = "Liste des categories";
+	const AccountingOperationCategory_Form_GlobalInfo = "Informations globales";
+    const AccountingOperationCategory_Count = "Nombre de categories: %d";
+    const AccountingOperationCategory_Label = "Libellé";
+    const AccountingOperationCategory_View = "Voir";
+
     // Accountint account
+    const AccountingAccount_List = "Liste des comptes";
 	const AccountingAccount_Form_GlobalInfo = "Informations globales";
     const AccountingAccount_AccountCount = "Nombre de compte: %d";
     const AccountingAccount_Label = "Libellé";
