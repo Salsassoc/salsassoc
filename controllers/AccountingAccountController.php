@@ -118,7 +118,7 @@ dispatch('/accounting/accounts/add', 'account_add');
 	set('account', $account);
 
     set('page_title', TS::Accounting_AccountAdd);
-    set('page_submenus', getSubMenus("members"));
+    set('page_submenus', getSubMenus("accounting"));
     return html('accounting.account.html.php');
   }
 
