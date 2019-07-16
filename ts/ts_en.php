@@ -83,6 +83,7 @@ class TS {
     // Accounting
     const Accounting_OperationAll = "All operations";
     const Accounting_Accounts = "Accounts";
+    const Accounting_AccountAdd = "Add account";
 
     // Accounting operation
     const AccountingOperation_OperationCount = "Operation count: %d";
@@ -98,6 +99,7 @@ class TS {
     const AccountingOperationType_Credit = "Credit";
 
     // Accountint account
+	const AccountingAccount_Form_GlobalInfo = "Global information";
     const AccountingAccount_AccountCount = "Account count: %d";
     const AccountingAccount_Label = "Label";
     const AccountingAccount_Type = "Type";
@@ -111,7 +113,7 @@ class TS {
 	const PaymentMethod_Cash = "Cash";
 
 	// Account type
-	const AccountType_Unknown = "Unknown";
+	const AccountType_Other = "Other";
 	const AccountType_CashBox = "Cash Box";
 	const AccountType_BankAccount = "Bank account";
 

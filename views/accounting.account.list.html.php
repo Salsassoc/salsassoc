@@ -31,7 +31,7 @@
 	?>
   </td>
   <td>
-    <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'])?>"><?php echo TS::Cotisation_View; ?></a>
+    <a href="<?php echo url_for('/accounting/accounts/', $account['id'])?>"><?php echo TS::AccountingAccount_View; ?></a>
   </td>
 </tr>
 <?php

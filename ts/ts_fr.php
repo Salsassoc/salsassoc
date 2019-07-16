@@ -86,6 +86,7 @@ class TS {
     // Accounting
     const Accounting_OperationAll = "Toutes les opérations";
     const Accounting_Accounts = "Comptes";
+    const Accounting_AccountAdd = "Ajouter un compte";
 
     // Accounting operation
     const AccountingOperation_OperationCount = "Nombre d'opération : %d";
@@ -101,6 +102,7 @@ class TS {
     const AccountingOperationType_Credit = "Crédit";
 
     // Accountint account
+	const AccountingAccount_Form_GlobalInfo = "Informations globales";
     const AccountingAccount_AccountCount = "Nombre de compte: %d";
     const AccountingAccount_Label = "Libellé";
     const AccountingAccount_Type = "Type";
@@ -114,7 +116,7 @@ class TS {
 	const PaymentMethod_Cash = "Espèces";
 
 	// Account type
-	const AccountType_Unknown = "Inconnue";
+	const AccountType_Other = "Autre";
 	const AccountType_CashBox = "Caisse";
 	const AccountType_BankAccount = "Compte bancaire";
 };

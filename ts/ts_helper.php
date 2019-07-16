@@ -65,7 +65,7 @@ class TSHelper
 		case 2: return TS::AccountType_BankAccount;
 		default: break;
 		}
-		return TS::AccountType_Unknown;
+		return TS::AccountType_Other;
 	}
 
 	public static function pdoErrorText($pdoErrors)
