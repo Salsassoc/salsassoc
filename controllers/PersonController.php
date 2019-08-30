@@ -7,6 +7,9 @@
         'lastname' => '',
         'gender' => 0,
         'birthdate' => null,
+        'address' => null,
+        'zipcode' => null,
+        'city' => null,
         'email' => null,
         'phonenumber' => null,
         'image_rights' => null,
@@ -26,6 +29,9 @@
         'lastname' => $_POST['Lastname'],
         'gender' => $valueGender,
         'birthdate' => $_POST['Birthdate'],
+        'address' => $_POST['Address'],
+        'zipcode' => $_POST['Zipcode'],
+        'city' => $_POST['City'],
         'email' => $_POST['Email'],
         'phonenumber' => $_POST['Phonenumber'],
         'image_rights' => $valueImagerights,
@@ -50,7 +56,7 @@
 
     $conn = $GLOBALS['db_connexion'];
 
-    $sql =  'SELECT person.id as id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(cotisation_id) AS cotisation_count
+    $sql =  'SELECT person.id as id, firstname, lastname, birthdate, zipcode, city, email, phonenumber, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(cotisation_id) AS cotisation_count
         FROM person LEFT JOIN cotisation_member ON person.id=person_id LEFT JOIN cotisation ON cotisation.id = cotisation_id';
 	$sql .= $filter;
     $sql .= ' GROUP BY person.id';
@@ -110,7 +116,7 @@ dispatch('/members/:id', 'person_view');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
-    $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date, comments FROM person WHERE id='.$id;
+    $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, comments FROM person WHERE id='.$id;
     $results = $conn->query($sql);
 
     $sql =  'SELECT id, label, cotisation.amount AS cotisation_amount, start_date, end_date, date, cotisation_member.amount as amount, payment_method FROM cotisation, cotisation_member WHERE cotisation.id=cotisation_id AND person_id='.$id;
@@ -147,9 +153,9 @@ dispatch('/members/:id', 'person_view');
 	$stmt = null;
     if($res){
         if($id==0){
-        	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, email, phonenumber, image_rights, comments, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :email, :phonenumber, :image_rights, :comments, date(\'now\'), 1)';
+        	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, comments, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, :comments, date(\'now\'), 1)';
 	    }else{
-        	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, comments=:comments WHERE id=:id';
+        	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, comments=:comments WHERE id=:id';
 	    }
 
 	    $stmt = $conn->prepare($sql);
@@ -171,6 +177,9 @@ dispatch('/members/:id', 'person_view');
 	    $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
 	    $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
 	    $stmt->bindParam(':birthdate', $person['birthdate'], PDO::PARAM_STR, 10);
+	    $stmt->bindParam(':address', $person['address'], PDO::PARAM_STR, 10);
+	    $stmt->bindParam(':zipcode', $person['zipcode'], PDO::PARAM_INT, 10);
+	    $stmt->bindParam(':city', $person['city'], PDO::PARAM_STR, 10);
 	    $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
 	    $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
 	    $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);

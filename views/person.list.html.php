@@ -8,6 +8,7 @@
   <th><?php echo TS::Person_Lastname; ?></th>
   <th><?php echo TS::Person_Firstname; ?></th>
   <th><?php echo TS::Person_Birthdate; ?></th>
+  <th><?php echo TS::Person_City; ?></th>
   <th><?php echo TS::Person_Email; ?></th>
   <th><?php echo TS::Person_Phonenumber; ?></th>
   <th><?php echo TS::Person_ImageRights; ?></th>
@@ -25,6 +26,7 @@
   <td><?php echo $person['lastname'] ?></td>
   <td><?php echo $person['firstname'] ?></td>
   <td><?php echo TSHelper::getShortDateTextFromDBDate($person['birthdate']) ?></td>
+  <td><?php echo ($person['city'] ? $person['city']." (".$person['zipcode'].")" : "") ?></td>
   <td><?php echo $person['email'] ?></td>
   <td><?php echo $person['phonenumber'] ?></td>
   <td><?php echo TSHelper::getYesNoUnknownText($person['image_rights']); ?></td>

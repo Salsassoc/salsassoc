@@ -69,6 +69,9 @@ class TS {
 	const Person_Lastname = "Lastname";
 	const Person_Firstname = "Firstname";
 	const Person_Birthdate = "Birthdate";
+	const Person_Address = "Address";
+	const Person_Zipcode = "Zipcode";
+	const Person_City = "City";
 	const Person_Email = "E-mail";
 	const Person_Phonenumber = "Phone number";
 	const Person_ImageRights = "Image rights";

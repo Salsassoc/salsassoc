@@ -31,6 +31,18 @@ if(isset($person['id'])){
       <input type="text" name="Birthdate" value="<?php echo $person['birthdate'] ?>" placeholder="YYYY-MM-DD" />
     </div>
     <div class='form-row'>
+      <label><?php echo TS::Person_Address; ?></label>
+      <input type="text" name="Address" value="<?php echo $person['address'] ?>"  />
+    </div>
+    <div class='form-row'>
+      <label><?php echo TS::Person_Zipcode; ?></label>
+      <input type="text" name="Zipcode" value="<?php echo $person['zipcode'] ?>"  />
+    </div>
+    <div class='form-row'>
+      <label><?php echo TS::Person_City; ?></label>
+      <input type="text" name="City" value="<?php echo $person['city'] ?>"  />
+    </div>
+    <div class='form-row'>
       <label><?php echo TS::Person_Email; ?></label>
       <input type="text" name="Email" value="<?php echo $person['email'] ?>" />
     </div>
