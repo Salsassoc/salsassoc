@@ -51,7 +51,8 @@
 	// Compute filter
 	$filter = "";
 	if($bCurrentOnly){
-		$filter .= " WHERE fiscal_year_id = (SELECT id FROM fiscal_year WHERE is_current IS 'true' ORDER BY end_date DESC LIMIT 1)";
+		//$filter .= " WHERE fiscal_year_id = (SELECT id FROM fiscal_year WHERE is_current IS 'true' ORDER BY end_date DESC LIMIT 1)";
+		$filter .= " WHERE '".$current_day."' BETWEEN start_date AND end_date ";
 	}
 
     $conn = $GLOBALS['db_connexion'];
@@ -61,6 +62,8 @@
 	$sql .= $filter;
     $sql .= ' GROUP BY person.id';
     $sql .= ' ORDER BY lastname, firstname';
+
+    echo $sql;
 
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
