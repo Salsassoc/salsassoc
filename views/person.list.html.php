@@ -1,5 +1,7 @@
 <div class="list-top-infos">
 <?php printf(TS::Person_PersonCount, count($personlist)); ?>
+ - 
+<a href="<?php echo url_for('/members/print')?>">Print</a>
 </div>
 
 <table width="100%" class="list">

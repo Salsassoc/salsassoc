@@ -108,6 +108,12 @@ function getcss()
     return css('style.css.php', null);
 }
 
+dispatch('/print.css', 'getprintcss');
+function getprintcss()
+{
+    return css('print.css.php', null);
+}
+
 run();
 
 ?>

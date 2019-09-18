@@ -41,21 +41,13 @@
     return $person;
   }
 
-  function person_list($bCurrentOnly)
+  function getPersonListQuery($bCurrentOnly, $currentDate)
   {
-	$webuser = loadWebUser();
-	if($webuser->is_anonymous){
-		redirect_to('/login'); return;
-	}
-
-	// Compute filter
 	$filter = "";
 	if($bCurrentOnly){
 		//$filter .= " WHERE fiscal_year_id = (SELECT id FROM fiscal_year WHERE is_current IS 'true' ORDER BY end_date DESC LIMIT 1)";
-		$filter .= " WHERE '".$current_day."' BETWEEN start_date AND end_date ";
+		$filter .= " WHERE '".$currentDate."' BETWEEN start_date AND end_date ";
 	}
-
-    $conn = $GLOBALS['db_connexion'];
 
     $sql =  'SELECT person.id as id, firstname, lastname, birthdate, zipcode, city, email, phonenumber, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(cotisation_id) AS cotisation_count
         FROM person LEFT JOIN cotisation_member ON person.id=person_id LEFT JOIN cotisation ON cotisation.id = cotisation_id';
@@ -63,7 +55,21 @@
     $sql .= ' GROUP BY person.id';
     $sql .= ' ORDER BY lastname, firstname';
 
-    echo $sql;
+    return $sql;
+  }
+
+  function person_list($bCurrentOnly)
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $conn = $GLOBALS['db_connexion'];
+
+    $currentDate = date("Y-m-d");
+
+    $sql = getPersonListQuery($bCurrentOnly, $currentDate);
 
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
@@ -91,6 +97,41 @@ dispatch('/members/all', 'person_list_all');
   function person_list_all()
   {
 	 return person_list(false);
+  }
+
+  function person_list_print($bCurrentOnly)
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $conn = $GLOBALS['db_connexion'];
+
+    $currentDate = date("Y-m-d");
+
+    $sql = getPersonListQuery($bCurrentOnly, $currentDate);
+
+    $stmt = $conn->prepare($sql);
+    $res = $stmt->execute();
+    if ($res) {
+        $results = $stmt->fetchAll();
+        set('personlist', $results);
+        set('page_id', "person_list");
+        set('page_title', TS::Person_Members);
+        set('page_submenus', getSubMenus("members"));
+        return render('person.list.print.html.php', "layout.print.html.php");
+    }
+
+    set('page_title', "Bad request");
+    return html('error.html.php');
+
+  }
+
+dispatch('/members/print', 'person_list_current_print');
+  function person_list_current_print()
+  {
+	 return person_list_print(true);
   }
 
 dispatch('/members/add', 'person_add');

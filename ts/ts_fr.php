@@ -85,6 +85,7 @@ class TS {
 	const Person_OldMember = "Ancien membre";
 	const Person_Form_GlobalInfo = "Informations globales";
 	const Person_Comments = "Commentaires";
+	const Person_Check = "Vérif.";
 
     // Accounting
     const Accounting_OperationAll = "Toutes les opérations";
