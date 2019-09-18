@@ -5,10 +5,12 @@
 <table width="100%" class="table" border="1">
 <thead>
 <tr>
+  <th>#</th>
   <th><?php echo TS::Person_Lastname; ?></th>
   <th><?php echo TS::Person_Firstname; ?></th>
   <th><?php echo TS::Person_Check; ?></th>
   <th class="hsep">&nbsp;</th>
+  <th>#</th>
   <th><?php echo TS::Person_Lastname; ?></th>
   <th><?php echo TS::Person_Firstname; ?></th>
   <th><?php echo TS::Person_Check; ?></th>
@@ -25,6 +27,7 @@
         }
 ?>
 
+  <td align="center"><?php echo $i+1 ?></td>
   <td><?php echo $person['lastname'] ?></td>
   <td><?php echo $person['firstname'] ?></td>
   <td></td>
