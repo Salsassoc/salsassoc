@@ -19,20 +19,20 @@
 		$operation_id = $operation['id'];
 ?> 
 <tr>
-  <td>
+  <td align="left">
     <?php
       echo $operation['label'];
 	?>
   </td>
-  <td><?php echo $operation['category'] ?></td>
-  <td><?php echo TSHelper::getShortDateTextFromDBDate($operation['date_value']) ?></td>
-  <td>
+  <td align="center"><?php echo $operation['category'] ?></td>
+  <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($operation['date_value']) ?></td>
+  <td align="center">
 	<?php
 		$amount = $operation['amount'];
 		echo TSHelper::getCurrencyText($amount);
 	?>
   </td>
-  <td>
+  <td align="center">
     <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'])?>"><?php echo TS::Cotisation_View; ?></a>
   </td>
 </tr>

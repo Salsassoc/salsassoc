@@ -35,17 +35,17 @@ Number of old members : <?php echo $iTotalOldMembers; ?> (<?php echo round(($iTo
     {
 ?> 
 <tr>
-  <td><?php echo $person['lastname'] ?></td>
-  <td><?php echo $person['firstname'] ?></td>
-  <td><?php echo TSHelper::getShortDateTextFromDBDate($person['birthdate']) ?></td>
-  <td><?php echo $person['email'] ?></td>
-  <td><?php echo $person['phonenumber'] ?></td>
-  <td><?php echo TSHelper::getYesNoUnknownText($person['image_rights']); ?></td>
-  <td><?php echo TSHelper::getYesNoUnknownText(($person['cotisation_count'] == null || $person['cotisation_count'] == 0) ? 'true' : 'false'); ?></td>
-  <td><?php echo TSHelper::getShortDateTextFromDBDate($person['creation_date']) ?></td>
-  <td><?php echo TSHelper::getCurrencyText($person['amount']); ?></td>
-  <td><?php echo TSHelper::getPaymentMethod($person['payment_method']); ?></td>
-  <td>
+  <td align="left"><?php echo $person['lastname'] ?></td>
+  <td align="left"><?php echo $person['firstname'] ?></td>
+  <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($person['birthdate']) ?></td>
+  <td align="center"><?php echo $person['email'] ?></td>
+  <td align="center"><?php echo $person['phonenumber'] ?></td>
+  <td align="center"><?php echo TSHelper::getYesNoUnknownText($person['image_rights']); ?></td>
+  <td align="center"><?php echo TSHelper::getYesNoUnknownText(($person['cotisation_count'] == null || $person['cotisation_count'] == 0) ? 'true' : 'false'); ?></td>
+  <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($person['creation_date']) ?></td>
+  <td align="center"><?php echo TSHelper::getCurrencyText($person['amount']); ?></td>
+  <td align="center"><?php echo TSHelper::getPaymentMethod($person['payment_method']); ?></td>
+  <td align="center">
     <a href="<?php echo url_for('/members', $person['id'])?>"><?php echo TS::Person_View; ?></a> - 
     <a href="<?php echo url_for('/cotisations/register/member', $person['id'])?>"><?php echo TS::Cotisation_NewRegister; ?></a>
   </td>

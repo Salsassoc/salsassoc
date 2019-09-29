@@ -21,16 +21,16 @@
     {
 ?> 
 <tr>
-  <td><?php echo $cotisation['label'] ?></td>
-  <td><?php echo TSHelper::getCotisationType($cotisation['type']) ?></td>
-  <td><?php echo TSHelper::getShortDateTextFromDBDate($cotisation['start_date']) ?></td>
-  <td><?php echo TSHelper::getShortDateTextFromDBDate($cotisation['end_date']) ?></td>
-  <td><?php echo TSHelper::getCurrencyText($cotisation['amount']) ?></td>
-  <td>
+  <td align="left"><?php echo $cotisation['label'] ?></td>
+  <td align="center"><?php echo TSHelper::getCotisationType($cotisation['type']) ?></td>
+  <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($cotisation['start_date']) ?></td>
+  <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($cotisation['end_date']) ?></td>
+  <td align="center"><?php echo TSHelper::getCurrencyText($cotisation['amount']) ?></td>
+  <td align="center">
     <a href="<?php echo url_for('/cotisations', $cotisation['id'], 'members')?>"><?php printf(TS::Cotisation_MembersCount, $cotisation['cotisation_count']) ?></a>
   </td>
-  <td><?php echo TSHelper::getCurrencyText($cotisation['cotisation_totalamount']) ?></td>
-  <td>
+  <td align="center"><?php echo TSHelper::getCurrencyText($cotisation['cotisation_totalamount']) ?></td>
+  <td align="center">
     <a href="<?php echo url_for('/cotisations', $cotisation['id'])?>"><?php echo TS::Cotisation_View; ?></a>
   </td>
 </tr>

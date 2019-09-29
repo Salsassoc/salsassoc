@@ -34,7 +34,7 @@
 		$fiscalyear_id = $fiscalyear['id'];
 ?> 
 <tr>
-  <td>
+  <td align="left">
     <?php
 	  $title = $fiscalyear['title'];
       if($title == ""){
@@ -43,9 +43,9 @@
       echo $title;
 	?>
   </td>
-  <td><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['start_date']) ?></td>
-  <td><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['end_date']) ?></td>
-  <td>
+  <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['start_date']) ?></td>
+  <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['end_date']) ?></td>
+  <td align="center">
     <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'], 'members')?>">
 		<?php
 			$memberscount=0;
@@ -56,7 +56,7 @@
 		?>
 	</a>
   </td>
-  <td>
+  <td align="center">
 	<?php
 		$totalamount=0.0;
 		if(isset($tabFiscalYearsAmount[$fiscalyear_id])){
@@ -65,7 +65,7 @@
 		echo TSHelper::getCurrencyText($totalamount);
 	?>
   </td>
-  <td>
+  <td align="center">
     <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'])?>"><?php echo TS::Cotisation_View; ?></a>
   </td>
 </tr>

@@ -16,12 +16,12 @@
 		$account_id = $operationcategory['id'];
 ?> 
 <tr>
-  <td>
+  <td align="left">
     <?php
       echo $operationcategory['label'];
 	?>
   </td>
-  <td>
+  <td align="center">
     <a href="<?php echo url_for('/accounting/operationcategories/', $operationcategory['id'])?>"><?php echo TS::AccountingOperationCategory_View; ?></a>
   </td>
 </tr>

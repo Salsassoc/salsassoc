@@ -117,7 +117,6 @@ h1 {
 .list td 
 {
     padding: 2px;
-    text-align: center;
     border-bottom: 1px solid #D4D4D4;
     border-top: 1px solid #D4D4D4;
 }
