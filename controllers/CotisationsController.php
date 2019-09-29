@@ -209,6 +209,7 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
 		$person_id = (isset($person['id']) && $person['id'] != "" ? $person['id'] : null);
         $res = person_save($conn, $person_id, $person, $errors);
         if($res){
+            // $person['id'] will be set in person_save
         	$res = cotisations_member_save($conn, $person['id'], $cotisations_member, $errors);
         }
         if($res){
@@ -219,7 +220,7 @@ dispatch_post('/cotisations/register', 'cotisation_register_save');
     }
 
     if($res){
-		redirect_to('/members/'.$person_id);
+		redirect_to('/members/'.$person['id']);
     }else{
 	    set('person', $person);
 	    set('cotisations', $cotisations);
