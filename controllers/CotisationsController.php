@@ -44,7 +44,7 @@
     }
 
 	if($res){
-		print_r($cotisations_member);
+		//print_r($cotisations_member);
 
 		$stmt->bindParam(':person_id', $person_id, PDO::PARAM_INT);
 		$stmt->bindParam(':date', $cotisations_member["date"], PDO::PARAM_STR);
@@ -134,7 +134,7 @@ dispatch('/cotisations/membership', 'cotisation_list_membership');
     // Load person
     if($res){
 	    if($person_id != null){
-	      $sql = 'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, comments
+	      $sql = 'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, comments
 			    FROM person
 			    WHERE id = '.$person_id;
 	      $stmt = $conn->prepare($sql);
