@@ -143,7 +143,7 @@ dispatch('/cotisations/membership', 'cotisation_list_membership');
             $person = $stmt->fetch();
           }
 	    }else{
-		    $person = array('firstname' => '', 'lastname' => '', 'birthdate' => '', 'email' => '', 'phonenumber' => '', 'image_rights' => '', 'comments' => '');
+		    $person = person_create();
 	    }
     }
 
