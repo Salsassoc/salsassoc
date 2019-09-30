@@ -35,6 +35,8 @@ class TS {
 	const FiscalYear_Title = "Title";
 	const FiscalYear_IsCurrent = "Current year";
 	const FiscalYear_EditFiscalYear = "Edit fiscal year";
+	const FiscalYear_Members_CotisationsAmount = "Cotisations amount";
+	const FiscalYear_Members_CotisationsPaymentMethod = "Payment method";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";

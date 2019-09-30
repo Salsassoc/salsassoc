@@ -35,6 +35,9 @@ class TS {
 	const FiscalYear_Title = "Titre";
 	const FiscalYear_IsCurrent = "Année en cours";
 	const FiscalYear_EditFiscalYear = "Modification d'une année fiscale";
+	const FiscalYear_Members_CotisationsAmount = "Montant cotisations";
+	const FiscalYear_Members_CotisationsPaymentMethod = "Mode de paiement";
+	const FiscalYears_FiscalYears = "Années fiscales";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
@@ -56,9 +59,6 @@ class TS {
 	const Cotisation_Type_Course = "Cours";
 	const Cotisation_CotisationMemberInfos = "Informations du membre";
 	const Cotisation_CotisationList = "Liste des cotisations";
-
-	// Fiscal years
-	const FiscalYears_FiscalYears = "Années fiscales";
 
 	// Person
 	const Person_Members = "Membres";

@@ -193,6 +193,106 @@ dispatch_post('/fiscalyears/:id/edit', 'fiscalyear_edit');
         set('page_submenus', getSubMenus("fiscalyear"));
         return html('fiscalyear.html.php');
 	}
+  }
+
+function getCotisationSumForPerson($person_id, $listCotisatioMember)
+{
+    $amount = 0.0;
+    $paymentMethod = 0;
+    $date = null;
+
+    foreach  ($listCotisatioMember as $cotisationMember)
+    {
+        if($cotisationMember["person_id"] == $person_id){
+            $date = $cotisationMember["date"];
+            $paymentMethod = $cotisationMember["payment_method"];
+            $amount += $cotisationMember["amount"];
+        }
+    }
+
+    return array("amount" => $amount, "payment_method" => $paymentMethod, "date" => $date);
+}
+
+dispatch('/fiscalyears/:id/members', 'fiscalyear_members_list');
+  function fiscalyear_members_list()
+  {
+    $webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+    
+    $fiscal_year_id = params('id');
+
+    $conn = $GLOBALS['db_connexion'];
+
+    $res = true;
+    $persons = true;
+
+    // Load person list
+    if($res){
+        $sql =  'SELECT DISTINCT person.id as id, firstname, lastname, birthdate, zipcode, city, email, phonenumber, image_rights, creation_date
+            FROM person, cotisation_member, cotisation 
+            WHERE person.id=cotisation_member.person_id AND cotisation_member.cotisation_id=cotisation.id
+            AND fiscal_year_id='.$fiscal_year_id.'
+            ORDER BY lastname, firstname';
+        $stmt = $conn->prepare($sql);
+        if($stmt){
+            $res = $stmt->execute();
+            if ($res) {
+                $persons = $stmt->fetchAll();
+            }
+        }else{
+            $res = false;
+        }
+    }
+
+    // Load cotisation list
+    if($res){
+        $sql =  'SELECT id, label, type
+            FROM cotisation 
+            WHERE fiscal_year_id='.$fiscal_year_id.'
+            ORDER BY type';
+        $stmt = $conn->prepare($sql);
+        if($stmt){
+            $res = $stmt->execute();
+            if ($res) {
+                $cotisations = $stmt->fetchAll();
+            }
+        }else{
+            $res = false;
+        }
+    }
+
+    // Load cotisation_member list
+    if($res){
+        $sql =  'SELECT person_id, cotisation_id, date, cotisation_member.amount AS amount, payment_method
+            FROM cotisation_member, cotisation 
+            WHERE cotisation_member.cotisation_id=cotisation.id
+            AND fiscal_year_id='.$fiscal_year_id.'
+            ORDER BY person_id, cotisation_id';
+        $stmt = $conn->prepare($sql);
+        if($stmt){
+            $res = $stmt->execute();
+            if ($res) {
+                $listCotisationMember = $stmt->fetchAll();
+            }
+        }else{
+            $res = false;
+        }
+    }
+    
+
+    if($res){
+        set('personlist', $persons);
+        set('cotisationlist', $cotisations);
+        set('listCotisationMember', $listCotisationMember);
+
+        set('page_title', "Members");
+        return html('fiscalyear.person.list.html.php');
+    }
+
+    set('page_title', "Bad request");
+    return html('error.html.php');
 }
 
 ?>
