@@ -17,6 +17,7 @@ class TS {
 	const Main_Welcome = "Welcome to ".TS::AppName." manager !";
 	const Main_Menu_Members = "Members";
 	const Main_Menu_People = "People";
+	const Main_Menu_Registrations = "Registrations";
 	const Main_Menu_Cotisations = "Cotisations";
 	const Main_Menu_FiscalYears = "Fiscal years";
 	const Main_Menu_Accounting = "Accounting";
@@ -58,6 +59,20 @@ class TS {
 	const Cotisation_Type_Course = "Course";
 	const Cotisation_CotisationMemberInfos = "Member informations";
 	const Cotisation_CotisationList = "Cotisations list";
+
+    // Registration
+	const Registration_RegistrationAll = "Registrations";
+	const Registration_AddRegistration = "Add a registration";
+	const Registration_RegistrationCount = "Registrations count : %d";
+	const Registration_Date = "Date";
+	const Registration_Type = "Type";
+	const Registration_View = "View";
+
+    // Registration type
+	const RegistrationType_MembershipStandard = "Standard";
+	const RegistrationType_MembershipDiscounted = "Avantages jeunes";
+	const RegistrationType_ExecutiveBoard = "Executive board";
+	const RegistrationType_Professor = "Professor";
 
 	// Person
 	const Person_Members = "Members";

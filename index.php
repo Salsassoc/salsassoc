@@ -5,6 +5,7 @@ require_once 'lib/limonade/lib/limonade.php';
 require_once 'tools/tools.php';
 
 require_once 'controllers/PersonController.php';
+require_once 'controllers/RegistrationController.php';
 require_once 'controllers/CotisationsController.php';
 require_once 'controllers/FiscalYearController.php';
 require_once 'controllers/AccountingAccountController.php';
@@ -27,10 +28,13 @@ function getSubMenus($menu)
 		$submenus["/members/all"] = TS::Person_AllMembers;
 		$submenus["/members/add"] = TS::Person_AddMember;
 	}
+	if($menu == "registrations"){
+		$submenus["/registrations"] = TS::Registration_RegistrationAll;
+		$submenus["/registrations/add"] = TS::Registration_AddRegistration;
+	}
 	if($menu == "cotisations"){
 		$submenus["/cotisations"] = TS::Cotisation_CotisationAll;
 		$submenus["/cotisations/membership"] = TS::Cotisation_CotisationMembership;
-		$submenus["/cotisations/register"] = TS::Cotisation_CotisationRegister;
 	}
 	if($menu == "accounting"){
 		$submenus["/accounting/operations"] = TS::Accounting_OperationAll;

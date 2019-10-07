@@ -27,6 +27,19 @@ class TSHelper
 		return date(TS::ShortDateText, $timestamp);
 	}
 
+	public static function getRegistrationType($type)
+	{
+		switch($type){
+		case 1: return TS::RegistrationType_MembershipStandard;
+		case 2: return TS::RegistrationType_MembershipDiscounted;
+		case 3: return TS::RegistrationType_ExecutiveBoard;
+		case 4: return TS::RegistrationType_Professor;
+		default: break;
+		}
+		return "";
+	}
+
+
 	public static function getCotisationType($type)
 	{
 		switch($type){
