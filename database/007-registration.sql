@@ -23,4 +23,16 @@ WHERE person.id = person_id AND cotisation_id = cotisation.id
 GROUP BY fiscal_year_id, person_id
 ORDER BY fiscal_year_id, lastname, firstname;
 
+CREATE TABLE registration_cotisation (
+   registration_id INTEGER NOT NULL,
+   cotisation_id INTEGER NOT NULL,
+   date DATE NOT NULL,
+   amount FLOAT NOT NULL,
+   payment_method INTEGER NULL
+);
 
+INSERT INTO registration_cotisation (registration_id, cotisation_id, date, amount, payment_method)
+SELECT registration.id, cotisation_id, date, amount, payment_method
+FROM registration, cotisation_member
+WHERE registration.person_id = cotisation_member.person_id
+AND registration_date = cotisation_member.date

@@ -33,7 +33,7 @@
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($registration['registration_date']) ?></td>
   <td align="center"><?php echo TSHelper::getRegistrationType($registration['registration_type']) ?></td>
   <td align="center">
-    <a href="<?php echo url_for('/members', $person['id'])?>"><?php echo TS::Person_View; ?></a>
+    <a href="<?php echo url_for('/registrations', $registration['id'])?>"><?php echo TS::Registration_View; ?></a>
   </td>
 </tr>
 <?php

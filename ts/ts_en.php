@@ -67,6 +67,7 @@ class TS {
 	const Registration_Date = "Date";
 	const Registration_Type = "Type";
 	const Registration_View = "View";
+    const Registration_Num = "Registration #%d";
 
     // Registration type
 	const RegistrationType_MembershipStandard = "Standard";
