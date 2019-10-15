@@ -25,6 +25,42 @@
     return $fiscalyear;
   }
 
+  function fiscalyears_db_load($conn, $sql, &$fiscalyear, &$errors)
+  {
+    $res = true;
+
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $fiscalyear = $stmt->fetch();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+	    $res = false;
+        $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+
+    return $res;
+  }
+
+  function fiscalyears_db_load_from_current($conn, &$fiscalyear, &$errors)
+  {
+    $sql = "SELECT id, title, start_date, end_date, is_current
+        FROM fiscal_year 
+        WHERE is_current = 'true'";
+    return fiscalyears_db_load($conn, $sql, $fiscalyear, $errors);
+  }
+
+  function fiscalyears_db_load_from_id($conn, $fiscal_year_id, &$fiscalyear, &$errors)
+  {
+    $sql = "SELECT id, title, start_date, end_date, is_current
+        FROM fiscal_year 
+        WHERE id = ".$fiscal_year_id;
+    return fiscalyears_db_load($conn, $sql, $fiscalyear, $errors);
+  }
+
 dispatch('/fiscalyears', 'fiscalyear_list');
   function fiscalyear_list()
   {

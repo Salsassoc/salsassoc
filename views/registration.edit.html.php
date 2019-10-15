@@ -4,18 +4,8 @@ if($registration['id'] != null){
   $registration_id = $registration['id'];
 }
 
-
 $formAction=url_for('/registrations', $registration_id, 'edit');
 ?>
-    <?php
-        if(isset($registration['id'])){
-    ?>
-    <div class='form-row'>
-      <span><?php echo sprintf(TS::Registration_Num, $registration['id']); ?></span>
-    </div>
-    <?php
-        }
-    ?>
 
 <div>
   <form method="POST" action="<?php echo $formAction; ?>" class="form">

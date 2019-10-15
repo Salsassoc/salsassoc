@@ -23,6 +23,31 @@
     return $cotisations_member;
   }
 
+  function cotisations_db_load_list($conn, $fiscal_year_id, &$cotisations, &$errors)
+  {
+	$res = true;
+
+    $sql = "SELECT id, label, type, amount, start_date, end_date, fiscal_year_id
+        FROM cotisation ";
+    if($fiscal_year_id != null){
+        $sql .= "WHERE fiscal_year_id=".$fiscal_year_id ; 
+    }
+
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $cotisations = $stmt->fetchAll();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+		$res = false;
+	    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+    return $res;
+  }
+
   function cotisations_member_save($conn, $person_id, $cotisations_member, &$errors)
   {
     $res = true;

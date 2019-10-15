@@ -66,6 +66,67 @@
     return $person;
   }
 
+  function registrations_is_new($registration)
+  {
+    return (!isset($registration['id'])) || ($registration['id'] == 0);
+  }
+
+  function registrations_get_cotisation_from_id($registration, $cotisation_id)
+  {
+    if(isset($registration['cotisations'])){
+      foreach($registration['cotisations'] as $registration_cotisation)
+      {
+         if($registration_cotisation['cotisation_id'] == $cotisation_id){
+            return $registration_cotisation;
+         }
+      }
+    }
+    return null;
+  }
+
+  function registrations_db_load_from_id($conn, $registration_id, &$registration, &$errors)
+  {
+    $res = true;
+
+    $sql =  'SELECT id, person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, registration_date, registration_type, fiscal_year_id FROM registration WHERE id='.$registration_id;
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $registration = $stmt->fetch();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+		$res = false;
+	    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+
+    return $res;
+  }
+
+
+  function registrations_db_load_registration_cotisations_list_from_id($conn, $registration_id, &$registration, &$errors)
+  {
+    $res = true;
+
+    $sql =  'SELECT registration_id, cotisation_id, date, amount, payment_method FROM registration_cotisation WHERE registration_id='.$registration_id;
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $registration['cotisations'] = $stmt->fetchAll();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+		$res = false;
+	    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+
+    return $res;
+  }
+
   function registration_save($conn, &$registration, &$errors)
   {
     $res = true;
@@ -105,9 +166,6 @@
     if($res){
 
         $person = registration_person($registration);
-
-        echo print_r($registration);
-        echo print_r($person);
 
         if($registration['person_id']==0){
         	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, date(\'now\'), 1)';
@@ -183,10 +241,7 @@
 	    }
 
 	}
-           echo print_r($person);
 
-            
-           echo print_r($registration);
     return $res;
   }
 
@@ -256,24 +311,18 @@ dispatch('/registrations/add', 'registration_add');
     $res = true;
 
     // Load current fiscal year
+    $fiscalyear = null;
     if($res){
-        $sql =  'SELECT id, title
-            FROM fiscal_year 
-            WHERE fiscal_year.is_current = \'true\'
-            ORDER BY type, id';
-        $stmt = $conn->prepare($sql);
-        if($stmt){
-            $res = $stmt->execute();
-            if ($res) {
-	            $fiscalyear = $stmt->fetch();
-                $registration['fiscal_year_id'] = $fiscalyear;
-            }else{
-	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-            }
-        }else{
-			$res = false;
-		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
-	    }
+       $res = fiscalyears_db_load_current($conn, $fiscalyear, $errors);
+       if($res){
+         $registration['fiscal_year_id'] = $fiscalyear['id'];
+       }
+    }
+
+    // Load current
+    $cotisations = array();
+    if($res){
+       $res = cotisations_db_load_list($conn, $fiscalyear['id'], $cotisations, $errors);
     }
 
     // Load person
@@ -301,7 +350,7 @@ dispatch('/registrations/add', 'registration_add');
           
 	    }
     }
-
+/*
     // Load cotisation list
     if($res){
         $sql =  'SELECT cotisation.id AS id, label, amount
@@ -319,6 +368,7 @@ dispatch('/registrations/add', 'registration_add');
           $res = false;
         }
     }
+*/
 
     if($res){
 	    set('registration', $registration);
@@ -330,6 +380,7 @@ dispatch('/registrations/add', 'registration_add');
     }
 
     set('page_title', "Bad request");
+	set('errors', $errors);
     return html('error.html.php');
   }
 
@@ -345,40 +396,31 @@ dispatch('/registrations/:id/edit', 'registration_edit');
     $conn = $GLOBALS['db_connexion'];
 
     $res = true;
-    $registration = null;
 
     // Load registration
+    $registration = null;
     if($res){
-        $sql =  'SELECT id, person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, registration_date, registration_type FROM registration WHERE id='.$id;
-        $stmt = $conn->prepare($sql);
-        if($stmt){
-            $res = $stmt->execute();
-            if ($res) {
-	            $registration = $stmt->fetch();
-            }else{
-	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-            }
-        }else{
-			$res = false;
-		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
-	    }
+       $res = registrations_db_load_from_id($conn, $id, $registration, $errors);
     }
 
-    // Load cotisations
+    // Load registration contisations
     if($res){
-        $sql =  'SELECT id, label, cotisation.amount AS cotisation_amount, start_date, end_date, date, registration_cotisation.amount as amount, payment_method FROM cotisation, registration_cotisation WHERE cotisation.id=cotisation_id AND registration_id='.$id;
-        $stmt = $conn->prepare($sql);
-        if($stmt){
-            $res = $stmt->execute();
-            if ($res) {
-	            $cotisations = $stmt->fetchAll();
-            }else{
-	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-            }
-        }else{
-			$res = false;
-		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
-	    }
+       $res = registrations_db_load_registration_cotisations_list_from_id($conn, $id, $registration, $errors);
+    }
+
+    // Load current fiscal year
+    $fiscalyear = null;
+    if($res){
+       $res = fiscalyears_db_load_from_id($conn, $registration['fiscal_year_id'], $fiscalyear, $errors);
+       if($res){
+         $registration['fiscal_year_id'] = $fiscalyear['id'];
+       }
+    }
+
+    // Load current
+    $cotisations = array();
+    if($res){
+       $res = cotisations_db_load_list($conn, $fiscalyear['id'], $cotisations, $errors);
     }
 
     if($res){
