@@ -58,10 +58,10 @@ class TS {
 	const Cotisation_MembersCount = "%d membres";
 	const Cotisation_Type_Membership = "Adhésion";
 	const Cotisation_Type_Course = "Cours";
-	const Cotisation_CotisationMemberInfos = "Informations du membre";
 	const Cotisation_CotisationList = "Liste des cotisations";
 
     // Registration
+	const Registration_Registrations = "Inscriptions";
 	const Registration_RegistrationAll = "Inscriptions";
 	const Registration_AddRegistration = "Ajouter une inscription";
 	const Registration_RegistrationCount = "Nombre d'inscriptions : %d";
@@ -69,6 +69,8 @@ class TS {
 	const Registration_Type = "Type";
 	const Registration_View = "Voir";
     const Registration_Num = "Inscription #%d";
+	const Registration_MemberInfos = "Informations du membre";
+	const Registration_Registration = "Inscription";
 
     // Registration type
 	const RegistrationType_MembershipStandard = "Standard";

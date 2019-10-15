@@ -1,74 +1,195 @@
 <?php
-/*
-  function registrations_member_load()
-  {
-    $cotisations_member = array();
-    
-    $cotisations_member["payment_method"] = $_POST['CotisationMember_PaymentMethod'];
-    $cotisations_member["date"] = $_POST['CotisationMember_Date'];
-    $cotisations_member["cotisations"] = array();
 
-    $count = $_POST['CotisationCount'];
-    for($i = 0; $i < $count; $i++){
-        $key = "CotisationMember_${i}_CotisationId";
-        $cotisation_id = $_POST[$key];
-        $key = "CotisationMember_${i}_Enabled";
-        $cotisation_enabled = isset($_POST[$key]);
-        $key = "CotisationMember_${i}_Amount";
-        $cotisation_amount = $_POST[$key];
-        $cotisation = array("id" => $cotisation_id, "enabled" => $cotisation_enabled, "amount" => $cotisation_amount);
-        $cotisations_member["cotisations"][$i] = $cotisation;
-    }
-    
-    return $cotisations_member;
+  function registration_create()
+  {
+    $registration = array(
+        'id' => '',
+        'person_id' => '',
+        'firstname' => '',
+        'lastname' => '',
+        'gender' => 0,
+        'birthdate' => null,
+        'address' => null,
+        'zipcode' => null,
+        'city' => null,
+        'email' => null,
+        'phonenumber' => null,
+        'image_rights' => null,
+        'registration_date' => date("Y-m-d"),
+        'registration_type' => null,
+        'fiscal_year_id' => null,
+        'listCotisation' => array(),
+    );
+    return $registration;
   }
 
-  function registrations_member_save($conn, $person_id, $cotisations_member, &$errors)
+  function registration_load()
+  {
+    $valueGender = 0;
+    $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
+    $registration = array(
+        // Registration infos
+        'id' => $_POST['RegistrationId'],
+        'registration_date' => $_POST['RegistrationDate'],
+        'registration_type' => $_POST['RegistrationType'],
+        'fiscal_year_id' => $_POST['RegistrationFiscalYearId'],
+        // Member infos
+        'person_id' => $_POST['PersonId'],
+        'firstname' => $_POST['Firstname'],
+        'lastname' => $_POST['Lastname'],
+        'gender' => $valueGender,
+        'birthdate' => $_POST['Birthdate'],
+        'address' => $_POST['Address'],
+        'zipcode' => $_POST['Zipcode'],
+        'city' => $_POST['City'],
+        'email' => $_POST['Email'],
+        'phonenumber' => $_POST['Phonenumber'],
+        'image_rights' => $valueImagerights
+    );
+
+    return $registration;
+  }
+
+  function registration_person($registration)
+  {
+    $person = person_create();
+    $person['firstname'] = $registration['firstname'];
+    $person['lastname'] = $registration['lastname'];
+    $person['gender'] = $registration['gender'];
+    $person['birthdate'] = $registration['birthdate'];
+    $person['address'] = $registration['address'];
+    $person['zipcode'] = $registration['zipcode'];
+    $person['city'] = $registration['city'];
+    $person['email'] = $registration['email'];
+    $person['phonenumber'] = $registration['phonenumber'];
+    $person['image_rights'] = $registration['image_rights'];
+    return $person;
+  }
+
+  function registration_save($conn, &$registration, &$errors)
   {
     $res = true;
 
+    if(isset($registration['id']) && $registration['id'] != 0){
+      $id = $registration['id'];
+    }else{
+      $id = 0;
+    }
+
+    if(isset($registration['person_id']) && $registration['person_id'] != 0){
+      $person_id = $registration['person_id'];
+    }else{
+      $person_id = 0;
+    }
+
     // Check data
-    if($cotisations_member['payment_method'] == ""){
-        $errors[] = "Payment method cannot be empty";
+    if($registration['firstname'] == ""){
+        $errors[] = "Firstname cannot be empty";
+        $res = false;
+    }
+    if($registration['lastname'] == ""){
+        $errors[] = "Lastname cannot be empty";
+        $res = false;
+    }
+    if($registration['registration_date'] == ""){
+        $errors[] = "Registration date cannot be empty";
+        $res = false;
+    }
+    if($registration['registration_type'] == ""){
+        $errors[] = "Registration type cannot be empty";
         $res = false;
     }
 
+    // Save the person
 	$stmt = null;
     if($res){
-        $sql = 'INSERT INTO cotisation_member (person_id, cotisation_id, date, amount, payment_method) VALUES (:person_id, :cotisation_id, :date, :amount, :payment_method)';
+
+        $person = registration_person($registration);
+
+        echo print_r($registration);
+        echo print_r($person);
+
+        if($registration['person_id']==0){
+        	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, date(\'now\'), 1)';
+	    }else{
+        	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights WHERE id=:id';
+	    }
 	    $stmt = $conn->prepare($sql);
-	    if(!$stmt){
-            $res = false;
+	    if($stmt){
+	        $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
+	        $stmt->bindParam(':birthdate', $person['birthdate'], PDO::PARAM_STR, 10);
+	        $stmt->bindParam(':address', $person['address'], PDO::PARAM_STR, 100);
+	        $stmt->bindParam(':zipcode', $person['zipcode'], PDO::PARAM_INT, 10);
+	        $stmt->bindParam(':city', $person['city'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
+	        $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);
+	        $res = $stmt->execute();
+            if($res){
+                if($person_id==0){
+                    $person_id = $conn->lastInsertId();
+		            $person["person_id"] = $person_id;
+                }
+            }else{
+	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+            }
+        }else{
+			$res = false;
 		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
 	    }
-    }
 
-	if($res){
-		//print_r($cotisations_member);
+	}
 
-		$stmt->bindParam(':person_id', $person_id, PDO::PARAM_INT);
-		$stmt->bindParam(':date', $cotisations_member["date"], PDO::PARAM_STR);
-		$stmt->bindParam(':payment_method', $cotisations_member['payment_method'], PDO::PARAM_INT);
-		foreach($cotisations_member["cotisations"] as $cotisation_member)
-        {
-			if($cotisation_member['enabled']){
-				$cotisation_id = $cotisation_member['id'];
-				$cotisation_amount = $cotisation_member['amount'];
+    // Save the registration
+	$stmt = null;
+    if($res){
+        // Prepare the query
+        if($id==0){
+        	$sql =  'INSERT INTO registration (person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, registration_date, registration_type, fiscal_year_id) VALUES (:person_id, :firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, :registration_date, :registration_type, :fiscal_year_id)';
+	    }else{
+        	$sql =  'UPDATE registration SET person_id=:person_id, firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, registration_date=:registration_date, registration_type=:registration_type, fiscal_year_id=:fiscal_year_id WHERE id=:id';
+	    }
 
-				$stmt->bindParam(':cotisation_id', $cotisation_id, PDO::PARAM_INT);
-				$stmt->bindParam(':amount', $cotisation_amount, PDO::PARAM_INT);
-				$res = $stmt->execute();
-				if(!$res){
-					$errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-					break;
-				}
-			}
-		}
-    }
+	    $stmt = $conn->prepare($sql);
+	    if($stmt){
+	        $stmt->bindParam(':person_id', $registration['person_id'], PDO::PARAM_INT);
+	        $stmt->bindParam(':firstname', $registration['firstname'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':lastname', $registration['lastname'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':gender', $registration['gender'], PDO::PARAM_INT);
+	        $stmt->bindParam(':birthdate', $registration['birthdate'], PDO::PARAM_STR, 10);
+	        $stmt->bindParam(':address', $registration['address'], PDO::PARAM_STR, 100);
+	        $stmt->bindParam(':zipcode', $registration['zipcode'], PDO::PARAM_INT, 10);
+	        $stmt->bindParam(':city', $registration['city'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':email', $registration['email'], PDO::PARAM_STR, 100);
+	        $stmt->bindParam(':phonenumber', $registration['phonenumber'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':image_rights', $registration['image_rights'], PDO::PARAM_STR);
+	        $stmt->bindParam(':registration_date', $registration['registration_date'], PDO::PARAM_STR, 10);
+	        $stmt->bindParam(':registration_type', $registration['registration_type'], PDO::PARAM_INT);
+	        $stmt->bindParam(':fiscal_year_id', $registration['fiscal_year_id'], PDO::PARAM_INT);
+	        $res = $stmt->execute();
+            if($res){
+                if($id==0){
+		            $registration["id"] = $conn->lastInsertId();
+                }
+            }else{
+	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+            }
+
+        }else{
+			$res = false;
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+	    }
+
+	}
+           echo print_r($person);
+
+            
+           echo print_r($registration);
     return $res;
   }
 
-*/
 dispatch('/registrations', 'registration_list');
   function registration_list()
   {
@@ -97,59 +218,13 @@ dispatch('/registrations', 'registration_list');
     if ($res) {
         set('listRegistrations', $listRegistrations);
 
-        set('page_title', "Registrations");
+        set('page_title', TS::Registration_Registrations);
         set('page_submenus', getSubMenus("registrations"));
         return html('registration.list.html.php');
     }
 
     set('page_title', "Bad request");
     return html('error.html.php');
-  }
-
-dispatch('/registrations/:id', 'registration_view');
-  function registration_view()
-  {
-	$webuser = loadWebUser();
-	if($webuser->is_anonymous){
-		redirect_to('/login'); return;
-	}
-
-    $id = params('id');
-    $conn = $GLOBALS['db_connexion'];
-
-    $res = true;
-    $registration = null;
-
-    // Load registration
-    if($res){
-        $sql =  'SELECT id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, registration_date, registration_type FROM registration WHERE id='.$id;
-        $stmt = $conn->prepare($sql);
-        $res = $stmt->execute();
-        if ($res) {
-	        $registration = $stmt->fetch();
-        }
-    }
-
-    if($res){
-        $sql =  'SELECT id, label, cotisation.amount AS cotisation_amount, start_date, end_date, date, registration_cotisation.amount as amount, payment_method FROM cotisation, registration_cotisation WHERE cotisation.id=cotisation_id AND registration_id='.$id;
-        $stmt = $conn->prepare($sql);
-        $res = $stmt->execute();
-        if ($res) {
-	        $listCotisations = $stmt->fetchAll();
-        }
-    }
-
-    if($res){
-        set('registration', $registration);
-        set('listCotisations', $listCotisations);
-
-        set('page_title', sprintf(TS::Registration_Num, $id));
-        set('page_submenus', getSubMenus("registrations"));
-        return html('registration.html.php');
-    }else{
-        set('page_title', "Bad request");
-        return html('error.html.php');
-    }
   }
 
 
@@ -176,42 +251,78 @@ dispatch('/registrations/add', 'registration_add');
 
     $conn = $GLOBALS['db_connexion'];
 
-    $res = true;
-    $listRegistrations = null;
+	$registration = registration_create();
 
-    // Load cotisation list
+    $res = true;
+
+    // Load current fiscal year
     if($res){
-        $sql =  'SELECT cotisation.id AS id, label, amount
-            FROM cotisation, fiscal_year 
-            WHERE fiscal_year.id=fiscal_year_id
-	        AND fiscal_year_id = (SELECT fiscal_year_id FROM cotisation ORDER BY fiscal_year_id DESC LIMIT 1)
+        $sql =  'SELECT id, title
+            FROM fiscal_year 
+            WHERE fiscal_year.is_current = \'true\'
             ORDER BY type, id';
         $stmt = $conn->prepare($sql);
-        $res = $stmt->execute();
-        if ($res) {
-	        $listCotisations = $stmt->fetchAll();
-        }
+        if($stmt){
+            $res = $stmt->execute();
+            if ($res) {
+	            $fiscalyear = $stmt->fetch();
+                $registration['fiscal_year_id'] = $fiscalyear;
+            }else{
+	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+            }
+        }else{
+			$res = false;
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+	    }
     }
 
     // Load person
     if($res){
 	    if($person_id != null){
-	      $sql = 'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, comments
+	      $sql = 'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights
 			    FROM person
 			    WHERE id = '.$person_id;
 	      $stmt = $conn->prepare($sql);
 	      $res = $stmt->execute();
 	      if ($res) {
             $person = $stmt->fetch();
+            $registration['person_id'] = $person_id;
+            $registration['firstname'] = $person['firstname'];
+            $registration['lastname'] = $person['lastname'];
+            $registration['birthdate'] = $person['birthdate'];
+            $registration['address'] = $person['address'];
+            $registration['zipcode'] = $person['zipcode'];
+            $registration['city'] = $person['city'];
+            $registration['email'] = $person['email'];
+            $registration['phonenumber'] = $person['phonenumber'];
+            $registration['image_rights'] = $person['image_rights'];
           }
 	    }else{
-		    $person = person_create();
+          
 	    }
     }
 
+    // Load cotisation list
     if($res){
-	    set('person', $person);
-	    set('listCotisations', $listCotisations);
+        $sql =  'SELECT cotisation.id AS id, label, amount
+            FROM cotisation, fiscal_year 
+            WHERE fiscal_year.id=fiscal_year_id
+	        AND fiscal_year.is_current = \'true\'
+            ORDER BY type, id';
+        $stmt = $conn->prepare($sql);
+        if($stmt){
+          $res = $stmt->execute();
+          if ($res) {
+	        $cotisations = $stmt->fetchAll();
+          }
+        }else{
+          $res = false;
+        }
+    }
+
+    if($res){
+	    set('registration', $registration);
+	    set('cotisations', $cotisations);
 
 	    set('page_title', TS::Cotisation_CotisationRegister);
 	    set('page_submenus', getSubMenus("registrations"));
@@ -222,8 +333,69 @@ dispatch('/registrations/add', 'registration_add');
     return html('error.html.php');
   }
 
-dispatch_post('/registrations/register', 'registration_save_new');
-  function registration_save()
+dispatch('/registrations/:id/edit', 'registration_edit');
+  function registration_edit()
+  {
+	$webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $id = params('id');
+    $conn = $GLOBALS['db_connexion'];
+
+    $res = true;
+    $registration = null;
+
+    // Load registration
+    if($res){
+        $sql =  'SELECT id, person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, registration_date, registration_type FROM registration WHERE id='.$id;
+        $stmt = $conn->prepare($sql);
+        if($stmt){
+            $res = $stmt->execute();
+            if ($res) {
+	            $registration = $stmt->fetch();
+            }else{
+	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+            }
+        }else{
+			$res = false;
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+	    }
+    }
+
+    // Load cotisations
+    if($res){
+        $sql =  'SELECT id, label, cotisation.amount AS cotisation_amount, start_date, end_date, date, registration_cotisation.amount as amount, payment_method FROM cotisation, registration_cotisation WHERE cotisation.id=cotisation_id AND registration_id='.$id;
+        $stmt = $conn->prepare($sql);
+        if($stmt){
+            $res = $stmt->execute();
+            if ($res) {
+	            $cotisations = $stmt->fetchAll();
+            }else{
+	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+            }
+        }else{
+			$res = false;
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+	    }
+    }
+
+    if($res){
+        set('registration', $registration);
+        set('cotisations', $cotisations);
+
+        set('page_title', sprintf(TS::Registration_Num, $id));
+        set('page_submenus', getSubMenus("registrations"));
+        return html('registration.edit.html.php');
+    }else{
+        set('page_title', "Bad request");
+        return html('error.html.php');
+    }
+  }
+
+dispatch_post('/registrations/:id/edit', 'registration_edit_post');
+  function registration_edit_post()
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
@@ -245,22 +417,17 @@ dispatch_post('/registrations/register', 'registration_save_new');
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute();
         if ($res) {
-	        $listCotisations = $stmt->fetchAll();
+	        $cotisations = $stmt->fetchAll();
         }
     }
 
     // Save data
     if($res){
-        $person = person_load();
+        $registration = registration_load();
         $cotisations_member = cotisations_member_load();
 
         $conn->beginTransaction();
-		$person_id = (isset($person['id']) && $person['id'] != "" ? $person['id'] : null);
-        $res = person_save($conn, $person_id, $person, $errors);
-        if($res){
-            // $person['id'] will be set in person_save
-        	$res = cotisations_member_save($conn, $person['id'], $cotisations_member, $errors);
-        }
+        $res = registration_save($conn, $registration, $errors);
         if($res){
             $conn->commit();
         }else{
@@ -269,16 +436,16 @@ dispatch_post('/registrations/register', 'registration_save_new');
     }
 
     if($res){
-		redirect_to('/members/'.$person['id']);
+		redirect_to('/registrations/'.$registration['id'].'/edit');
     }else{
-	    set('person', $person);
+	    set('registration', $registration);
 	    set('cotisations', $cotisations);
         set('cotisations_member', $cotisations_member);
 
 	    set('page_title', TS::Cotisation_CotisationRegister);
 	    set('page_submenus', getSubMenus("cotisations"));
         set('errors', $errors);
-	    return html('cotisation.register.html.php');
+	    return html('registration.edit.html.php');
     }
   }
 

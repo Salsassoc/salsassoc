@@ -39,7 +39,7 @@
   </td>
   <td align="center">
     <a href="<?php echo url_for('/members', $person['id'])?>"><?php echo TS::Person_View; ?></a> - 
-    <a href="<?php echo url_for('/cotisations/register/member', $person['id'])?>"><?php echo TS::Cotisation_NewRegister; ?></a>
+    <a href="<?php echo url_for('/registrations/add/member', $person['id'])?>"><?php echo TS::Cotisation_NewRegister; ?></a>
   </td>
 </tr>
 <?php
