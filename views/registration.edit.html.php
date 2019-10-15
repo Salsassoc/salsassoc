@@ -18,5 +18,10 @@ $formAction=url_for('/registrations', $registration_id, 'edit');
 
     <input type="submit" value="Save" />
 
+    <br/>
+    <br/>
+
   </form>
 </div>
+
+

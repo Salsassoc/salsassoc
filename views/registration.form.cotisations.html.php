@@ -30,13 +30,13 @@
         <td>
           <input type="checkbox" name="CotisationMember_<?php echo $count; ?>_Enabled" <?php echo ($enabled ? ' checked="checked"' : ''); ?> />
           <input type="text" name="CotisationMember_<?php echo $count; ?>_Amount" value="<?php echo $amount ?>" /> <?php echo TS::Currency; ?>
-          <select name="CotisationMember_PaymentMethod">
+          <select name="CotisationMember_<?php echo $count; ?>_PaymentMethod">
             <option value="">-- <?php echo TS::Unknown ?> --</option>
             <option value="0" <?php echo (($payment_method == 0) ? 'selected' : '');?>><?php echo TS::PaymentMethod_None ?></option>
             <option value="1" <?php echo (($payment_method == 1) ? 'selected' : '');?>><?php echo TS::PaymentMethod_Check ?></option>
             <option value="2" <?php echo (($payment_method == 2) ? 'selected' : '');?>><?php echo TS::PaymentMethod_Cash ?></option>
           </select>
-          <input type="Text" name="CotisationMember_Date" value="<?php echo $date ?>" placeholder="YYYY-MM-DD" />
+          <input type="Text" name="CotisationMember_<?php echo $count; ?>_Date" value="<?php echo $date ?>" placeholder="YYYY-MM-DD" />
         </td>
       </tr>
 <?php

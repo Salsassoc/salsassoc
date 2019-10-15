@@ -50,6 +50,27 @@
     return $registration;
   }
 
+  function registration_cotisations_load($registration_id)
+  {
+    $registration_cotisations = array();
+
+    $count = $_POST['CotisationCount'];
+    for($i = 0; $i<$count; $i++){
+        $fieldBase = 'CotisationMember_'.$i.'_';
+        $registration_cotisations[$i] = array(
+           'enabled' => isset($_POST[$fieldBase.'Enabled']),
+           'registration_id' => $registration_id,
+           'cotisation_id' => $_POST[$fieldBase.'CotisationId'],
+           'amount' => $_POST[$fieldBase.'Amount'],
+           'payement_method' => $_POST[$fieldBase.'PaymentMethod'],
+           'date' => $_POST[$fieldBase.'PaymentMethod'],
+
+        );
+    }
+
+    return $registration_cotisations;
+  }
+
   function registration_person($registration)
   {
     $person = person_create();
@@ -241,6 +262,54 @@
 	    }
 
 	}
+    
+    // Clear the registration cotisations
+    if($res){
+        $sql = 'DELETE FROM registration_cotisation WHERE registration_id=:registration_id';
+	    $stmt = $conn->prepare($sql);
+	    if($stmt){
+		    $stmt->bindParam(':registration_id', $registration["id"], PDO::PARAM_INT);
+	        $res = $stmt->execute();
+            if(!$res){
+	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+            }
+        }else{
+            $res = false;
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+	    }
+    }
+
+    // Save the registration cotisations
+    if($res){
+        $sql = 'INSERT INTO registration_cotisation (registration_id, cotisation_id, date, amount, payment_method) VALUES (:registration_id, :cotisation_id, :date, :amount, :payment_method)';
+	    $stmt = $conn->prepare($sql);
+	    if(!$stmt){
+            $res = false;
+		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+	    }
+
+	    if($res){
+		    $stmt->bindParam(':registration_id', $registration["id"], PDO::PARAM_INT);
+		    foreach($registration["cotisations"] as $registration_cotisation)
+            {
+			    if($registration_cotisation['enabled']){
+                    $date = $registration_cotisation["date"];
+                    $payment_method = $registration_cotisation["payment_method"];
+                    $cotisation_id = $registration_cotisation["cotisation_id"];
+                    $amount = $registration_cotisation["amount"];
+		            $stmt->bindParam(':date', $date, PDO::PARAM_STR);
+		            $stmt->bindParam(':payment_method', $payment_method, PDO::PARAM_INT);
+				    $stmt->bindParam(':cotisation_id', $cotisation_id, PDO::PARAM_INT);
+				    $stmt->bindParam(':amount', $amount, PDO::PARAM_INT);
+				    $res = $stmt->execute();
+				    if(!$res){
+					    $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+					    break;
+				    }
+			    }
+		    }
+        }
+    }
 
     return $res;
   }
@@ -319,7 +388,7 @@ dispatch('/registrations/add', 'registration_add');
        }
     }
 
-    // Load current
+    // Load cotisation of 
     $cotisations = array();
     if($res){
        $res = cotisations_db_load_list($conn, $fiscalyear['id'], $cotisations, $errors);
@@ -449,24 +518,10 @@ dispatch_post('/registrations/:id/edit', 'registration_edit_post');
 
     $conn = $GLOBALS['db_connexion'];
 
-    // Load cotisation list
-    if($res){
-        $sql =  'SELECT cotisation.id AS id, label, amount
-            FROM cotisation, fiscal_year 
-            WHERE fiscal_year.id=fiscal_year_id
-	        AND fiscal_year_id = (SELECT fiscal_year_id FROM cotisation ORDER BY fiscal_year_id DESC LIMIT 1)
-            ORDER BY type, id';
-        $stmt = $conn->prepare($sql);
-        $res = $stmt->execute();
-        if ($res) {
-	        $cotisations = $stmt->fetchAll();
-        }
-    }
-
     // Save data
     if($res){
         $registration = registration_load();
-        $cotisations_member = cotisations_member_load();
+        $registration['cotisations'] = registration_cotisations_load($registration['id']);
 
         $conn->beginTransaction();
         $res = registration_save($conn, $registration, $errors);
