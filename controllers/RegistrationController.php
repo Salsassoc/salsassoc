@@ -25,28 +25,24 @@
 
   function registration_load()
   {
-    $valueGender = 0;
-    $valueImagerights = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
-    $registration = array(
-        // Registration infos
-        'id' => $_POST['RegistrationId'],
-        'registration_date' => $_POST['RegistrationDate'],
-        'registration_type' => $_POST['RegistrationType'],
-        'fiscal_year_id' => $_POST['RegistrationFiscalYearId'],
-        // Member infos
-        'person_id' => $_POST['PersonId'],
-        'firstname' => $_POST['Firstname'],
-        'lastname' => $_POST['Lastname'],
-        'gender' => $valueGender,
-        'birthdate' => $_POST['Birthdate'],
-        'address' => $_POST['Address'],
-        'zipcode' => $_POST['Zipcode'],
-        'city' => $_POST['City'],
-        'email' => $_POST['Email'],
-        'phonenumber' => $_POST['Phonenumber'],
-        'image_rights' => $valueImagerights
-    );
-
+    $registration = array();
+    // Registration infos
+    $registration['id'] = $_POST['RegistrationId'];
+    $registration['registration_date'] = $_POST['RegistrationDate'];
+    $registration['registration_type'] = $_POST['RegistrationType'];
+    $registration['fiscal_year_id'] = $_POST['RegistrationFiscalYearId'];
+    // Member infos
+    $registration['person_id'] = $_POST['PersonId'];
+    $registration['firstname'] = $_POST['Firstname'];
+    $registration['lastname'] = $_POST['Lastname'];
+    $registration['gender'] = 0;
+    $registration['birthdate'] = ($_POST['Birthdate'] != "" ? $_POST['Birthdate'] : null);
+    $registration['address'] = ($_POST['Address'] != "" ? $_POST['Address'] : null);
+    $registration['zipcode'] =  ($_POST['Zipcode'] != "" ? $_POST['Zipcode'] : null);
+    $registration['city'] = ($_POST['City'] != "" ? $_POST['City'] : null);
+    $registration['email'] = $_POST['Email'];
+    $registration['phonenumber'] = ($_POST['Phonenumber'] != "" ? $_POST['Phonenumber'] : null);
+    $registration['image_rights'] = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
     return $registration;
   }
 
@@ -62,8 +58,8 @@
            'registration_id' => $registration_id,
            'cotisation_id' => $_POST[$fieldBase.'CotisationId'],
            'amount' => $_POST[$fieldBase.'Amount'],
-           'payement_method' => $_POST[$fieldBase.'PaymentMethod'],
-           'date' => $_POST[$fieldBase.'PaymentMethod'],
+           'payment_method' => $_POST[$fieldBase.'PaymentMethod'],
+           'date' => $_POST[$fieldBase.'Date'],
 
         );
     }
@@ -185,16 +181,18 @@
     // Save the person
 	$stmt = null;
     if($res){
-
         $person = registration_person($registration);
 
-        if($registration['person_id']==0){
+        if($person_id == 0){
         	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, date(\'now\'), 1)';
 	    }else{
         	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights WHERE id=:id';
 	    }
 	    $stmt = $conn->prepare($sql);
 	    if($stmt){
+            if($person_id != 0){        
+	          $stmt->bindParam(':id', $person_id, PDO::PARAM_INT);
+            }
 	        $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
 	        $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
 	        $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
@@ -220,7 +218,7 @@
 	    }
 
 	}
-
+ 
     // Save the registration
 	$stmt = null;
     if($res){
@@ -233,6 +231,9 @@
 
 	    $stmt = $conn->prepare($sql);
 	    if($stmt){
+            if($id != 0){        
+	          $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            }
 	        $stmt->bindParam(':person_id', $registration['person_id'], PDO::PARAM_INT);
 	        $stmt->bindParam(':firstname', $registration['firstname'], PDO::PARAM_STR, 50);
 	        $stmt->bindParam(':lastname', $registration['lastname'], PDO::PARAM_STR, 50);
@@ -262,7 +263,7 @@
 	    }
 
 	}
-    
+
     // Clear the registration cotisations
     if($res){
         $sql = 'DELETE FROM registration_cotisation WHERE registration_id=:registration_id';
@@ -537,7 +538,6 @@ dispatch_post('/registrations/:id/edit', 'registration_edit_post');
     }else{
 	    set('registration', $registration);
 	    set('cotisations', $cotisations);
-        set('cotisations_member', $cotisations_member);
 
 	    set('page_title', TS::Cotisation_CotisationRegister);
 	    set('page_submenus', getSubMenus("cotisations"));
