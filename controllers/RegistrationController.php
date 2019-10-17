@@ -207,8 +207,9 @@
             if($res){
                 if($person_id==0){
                     $person_id = $conn->lastInsertId();
-		            $person["person_id"] = $person_id;
+		            $person["id"] = $person_id;
                 }
+                $registration['person_id'] = $person_id;
             }else{
 	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
             }
@@ -383,7 +384,7 @@ dispatch('/registrations/add', 'registration_add');
     // Load current fiscal year
     $fiscalyear = null;
     if($res){
-       $res = fiscalyears_db_load_current($conn, $fiscalyear, $errors);
+       $res = fiscalyears_db_load_from_current($conn, $fiscalyear, $errors);
        if($res){
          $registration['fiscal_year_id'] = $fiscalyear['id'];
        }
@@ -420,25 +421,6 @@ dispatch('/registrations/add', 'registration_add');
           
 	    }
     }
-/*
-    // Load cotisation list
-    if($res){
-        $sql =  'SELECT cotisation.id AS id, label, amount
-            FROM cotisation, fiscal_year 
-            WHERE fiscal_year.id=fiscal_year_id
-	        AND fiscal_year.is_current = \'true\'
-            ORDER BY type, id';
-        $stmt = $conn->prepare($sql);
-        if($stmt){
-          $res = $stmt->execute();
-          if ($res) {
-	        $cotisations = $stmt->fetchAll();
-          }
-        }else{
-          $res = false;
-        }
-    }
-*/
 
     if($res){
 	    set('registration', $registration);
