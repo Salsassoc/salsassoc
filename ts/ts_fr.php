@@ -17,7 +17,7 @@ class TS {
 	const Main_Welcome = "Bienvenue dans le gestionnaire ".TS::AppName." !";
 	const Main_Menu_Members = "Membres";
 	const Main_Menu_People = "Personnes";
-	const Main_Menu_Registrations = "Inscriptions";
+	const Main_Menu_Memberships = "Adhésions";
 	const Main_Menu_Cotisations = "Cotisations";
 	const Main_Menu_FiscalYears = "Années fiscales";
 	const Main_Menu_Accounting = "Comptabilité";
@@ -60,23 +60,23 @@ class TS {
 	const Cotisation_Type_Course = "Cours";
 	const Cotisation_CotisationList = "Liste des cotisations";
 
-    // Registration
-	const Registration_Registrations = "Inscriptions";
-	const Registration_RegistrationAll = "Inscriptions";
-	const Registration_AddRegistration = "Ajouter une inscription";
-	const Registration_RegistrationCount = "Nombre d'inscriptions : %d";
-	const Registration_Date = "Date";
-	const Registration_Type = "Type";
-	const Registration_View = "Voir";
-    const Registration_Num = "Inscription #%d";
-	const Registration_MemberInfos = "Informations du membre";
-	const Registration_Registration = "Inscription";
+    // Membership
+	const Membership_Memberships = "Adhésions";
+	const Membership_MembershipAll = "Adhésions";
+	const Membership_AddMembership = "Ajouter une adhésion";
+	const Membership_MembershipCount = "Nombre d'adhésions : %d";
+	const Membership_Date = "Date";
+	const Membership_Type = "Type";
+	const Membership_View = "Voir";
+    const Membership_Num = "Adhésion #%d";
+	const Membership_MemberInfos = "Informations du membre";
+	const Membership_Membership = "Adhésion";
 
-    // Registration type
-	const RegistrationType_MembershipStandard = "Standard";
-	const RegistrationType_MembershipDiscounted = "Avantages jeunes";
-	const RegistrationType_ExecutiveBoard = "Conseil d'administration";
-	const RegistrationType_Professor = "Professeur";
+    // Membership type
+	const MembershipType_MembershipStandard = "Standard";
+	const MembershipType_MembershipDiscounted = "Avantages jeunes";
+	const MembershipType_ExecutiveBoard = "Conseil d'administration";
+	const MembershipType_Professor = "Professeur";
 
 	// Person
 	const Person_Members = "Membres";

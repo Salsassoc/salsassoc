@@ -14,7 +14,7 @@
       <?php if(isset($_SESSION['username'])){ ?>
       <a href="<?php echo url_for('/members')?>"><?php echo TS::Main_Menu_Members; ?></a> |
      <!-- <a href="<?php echo url_for('/people')?>"><?php echo TS::Main_Menu_People; ?></a> |-->
-      <a href="<?php echo url_for('/registrations')?>"><?php echo TS::Main_Menu_Registrations; ?></a> |
+      <a href="<?php echo url_for('/memberships')?>"><?php echo TS::Main_Menu_Memberships; ?></a> |
       <a href="<?php echo url_for('/cotisations')?>"><?php echo TS::Main_Menu_Cotisations; ?></a> |
       <a href="<?php echo url_for('/accounting')?>"><?php echo TS::Main_Menu_Accounting; ?></a> |
       <a href="<?php echo url_for('/fiscalyears')?>"><?php echo TS::Main_Menu_FiscalYears; ?></a> |

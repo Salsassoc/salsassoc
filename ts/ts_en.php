@@ -17,7 +17,7 @@ class TS {
 	const Main_Welcome = "Welcome to ".TS::AppName." manager !";
 	const Main_Menu_Members = "Members";
 	const Main_Menu_People = "People";
-	const Main_Menu_Registrations = "Registrations";
+	const Main_Menu_Memberships = "Memberships";
 	const Main_Menu_Cotisations = "Cotisations";
 	const Main_Menu_FiscalYears = "Fiscal years";
 	const Main_Menu_Accounting = "Accounting";
@@ -59,23 +59,23 @@ class TS {
 	const Cotisation_Type_Course = "Course";
 	const Cotisation_CotisationList = "Cotisations list";
 
-    // Registration
-	const Registration_Registrations = "Registrations";
-	const Registration_RegistrationAll = "Registrations";
-	const Registration_AddRegistration = "Add a registration";
-	const Registration_RegistrationCount = "Registrations count : %d";
-	const Registration_Date = "Date";
-	const Registration_Type = "Type";
-	const Registration_View = "View";
-    const Registration_Num = "Registration #%d";
-	const Registration_MemberInfos = "Member informations";
-	const Registration_Registration = "Registration";
+    // Membership
+	const Membership_Memberships = "Memberships";
+	const Membership_MembershipAll = "Memberships";
+	const Membership_AddMembership = "Add a membership";
+	const Membership_MembershipCount = "Memberships count : %d";
+	const Membership_Date = "Date";
+	const Membership_Type = "Type";
+	const Membership_View = "View";
+    const Membership_Num = "Membership #%d";
+	const Membership_MemberInfos = "Member informations";
+	const Membership_Membership = "Membership";
 
-    // Registration type
-	const RegistrationType_MembershipStandard = "Standard";
-	const RegistrationType_MembershipDiscounted = "Avantages jeunes";
-	const RegistrationType_ExecutiveBoard = "Executive board";
-	const RegistrationType_Professor = "Professor";
+    // Membership type
+	const MembershipType_MembershipStandard = "Standard";
+	const MembershipType_MembershipDiscounted = "Avantages jeunes";
+	const MembershipType_ExecutiveBoard = "Executive board";
+	const MembershipType_Professor = "Professor";
 
 	// Person
 	const Person_Members = "Members";
