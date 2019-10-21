@@ -61,6 +61,33 @@
     return fiscalyears_db_load($conn, $sql, $fiscalyear, $errors);
   }
 
+  function fiscalyears_db_load_list($conn, $sql, &$fiscalyears, &$errors)
+  {
+    $res = true;
+
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $fiscalyears = $stmt->fetchAll();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+	    $res = false;
+        $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+
+    return $res;
+  }
+
+  function fiscalyears_db_load_list_all($conn, &$fiscalyears, &$errors)
+  {
+    $sql = "SELECT id, title, start_date, end_date, is_current";
+    $sql .= " FROM fiscal_year";
+    return fiscalyears_db_load_list($conn, $sql, $fiscalyears, $errors);
+  }
+
 dispatch('/fiscalyears', 'fiscalyear_list');
   function fiscalyear_list()
   {
@@ -71,43 +98,41 @@ dispatch('/fiscalyears', 'fiscalyear_list');
 
     $conn = $GLOBALS['db_connexion'];
 
-	// Get fiscal years list
-    $sql =  'SELECT id, title, start_date, end_date, is_current FROM fiscal_year';
-	$sql .= ' ORDER BY start_date DESC';
+    $res = true;
+
+    // Load current fiscal year
+    $fiscalyears = null;
+    if($res){
+       $res = fiscalyears_db_load_list_all($conn, $fiscalyears, $errors);
+    }
+
+	// Get membership for each years
+    $sql = 'SELECT fiscal_year_id, count(DISTINCT id) AS membership_count';
+    $sql .= ' FROM membership';
+    $sql .= ' GROUP BY fiscal_year_id';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
-        $results = $stmt->fetchAll();
-        set('fiscalyears', $results);
-
+        $fiscalyearsmemberscount = $stmt->fetchAll();
 	}
 
 	// Get members for each years
-    $sql =  'SELECT fiscal_year_id, count(DISTINCT person_id) AS person_count';
-    $sql .=  ' FROM cotisation_member, cotisation';
-    $sql .=  ' WHERE cotisation_id=cotisation.id';
+    $sql =  'SELECT fiscal_year_id, sum(membership_cotisation.amount) AS total_amount';
+    $sql .=  ' FROM membership, membership_cotisation';
+    $sql .=  ' WHERE membership.id=membership_id';
     $sql .=  ' GROUP BY fiscal_year_id';
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
         $results = $stmt->fetchAll();
-        set('fiscalyearsmemberscount', $results);
-	}
-
-	// Get members for each years
-    $sql =  'SELECT fiscal_year_id, sum(cotisation_member.amount) AS total_amount';
-    $sql .=  ' FROM cotisation_member, cotisation';
-    $sql .=  ' WHERE cotisation_id=cotisation.id';
-    $sql .=  ' GROUP BY fiscal_year_id';
-    $stmt = $conn->prepare($sql);
-    $res = $stmt->execute();
-    if ($res) {
-        $results = $stmt->fetchAll();
-        set('fiscalyearsamount', $results);
 	}
 
 	// Render data
 	if($res){
+        set('fiscalyears', $fiscalyears);
+        set('fiscalyearsmemberscount', $fiscalyearsmemberscount);
+        set('fiscalyearsamount', $results);
+        
         set('page_title', "Fiscal years");
         set('page_submenus', getSubMenus("fiscalyears"));
         return html('fiscalyear.list.html.php');
@@ -231,26 +256,26 @@ dispatch_post('/fiscalyears/:id/edit', 'fiscalyear_edit');
 	}
   }
 
-function getCotisationSumForPerson($person_id, $listCotisatioMember)
+function getCotisationSumForMembership($membership_id, $listCotisatioMember)
 {
     $amount = 0.0;
     $paymentMethod = 0;
     $date = null;
 
-    foreach  ($listCotisatioMember as $cotisationMember)
+    foreach  ($listCotisatioMember as $membership_cotisation)
     {
-        if($cotisationMember["person_id"] == $person_id){
-            $date = $cotisationMember["date"];
-            $paymentMethod = $cotisationMember["payment_method"];
-            $amount += $cotisationMember["amount"];
+        if($membership_cotisation["membership_id"] == $membership_id){
+            $date = $membership_cotisation["date"];
+            $paymentMethod = $membership_cotisation["payment_method"];
+            $amount += $membership_cotisation["amount"];
         }
     }
 
     return array("amount" => $amount, "payment_method" => $paymentMethod, "date" => $date);
 }
 
-dispatch('/fiscalyears/:id/members', 'fiscalyear_members_list');
-  function fiscalyear_members_list()
+dispatch('/fiscalyears/:id/memberships', 'fiscalyear_memberships_list');
+  function fiscalyear_memberships_list()
   {
     $webuser = loadWebUser();
 	if($webuser->is_anonymous){
@@ -260,30 +285,19 @@ dispatch('/fiscalyears/:id/members', 'fiscalyear_members_list');
     $fiscal_year_id = params('id');
 
     $conn = $GLOBALS['db_connexion'];
+    $errors = array();
 
     $res = true;
     $persons = true;
 
     // Load person list
     if($res){
-        $sql =  'SELECT DISTINCT person.id as id, firstname, lastname, birthdate, zipcode, city, email, phonenumber, image_rights, creation_date
-            FROM person, cotisation_member, cotisation 
-            WHERE person.id=cotisation_member.person_id AND cotisation_member.cotisation_id=cotisation.id
-            AND fiscal_year_id='.$fiscal_year_id.'
-            ORDER BY lastname, firstname';
-        $stmt = $conn->prepare($sql);
-        if($stmt){
-            $res = $stmt->execute();
-            if ($res) {
-                $persons = $stmt->fetchAll();
-            }
-        }else{
-            $res = false;
-        }
+        $res = memberships_db_load_list_from_fiscal_year_id($conn, $fiscal_year_id, $memberships, $errors);
     }
 
     // Load cotisation list
     if($res){
+        
         $sql =  'SELECT id, label, type
             FROM cotisation 
             WHERE fiscal_year_id='.$fiscal_year_id.'
@@ -299,13 +313,14 @@ dispatch('/fiscalyears/:id/members', 'fiscalyear_members_list');
         }
     }
 
+    $listCotisationMember = null;
     // Load cotisation_member list
     if($res){
-        $sql =  'SELECT person_id, cotisation_id, date, cotisation_member.amount AS amount, payment_method
-            FROM cotisation_member, cotisation 
-            WHERE cotisation_member.cotisation_id=cotisation.id
+        $sql =  'SELECT membership_id, cotisation_id, date, membership_cotisation.amount AS amount, payment_method
+            FROM membership_cotisation, cotisation 
+            WHERE membership_cotisation.cotisation_id=cotisation.id
             AND fiscal_year_id='.$fiscal_year_id.'
-            ORDER BY person_id, cotisation_id';
+            ORDER BY membership_id, cotisation_id';
         $stmt = $conn->prepare($sql);
         if($stmt){
             $res = $stmt->execute();
@@ -316,18 +331,18 @@ dispatch('/fiscalyears/:id/members', 'fiscalyear_members_list');
             $res = false;
         }
     }
-    
 
     if($res){
-        set('personlist', $persons);
+        set('memberships', $memberships);
         set('cotisationlist', $cotisations);
         set('listCotisationMember', $listCotisationMember);
 
         set('page_title', "Members");
-        return html('fiscalyear.person.list.html.php');
+        return html('fiscalyear.membership.list.html.php');
     }
 
     set('page_title', "Bad request");
+    set('errors', $errors);
     return html('error.html.php');
 }
 

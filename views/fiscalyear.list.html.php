@@ -19,7 +19,7 @@
 	$tabFiscalYearsMembersCount = array();
     foreach  ($fiscalyearsmemberscount as $fiscalyearmemberscount)
     {
-		$tabFiscalYearsMembersCount[$fiscalyearmemberscount['fiscal_year_id']] = $fiscalyearmemberscount['person_count'];
+		$tabFiscalYearsMembersCount[$fiscalyearmemberscount['fiscal_year_id']] = $fiscalyearmemberscount['membership_count'];
 	}
 
 	// Compute associative array for fiscal year amount
@@ -46,7 +46,7 @@
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['start_date']) ?></td>
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($fiscalyear['end_date']) ?></td>
   <td align="center">
-    <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'], 'members')?>">
+    <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'], 'memberships')?>">
 		<?php
 			$memberscount=0;
 			if(isset($tabFiscalYearsMembersCount[$fiscalyear_id])){
