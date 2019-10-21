@@ -122,6 +122,34 @@
     return $res;
   }
 
+  function memberships_db_load_list($conn, $sql, &$membership, &$errors)
+  {
+    $res = true;
+
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $membership = $stmt->fetchAll();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+		$res = false;
+	    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+
+    return $res;
+  }
+
+  function memberships_db_load_list_from_person_id($conn, $person_id, &$memberships, &$errors)
+  {
+    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, person_id";
+    $sql .= " FROM membership";
+    $sql .= " WHERE person_id=".$person_id;
+    $sql .= " ORDER BY membership_date DESC";
+    return memberships_db_load_list($conn, $sql, $memberships, $errors);
+  }
 
   function memberships_db_load_membership_cotisations_list_from_id($conn, $membership_id, &$membership, &$errors)
   {
@@ -327,7 +355,7 @@ dispatch('/memberships', 'membership_list');
     $conn = $GLOBALS['db_connexion'];
 
     $res = true;
-    $listMemberships = null;
+    $memberships = null;
 
     // Load membership list
     if($res){
@@ -336,13 +364,13 @@ dispatch('/memberships', 'membership_list');
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute();
         if($res){
-          $listMemberships = $stmt->fetchAll();
+          $memberships = $stmt->fetchAll();
         }
     }
 
     // Render
     if ($res) {
-        set('listMemberships', $listMemberships);
+        set('memberships', $memberships);
 
         set('page_title', TS::Membership_Memberships);
         set('page_submenus', getSubMenus("memberships"));

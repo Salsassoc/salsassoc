@@ -83,6 +83,11 @@ h1 {
 	margin:5px 0px 5px 0px;
 }
 
+h2 {
+	font-weight: bold;
+}
+
+
 .list
 {
 	border-collapse: collapse;

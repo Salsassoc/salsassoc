@@ -41,6 +41,27 @@
     return $person;
   }
 
+  function persons_db_load_from_id($conn, $id, &$person, &$errors)
+  {
+    $res = true;
+
+    $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, comments FROM person WHERE id='.$id;
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $person = $stmt->fetch();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+	    $res = false;
+        $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+
+    return $res;
+  }
+
   function persons_db_load_list($conn, $sql, &$persons, &$errors)
   {
     $res = true;
@@ -210,15 +231,24 @@ dispatch('/members/:id', 'person_view');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
-    $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, comments FROM person WHERE id='.$id;
-    $results = $conn->query($sql);
 
-    $sql =  'SELECT id, label, cotisation.amount AS cotisation_amount, start_date, end_date, date, cotisation_member.amount as amount, payment_method FROM cotisation, cotisation_member WHERE cotisation.id=cotisation_id AND person_id='.$id;
-    $results2 = $conn->query($sql);
+    $res = true;
 
-    if(count($results) == 1){
-        set('person', $results->fetch());
-        set('cotisations', $results2);
+    // Load person
+    $person = null;
+    if($res){
+       $res = persons_db_load_from_id($conn, $id, $person, $errors);
+    }
+
+    // Load memberships
+    $memberships = null;
+    if($res){
+       $res = memberships_db_load_list_from_person_id($conn, $person['id'], $memberships, $errors);
+    }
+ 
+    if($res){
+        set('person', $person);
+        set('memberships', $memberships);
 
         set('page_title', sprintf(TS::Person_MemberNum, $id));
         set('page_submenus', getSubMenus("members"));
