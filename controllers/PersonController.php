@@ -41,7 +41,46 @@
     return $person;
   }
 
-  function getPersonListQuery($bCurrentOnly, $currentDate)
+  function persons_db_load_list($conn, $sql, &$persons, &$errors)
+  {
+    $res = true;
+
+    $stmt = $conn->prepare($sql);
+    if($stmt){
+        $res = $stmt->execute();
+        if ($res) {
+            $persons = $stmt->fetchAll();
+        }else{
+            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+    }else{
+	    $res = false;
+        $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+    }
+
+    return $res;
+  }
+
+  function persons_db_load_list_from_fiscal_year($conn, $fiscalyear, &$persons, &$errors)
+  {
+    $sql =  "SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.image_rights AS image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count";
+    $sql .= " FROM person LEFT JOIN membership ON person.id=person_id";
+	$sql .= " WHERE fiscal_year_id=".$fiscalyear['id'];
+    $sql .= ' GROUP BY person.id';
+    $sql .= ' ORDER BY lastname, firstname';
+    return persons_db_load_list($conn, $sql, $persons, $errors);
+  }
+
+  function persons_db_load_list_all($conn, &$persons, &$errors)
+  {
+    $sql =  "SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.image_rights AS image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count";
+    $sql .= " FROM person LEFT JOIN membership ON person.id=person_id";
+    $sql .= ' GROUP BY person.id';
+    $sql .= ' ORDER BY lastname, firstname';
+    return persons_db_load_list($conn, $sql, $persons, $errors);
+  }
+
+  function getPersonListQuery($bCurrentOnly, $fiscalyear)
   {
 	$filter = "";
 	if($bCurrentOnly){
@@ -49,8 +88,8 @@
 		$filter .= " WHERE '".$currentDate."' BETWEEN start_date AND end_date ";
 	}
 
-    $sql =  'SELECT person.id as id, firstname, lastname, birthdate, zipcode, city, email, phonenumber, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(cotisation_id) AS cotisation_count
-        FROM person LEFT JOIN cotisation_member ON person.id=person_id LEFT JOIN cotisation ON cotisation.id = cotisation_id';
+    $sql =  'SELECT person.id as id, firstname, lastname, birthdate, zipcode, city, email, phonenumber, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count
+        FROM person LEFT JOIN member_ship ON person.id=person_id';
 	$sql .= $filter;
     $sql .= ' GROUP BY person.id';
     $sql .= ' ORDER BY lastname, firstname';
@@ -67,15 +106,26 @@
 
     $conn = $GLOBALS['db_connexion'];
 
-    $currentDate = date("Y-m-d");
+    $res = true;
 
-    $sql = getPersonListQuery($bCurrentOnly, $currentDate);
+    // Load current fiscal year
+    $fiscalyear = null;
+    if($res){
+       $res = fiscalyears_db_load_from_current($conn, $fiscalyear, $errors);
+    }
 
-    $stmt = $conn->prepare($sql);
-    $res = $stmt->execute();
+    // Load the list of persons
+    $persons = null;
+    if($res){
+      if($bCurrentOnly){
+        $res = persons_db_load_list_from_fiscal_year($conn, $fiscalyear, $persons, $errors);
+      }else{
+        $res = persons_db_load_list_all($conn, $persons, $errors);
+      }
+    }
+
     if ($res) {
-        $results = $stmt->fetchAll();
-        set('personlist', $results);
+        set('personlist', $persons);
         set('page_id', "person_list");
         set('page_title', TS::Person_Members);
         set('page_submenus', getSubMenus("members"));
