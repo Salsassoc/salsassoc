@@ -36,3 +36,5 @@ SELECT membership.id, cotisation_id, date, amount, payment_method
 FROM membership, cotisation_member
 WHERE membership.person_id = cotisation_member.person_id
 AND membership_date = cotisation_member.date;
+
+DROP TABLE cotisation_member;
