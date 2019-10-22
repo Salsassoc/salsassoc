@@ -181,7 +181,7 @@
     return $res;
   }
 
-  function membership_save($conn, &$membership, &$errors)
+  function membership_save($conn, $bSavePerson, &$membership, &$errors)
   {
     $res = true;
 
@@ -220,40 +220,42 @@
     if($res){
         $person = membership_person($membership);
 
-        if($person_id == 0){
-        	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, date(\'now\'), 1)';
-	    }else{
-        	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights WHERE id=:id';
-	    }
-	    $stmt = $conn->prepare($sql);
-	    if($stmt){
-            if($person_id != 0){        
-	          $stmt->bindParam(':id', $person_id, PDO::PARAM_INT);
-            }
-	        $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
-	        $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
-	        $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
-	        $stmt->bindParam(':birthdate', $person['birthdate'], PDO::PARAM_STR, 10);
-	        $stmt->bindParam(':address', $person['address'], PDO::PARAM_STR, 100);
-	        $stmt->bindParam(':zipcode', $person['zipcode'], PDO::PARAM_INT, 10);
-	        $stmt->bindParam(':city', $person['city'], PDO::PARAM_STR, 50);
-	        $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
-	        $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
-	        $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);
-	        $res = $stmt->execute();
-            if($res){
-                if($person_id==0){
-                    $person_id = $conn->lastInsertId();
-		            $person["id"] = $person_id;
+        if($bSavePerson){
+            if($person_id == 0){
+            	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, date(\'now\'), 1)';
+	        }else{
+            	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights WHERE id=:id';
+	        }
+	        $stmt = $conn->prepare($sql);
+	        if($stmt){
+                if($person_id != 0){        
+	              $stmt->bindParam(':id', $person_id, PDO::PARAM_INT);
                 }
-                $membership['person_id'] = $person_id;
+	            $stmt->bindParam(':firstname', $person['firstname'], PDO::PARAM_STR, 50);
+	            $stmt->bindParam(':lastname', $person['lastname'], PDO::PARAM_STR, 50);
+	            $stmt->bindParam(':gender', $person['gender'], PDO::PARAM_INT);
+	            $stmt->bindParam(':birthdate', $person['birthdate'], PDO::PARAM_STR, 10);
+	            $stmt->bindParam(':address', $person['address'], PDO::PARAM_STR, 100);
+	            $stmt->bindParam(':zipcode', $person['zipcode'], PDO::PARAM_INT, 10);
+	            $stmt->bindParam(':city', $person['city'], PDO::PARAM_STR, 50);
+	            $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
+	            $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
+	            $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);
+	            $res = $stmt->execute();
+                if($res){
+                    if($person_id==0){
+                        $person_id = $conn->lastInsertId();
+		                $person["id"] = $person_id;
+                    }
+                    $membership['person_id'] = $person_id;
+                }else{
+	                $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+                }
             }else{
-	            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-            }
-        }else{
-			$res = false;
-		    $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
-	    }
+			    $res = false;
+		        $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
+	        }
+        }
 
 	}
  
@@ -412,7 +414,11 @@ dispatch('/memberships/add', 'membership_add');
 		redirect_to('/login'); return;
 	}
 
+    $res = true;
+
     $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
 
 	$membership = membership_create();
 
@@ -427,10 +433,10 @@ dispatch('/memberships/add', 'membership_add');
        }
     }
 
-    // Load cotisation of 
-    $cotisations = array();
+    // Load cotisation list
+    $listCotisation = null;
     if($res){
-       $res = cotisations_db_load_list($conn, $fiscalyear['id'], $cotisations, $errors);
+        $res = $dbController->getCotisationListByFiscalYearId($fiscalyear['id'], $listCotisation);
     }
 
     // Load person
@@ -461,7 +467,7 @@ dispatch('/memberships/add', 'membership_add');
 
     if($res){
 	    set('membership', $membership);
-	    set('cotisations', $cotisations);
+	    set('cotisations', $listCotisation);
 
 	    set('page_title', TS::Cotisation_CotisationRegister);
 	    set('page_submenus', getSubMenus("memberships"));
@@ -481,11 +487,13 @@ dispatch('/memberships/:id/edit', 'membership_edit');
 		redirect_to('/login'); return;
 	}
 
-    $id = params('id');
+    $res = true;
+
     $conn = $GLOBALS['db_connexion'];
     $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
 
-    $res = true;
+    $id = params('id');
 
     // Load membership
     $membership = null;
@@ -507,15 +515,15 @@ dispatch('/memberships/:id/edit', 'membership_edit');
        }
     }
 
-    // Load cotisation
-    $cotisations = array();
+    // Load cotisation list
+    $listCotisation = null;
     if($res){
-       $res = cotisations_db_load_list($conn, $fiscalyear['id'], $cotisations, $errors);
+        $res = $dbController->getCotisationListByFiscalYearId($fiscalyear['id'], $listCotisation);
     }
 
     if($res){
         set('membership', $membership);
-        set('cotisations', $cotisations);
+        set('cotisations', $listCotisation);
 
         set('page_title', sprintf(TS::Membership_Num, $id));
         set('page_submenus', getSubMenus("memberships"));
@@ -535,9 +543,16 @@ dispatch_post('/memberships/:id/edit', 'membership_edit_post');
 	}
 
     $res = true;
-    $errors = array();
 
     $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
+
+    // Load current fiscal year
+    $fiscalyear = null;
+    if($res){
+       $res = fiscalyears_db_load_from_current($conn, $fiscalyear, $errors);
+    }
 
     // Save data
     if($res){
@@ -545,15 +560,16 @@ dispatch_post('/memberships/:id/edit', 'membership_edit_post');
         $membership['cotisations'] = membership_cotisations_load($membership['id']);
     }
 
-    // Load cotisation
-    $cotisations = array();
+    // Load cotisation list
+    $listCotisation = null;
     if($res){
-       $res = cotisations_db_load_list($conn, $membership['fiscal_year_id'], $cotisations, $errors);
+        $res = $dbController->getCotisationListByFiscalYearId($membership['fiscal_year_id'], $listCotisation);
     }
 
     if($res){
+        $bSavePerson = ($fiscalyear['id'] == $membership['fiscal_year_id']);
         $conn->beginTransaction();
-        $res = membership_save($conn, $membership, $errors);
+        $res = membership_save($conn, $bSavePerson, $membership, $errors);
         if($res){
             $conn->commit();
         }else{
@@ -565,7 +581,7 @@ dispatch_post('/memberships/:id/edit', 'membership_edit_post');
 		redirect_to('/memberships/'.$membership['id'].'/edit');
     }else{
 	    set('membership', $membership);
-	    set('cotisations', $cotisations);
+	    set('cotisations', $listCotisation);
 
 	    set('page_title', TS::Cotisation_CotisationRegister);
 	    set('page_submenus', getSubMenus("cotisations"));

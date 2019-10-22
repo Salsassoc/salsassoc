@@ -248,7 +248,7 @@ dispatch('/members/:id', 'person_view');
  
     if($res){
         set('person', $person);
-        set('memberships', $memberships);
+        set('listMembership', $memberships);
 
         set('page_title', sprintf(TS::Person_MemberNum, $id));
         set('page_submenus', getSubMenus("members"));
