@@ -71,7 +71,7 @@ class DatabaseController
         $sql = "SELECT id, label, type, amount, start_date, end_date, fiscal_year_id";
         $sql .= " FROM cotisation";
 	    if($bMembershipOnly){
-		    $sql .= 'WHERE type = 1 ';
+		    $sql .= " WHERE type = 1";
 	    }
         $sql .= " ORDER BY type";
         return $this->fetchAll($sql, $listCotisation);
