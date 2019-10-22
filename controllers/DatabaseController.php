@@ -59,6 +59,7 @@ class DatabaseController
     {
         $sql = "SELECT id, title, start_date, end_date, is_current";
         $sql .= " FROM fiscal_year";
+        $sql .= " ORDER BY start_date DESC";
         return $this->fetchAll($sql, $listFiscalYear);
     }
 
@@ -73,7 +74,7 @@ class DatabaseController
 	    if($bMembershipOnly){
 		    $sql .= " WHERE type = 1";
 	    }
-        $sql .= " ORDER BY type";
+        $sql .= " ORDER BY start_date DESC";
         return $this->fetchAll($sql, $listCotisation);
     }
 
