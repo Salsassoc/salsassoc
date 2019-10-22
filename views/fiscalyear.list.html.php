@@ -1,5 +1,5 @@
 <p align="right">
-<?php printf(TS::FiscalYear_FiscalYearCount, count($fiscalyears)); ?>
+<?php printf(TS::FiscalYear_FiscalYearCount, count($listFiscalYear)); ?>
 </p>
 
 <table width="100%" class="list">
@@ -17,19 +17,19 @@
 <?php
 	// Compute associative array for fiscal year person count
 	$tabFiscalYearsMembersCount = array();
-    foreach  ($fiscalyearsmemberscount as $fiscalyearmemberscount)
+    foreach  ($listMembershipCountPerFiscalYear as $fiscalyearmemberscount)
     {
 		$tabFiscalYearsMembersCount[$fiscalyearmemberscount['fiscal_year_id']] = $fiscalyearmemberscount['membership_count'];
 	}
 
 	// Compute associative array for fiscal year amount
 	$tabFiscalYearsAmount = array();
-    foreach  ($fiscalyearsamount as $fiscalyearamount)
+    foreach  ($listAmountPerFiscalYear as $fiscalyearamount)
     {
 		$tabFiscalYearsAmount[$fiscalyearamount['fiscal_year_id']] = $fiscalyearamount['total_amount'];
 	}
 
-    foreach  ($fiscalyears as $fiscalyear)
+    foreach  ($listFiscalYear as $fiscalyear)
     {
 		$fiscalyear_id = $fiscalyear['id'];
 ?> 

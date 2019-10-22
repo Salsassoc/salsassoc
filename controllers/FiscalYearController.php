@@ -61,33 +61,6 @@
     return fiscalyears_db_load($conn, $sql, $fiscalyear, $errors);
   }
 
-  function fiscalyears_db_load_list($conn, $sql, &$fiscalyears, &$errors)
-  {
-    $res = true;
-
-    $stmt = $conn->prepare($sql);
-    if($stmt){
-        $res = $stmt->execute();
-        if ($res) {
-            $fiscalyears = $stmt->fetchAll();
-        }else{
-            $errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
-        }
-    }else{
-	    $res = false;
-        $errors[] = TSHelper::pdoErrorText($conn->errorInfo());
-    }
-
-    return $res;
-  }
-
-  function fiscalyears_db_load_list_all($conn, &$fiscalyears, &$errors)
-  {
-    $sql = "SELECT id, title, start_date, end_date, is_current";
-    $sql .= " FROM fiscal_year";
-    return fiscalyears_db_load_list($conn, $sql, $fiscalyears, $errors);
-  }
-
 dispatch('/fiscalyears', 'fiscalyear_list');
   function fiscalyear_list()
   {
@@ -96,42 +69,35 @@ dispatch('/fiscalyears', 'fiscalyear_list');
 		redirect_to('/login'); return;
 	}
 
-    $conn = $GLOBALS['db_connexion'];
-
     $res = true;
 
+    $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
+
     // Load current fiscal year
-    $fiscalyears = null;
+    $listFiscalYear = null;
     if($res){
-       $res = fiscalyears_db_load_list_all($conn, $fiscalyears, $errors);
+        $res = $dbController->getFiscalYearList($listFiscalYear);
     }
 
 	// Get membership for each years
-    $sql = 'SELECT fiscal_year_id, count(DISTINCT id) AS membership_count';
-    $sql .= ' FROM membership';
-    $sql .= ' GROUP BY fiscal_year_id';
-    $stmt = $conn->prepare($sql);
-    $res = $stmt->execute();
-    if ($res) {
-        $fiscalyearsmemberscount = $stmt->fetchAll();
-	}
+    $listMembershipCountPerFiscalYear = null;
+    if($res){
+        $res = $dbController->getMembershipCountPerFiscalYear($listMembershipCountPerFiscalYear);
+    }
 
 	// Get members for each years
-    $sql =  'SELECT fiscal_year_id, sum(membership_cotisation.amount) AS total_amount';
-    $sql .=  ' FROM membership, membership_cotisation';
-    $sql .=  ' WHERE membership.id=membership_id';
-    $sql .=  ' GROUP BY fiscal_year_id';
-    $stmt = $conn->prepare($sql);
-    $res = $stmt->execute();
-    if ($res) {
-        $results = $stmt->fetchAll();
-	}
+    $listAmountPerFiscalYear = null;
+    if($res){
+        $res = $dbController->getMembershipCotisationAmountCountPerFiscalYear($listAmountPerFiscalYear);
+    }
 
 	// Render data
 	if($res){
-        set('fiscalyears', $fiscalyears);
-        set('fiscalyearsmemberscount', $fiscalyearsmemberscount);
-        set('fiscalyearsamount', $results);
+        set('listFiscalYear', $listFiscalYear);
+        set('listMembershipCountPerFiscalYear', $listMembershipCountPerFiscalYear);
+        set('listAmountPerFiscalYear', $listAmountPerFiscalYear);
         
         set('page_title', "Fiscal years");
         set('page_submenus', getSubMenus("fiscalyears"));
@@ -285,30 +251,28 @@ dispatch('/fiscalyears/:id/memberships', 'fiscalyear_memberships_list');
     $res = true;
 
     $conn = $GLOBALS['db_connexion'];
-
     $errors = array();
     $dbController = new DatabaseController($conn, $errors);
-
-    $persons = true;
     
+    // Load URL params
     $fiscal_year_id = params('id');
 
     // Load person list
     $listMemberships = null;
     if($res){
-      $res = $dbController->getMembershipListByFiscalYearId($fiscal_year_id, $listMemberships);
+        $res = $dbController->getMembershipListByFiscalYearId($fiscal_year_id, $listMemberships);
     }
 
     // Load cotisation list
     $listCotisations = null;
     if($res){
-      $res = $dbController->getCotisationsByFiscalYearId($fiscal_year_id, $listCotisations);
+        $res = $dbController->getCotisationsByFiscalYearId($fiscal_year_id, $listCotisations);
     }
 
     // Load cotisation_member list
     $listMembershipCotisation = null;
     if($res){
-      $res = $dbController->getMembershipCotisationListByFiscalYearId($fiscal_year_id, $listMembershipCotisation);
+        $res = $dbController->getMembershipCotisationListByFiscalYearId($fiscal_year_id, $listMembershipCotisation);
     }
 
     if($res){
