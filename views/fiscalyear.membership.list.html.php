@@ -42,7 +42,7 @@
   <td align="center"><?php echo TSHelper::getCurrencyText($membership_cotisation['amount']); ?></td>
   <td align="center"><?php echo TSHelper::getPaymentMethod($membership_cotisation['payment_method']); ?></td>
   <td align="center">
-    <a href="<?php echo url_for('/membership', $membership['id'])?>"><?php echo TS::Person_View; ?></a>
+    <a href="<?php echo url_for('/memberships', $membership['id'], 'edit')?>"><?php echo TS::Person_View; ?></a>
   </td>
 </tr>
 <?php
