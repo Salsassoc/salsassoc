@@ -1,5 +1,5 @@
 <div class="list-top-infos">
-<?php printf(TS::Membership_MembershipCount, count($memberships)); ?>
+<?php printf(TS::Membership_MembershipCount, count($listMemberships)); ?>
  - 
 <a href="<?php echo url_for('/members/print')?>">Print</a>
 </div>
@@ -23,9 +23,9 @@
 </thead>
 <tbody>
 <?php
-    foreach  ($memberships as $membership)
+    foreach  ($listMemberships as $membership)
     {
-        $membership_cotisation = getCotisationSumForMembership($membership["id"], $listCotisationMember);
+        $membership_cotisation = getCotisationSumForMembership($membership["id"], $listMembershipCotisation);
 ?> 
 <tr>
   <td align="left"><?php echo $membership['lastname'] ?></td>

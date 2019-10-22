@@ -281,61 +281,40 @@ dispatch('/fiscalyears/:id/memberships', 'fiscalyear_memberships_list');
 	if($webuser->is_anonymous){
 		redirect_to('/login'); return;
 	}
+
+    $res = true;
+
+    $conn = $GLOBALS['db_connexion'];
+
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
+
+    $persons = true;
     
     $fiscal_year_id = params('id');
 
-    $conn = $GLOBALS['db_connexion'];
-    $errors = array();
-
-    $res = true;
-    $persons = true;
-
     // Load person list
+    $listMemberships = null;
     if($res){
-        $res = memberships_db_load_list_from_fiscal_year_id($conn, $fiscal_year_id, $memberships, $errors);
+      $res = $dbController->getMembershipListByFiscalYearId($fiscal_year_id, $listMemberships);
     }
 
     // Load cotisation list
+    $listCotisations = null;
     if($res){
-        
-        $sql =  'SELECT id, label, type
-            FROM cotisation 
-            WHERE fiscal_year_id='.$fiscal_year_id.'
-            ORDER BY type';
-        $stmt = $conn->prepare($sql);
-        if($stmt){
-            $res = $stmt->execute();
-            if ($res) {
-                $cotisations = $stmt->fetchAll();
-            }
-        }else{
-            $res = false;
-        }
+      $res = $dbController->getCotisationsByFiscalYearId($fiscal_year_id, $listCotisations);
     }
 
-    $listCotisationMember = null;
     // Load cotisation_member list
+    $listMembershipCotisation = null;
     if($res){
-        $sql =  'SELECT membership_id, cotisation_id, date, membership_cotisation.amount AS amount, payment_method
-            FROM membership_cotisation, cotisation 
-            WHERE membership_cotisation.cotisation_id=cotisation.id
-            AND fiscal_year_id='.$fiscal_year_id.'
-            ORDER BY membership_id, cotisation_id';
-        $stmt = $conn->prepare($sql);
-        if($stmt){
-            $res = $stmt->execute();
-            if ($res) {
-                $listCotisationMember = $stmt->fetchAll();
-            }
-        }else{
-            $res = false;
-        }
+      $res = $dbController->getMembershipCotisationListByFiscalYearId($fiscal_year_id, $listMembershipCotisation);
     }
 
     if($res){
-        set('memberships', $memberships);
-        set('cotisationlist', $cotisations);
-        set('listCotisationMember', $listCotisationMember);
+        set('listMemberships', $listMemberships);
+        set('listCotisations', $listCotisations);
+        set('listMembershipCotisation', $listMembershipCotisation);
 
         set('page_title', "Members");
         return html('fiscalyear.membership.list.html.php');
