@@ -51,33 +51,30 @@ dispatch('/cotisations/membership', 'cotisation_list_membership');
 	return cotisation_list(true);
   }
 
-dispatch('/cotisations/:id/members', 'cotisation_members_list');
-  function cotisation_members_list()
+dispatch('/cotisations/:id/membership', 'cotisation_membership_list');
+  function cotisation_membership_list()
   {
 	$webuser = loadWebUser();
 	if($webuser->is_anonymous){
 		redirect_to('/login'); return;
 	}
+
+    $res = true;
+
+    $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
     
     $id = params('id');
 
-    $conn = $GLOBALS['db_connexion'];
+    // Load cotisation list
+    $listMembership = null;
+    if($res){
+        $res = $dbController->getMembershipListByCotisationId($id, $listMembership);
+    }
 
-    $sql =  'SELECT id, firstname, lastname, birthdate, email, phonenumber, image_rights, creation_date, amount, payment_method, cotisation_count
-        FROM person, cotisation_member 
-        LEFT JOIN 
-          (SELECT person_id, COUNT(cotisation_id) AS cotisation_count FROM cotisation_member, cotisation
-           WHERE cotisation.id = cotisation_id AND cotisation.fiscal_year_id < (SELECT fiscal_year_id FROM cotisation WHERE id='.$id.')
-           GROUP BY person_id
-          ) AS CotisationCount ON CotisationCount.person_id=person.id
-        WHERE person.id=cotisation_member.person_id AND cotisation_id='.$id.'
-        GROUP BY person.id
-        ORDER BY lastname, firstname';
-    $stmt = $conn->prepare($sql);
-    $res = $stmt->execute();
     if ($res) {
-        $results = $stmt->fetchAll();
-        set('personlist', $results);
+        set('listMembership', $listMembership);
 
         set('page_title', "Members");
         return html('cotisation.person.list.html.php');

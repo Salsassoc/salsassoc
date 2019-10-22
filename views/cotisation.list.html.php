@@ -29,7 +29,7 @@
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($cotisation['end_date']) ?></td>
   <td align="center"><?php echo TSHelper::getCurrencyText($cotisation['amount']) ?></td>
   <td align="center">
-    <a href="<?php echo url_for('/cotisations', $cotisation['id'], 'members')?>"><?php printf(TS::Cotisation_MembersCount, ($membershipSummary != null ? $membershipSummary['membership_count'] : "0")) ?></a>
+    <a href="<?php echo url_for('/cotisations', $cotisation['id'], 'membership')?>"><?php printf(TS::Cotisation_MembersCount, ($membershipSummary != null ? $membershipSummary['membership_count'] : "0")) ?></a>
   </td>
   <td align="center"><?php echo TSHelper::getCurrencyText(($membershipSummary != null ? $membershipSummary['totalamount'] : 0.0)) ?></td>
   <td align="center">

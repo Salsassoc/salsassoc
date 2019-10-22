@@ -379,7 +379,7 @@ dispatch('/memberships', 'membership_list');
 
     // Render
     if ($res) {
-        set('memberships', $memberships);
+        set('listMembership', $memberships);
 
         set('page_title', TS::Membership_Memberships);
         set('page_submenus', getSubMenus("memberships"));

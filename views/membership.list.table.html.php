@@ -15,7 +15,7 @@
 </thead>
 <tbody>
 <?php
-    foreach  ($memberships as $membership)
+    foreach  ($listMembership as $membership)
     {
 ?> 
 <tr>

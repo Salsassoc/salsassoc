@@ -99,6 +99,16 @@ class DatabaseController
         return $this->fetchAll($sql, $listMemberships);
     }
 
+    public function getMembershipListByCotisationId($iCotisationId, &$listMemberships)
+    {
+        $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, person_id";
+        $sql .= " FROM membership, membership_cotisation";
+        $sql .= " WHERE membership.id=membership_id";
+        $sql .= " AND cotisation_id=".$iCotisationId;
+        $sql .= " ORDER BY membership_date DESC";
+        return $this->fetchAll($sql, $listMemberships);
+    }
+
     public function getMembershipCountPerFiscalYear(&$listMembershipCountPerFiscalYear)
     {
         $sql = 'SELECT fiscal_year_id, count(DISTINCT id) AS membership_count';
