@@ -105,6 +105,7 @@ dispatch('/fiscalyears', 'fiscalyear_list');
     }
 
     set('page_title', "Bad request");
+    set('errors', $errors);
     return html('error.html.php');
   }
 
@@ -266,7 +267,7 @@ dispatch('/fiscalyears/:id/memberships', 'fiscalyear_memberships_list');
     // Load cotisation list
     $listCotisations = null;
     if($res){
-        $res = $dbController->getCotisationsByFiscalYearId($fiscal_year_id, $listCotisations);
+        $res = $dbController->getCotisationListByFiscalYearId($fiscal_year_id, $listCotisations);
     }
 
     // Load cotisation_member list

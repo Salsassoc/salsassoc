@@ -10,4 +10,15 @@ function loadWebUser()
 	return new WebUser();
 }
 
+function findItemInListById($list, $key, $value)
+{
+    foreach($list as $item)
+    {
+        if($item[$key] == $value){
+            return $item;
+        }
+    }
+    return null;
+}
+
 ?>

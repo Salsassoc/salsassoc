@@ -1,5 +1,5 @@
 <p align="right">
-<?php printf(TS::Cotisation_CotisationCount, count($cotisationlist)); ?>
+<?php printf(TS::Cotisation_CotisationCount, count($listCotisation)); ?>
 </p>
 
 <table width="100%" class="list">
@@ -17,8 +17,10 @@
 </thead>
 <tbody>
 <?php
-    foreach  ($cotisationlist as $cotisation)
+    foreach  ($listCotisation as $cotisation)
     {
+        $membershipSummary = findItemInListById($listMembershipSummaryPerCotisation, "cotisation_id", $cotisation['id']);
+
 ?> 
 <tr>
   <td align="left"><?php echo $cotisation['label'] ?></td>
@@ -27,9 +29,9 @@
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($cotisation['end_date']) ?></td>
   <td align="center"><?php echo TSHelper::getCurrencyText($cotisation['amount']) ?></td>
   <td align="center">
-    <a href="<?php echo url_for('/cotisations', $cotisation['id'], 'members')?>"><?php printf(TS::Cotisation_MembersCount, $cotisation['cotisation_count']) ?></a>
+    <a href="<?php echo url_for('/cotisations', $cotisation['id'], 'members')?>"><?php printf(TS::Cotisation_MembersCount, ($membershipSummary != null ? $membershipSummary['membership_count'] : "0")) ?></a>
   </td>
-  <td align="center"><?php echo TSHelper::getCurrencyText($cotisation['cotisation_totalamount']) ?></td>
+  <td align="center"><?php echo TSHelper::getCurrencyText(($membershipSummary != null ? $membershipSummary['totalamount'] : 0.0)) ?></td>
   <td align="center">
     <a href="<?php echo url_for('/cotisations', $cotisation['id'])?>"><?php echo TS::Cotisation_View; ?></a>
   </td>

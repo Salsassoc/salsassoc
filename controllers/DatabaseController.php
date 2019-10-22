@@ -66,13 +66,24 @@ class DatabaseController
     // Around cotisations
     //////////////////////
 
-    public function getCotisationsByFiscalYearId($iFiscalYearId, &$listCotisations)
+    public function getCotisationList($bMembershipOnly, &$listCotisation)
     {
-        $sql = "SELECT id, label, type";
+        $sql = "SELECT id, label, type, amount, start_date, end_date, fiscal_year_id";
+        $sql .= " FROM cotisation";
+	    if($bMembershipOnly){
+		    $sql .= 'WHERE type = 1 ';
+	    }
+        $sql .= " ORDER BY type";
+        return $this->fetchAll($sql, $listCotisation);
+    }
+
+    public function getCotisationListByFiscalYearId($iFiscalYearId, &$listCotisation)
+    {
+        $sql = "SELECT id, label, type, amount, start_date, end_date, fiscal_year_id";
         $sql .= " FROM cotisation ";
         $sql .= " WHERE fiscal_year_id=".$iFiscalYearId;
         $sql .= " ORDER BY type";
-        return $this->fetchAll($sql, $listCotisations);
+        return $this->fetchAll($sql, $listCotisation);
     }
 
     //////////////////////
@@ -118,6 +129,15 @@ class DatabaseController
         $sql .= " GROUP BY fiscal_year_id";
         return $this->fetchAll($sql, $listAmountPerFiscalYear);
     }
+
+    public function getMembershipSummaryPerCotisation(&$listMembershipSummaryPerCotisation)
+    {
+        $sql = "SELECT cotisation_id, COUNT(membership_id) AS membership_count, SUM(amount) AS totalamount";
+        $sql .= " FROM membership_cotisation";
+	    $sql .= " GROUP BY cotisation_id";
+        return $this->fetchAll($sql, $listMembershipSummaryPerCotisation);
+    }
+
 }
 
 ?>
