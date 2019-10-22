@@ -15,10 +15,11 @@
   <th><?php echo TS::Person_Email; ?></th>
   <th><?php echo TS::Person_Phonenumber; ?></th>
   <th><?php echo TS::Person_ImageRights; ?></th>
-  <th><?php echo TS::Person_DateCreated; ?></th>
+  <th><?php echo TS::Membership_Date; ?></th>
+  <th><?php echo TS::Membership_Type; ?></th>
   <th><?php echo TS::FiscalYear_Members_CotisationsAmount; ?></th>
   <th><?php echo TS::FiscalYear_Members_CotisationsPaymentMethod; ?></th>
-  <th><?php echo TS::Person_View; ?></th>
+  <th><?php echo TS::Membership_View; ?></th>
 </tr>
 </thead>
 <tbody>
@@ -37,6 +38,7 @@
   <td align="center"><?php echo $membership['phonenumber'] ?></td>
   <td align="center"><?php echo TSHelper::getYesNoUnknownText($membership['image_rights']); ?></td>
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($membership['membership_date']); ?></td>
+  <td align="center"><?php echo TSHelper::getMembershipType($membership['membership_type']) ?></td>
   <td align="center"><?php echo TSHelper::getCurrencyText($membership_cotisation['amount']); ?></td>
   <td align="center"><?php echo TSHelper::getPaymentMethod($membership_cotisation['payment_method']); ?></td>
   <td align="center">
