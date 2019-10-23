@@ -10,8 +10,7 @@
   <th><?php echo TS::Person_Lastname; ?></th>
   <th><?php echo TS::Person_Firstname; ?></th>
   <th><?php echo TS::Person_Birthdate; ?></th>
-  <th><?php echo TS::Person_Zipcode; ?></th>
-  <th><?php echo TS::Person_City; ?></th>
+  <th><?php echo TS::Person_Address; ?></th>
   <th><?php echo TS::Person_Email; ?></th>
   <th><?php echo TS::Person_Phonenumber; ?></th>
   <th><?php echo TS::Person_ImageRights; ?></th>
@@ -32,9 +31,10 @@
   <td align="left"><?php echo $membership['lastname'] ?></td>
   <td align="left"><?php echo $membership['firstname'] ?></td>
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($membership['birthdate']) ?></td>
-  <td align="center"><?php echo $membership['zipcode'] ?></td>
-  <td align="center"><?php echo $membership['city'] ?></td>
-  <td align="center"><?php echo $membership['email'] ?></td>
+  <td align="right">
+    <?php echo $membership['address']." ".$membership['zipcode']." ".$membership['city']; ?>
+   </td>
+  <td align="left"><?php echo $membership['email'] ?></td>
   <td align="center"><?php echo $membership['phonenumber'] ?></td>
   <td align="center"><?php echo TSHelper::getYesNoUnknownText($membership['image_rights']); ?></td>
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($membership['membership_date']); ?></td>
