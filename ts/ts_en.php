@@ -147,6 +147,7 @@ class TS {
 	const PaymentMethod_None = "None";
 	const PaymentMethod_Check = "Check";
 	const PaymentMethod_Cash = "Cash";
+	const PaymentMethod_CreditCard = "Credit card";
 
 	// Account type
 	const AccountType_Other = "Other";

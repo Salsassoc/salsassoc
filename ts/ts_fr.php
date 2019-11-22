@@ -148,6 +148,7 @@ class TS {
 	const PaymentMethod_None = "Aucun";
 	const PaymentMethod_Check = "Chèque";
 	const PaymentMethod_Cash = "Espèces";
+	const PaymentMethod_CreditCard = "Carte bancaire";
 
 	// Account type
 	const AccountType_Other = "Autre";

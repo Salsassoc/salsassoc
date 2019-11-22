@@ -56,6 +56,7 @@ class TSHelper
 		case 0: return TS::PaymentMethod_None;
 		case 1: return TS::PaymentMethod_Check;
 		case 2: return TS::PaymentMethod_Cash;
+		case 3: return TS::PaymentMethod_CreditCard;
 		default: break;
 		}
 		return "";
