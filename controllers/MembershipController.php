@@ -406,7 +406,6 @@ dispatch('/memberships/add/member/:id', 'membership_add_old_member');
 	return membership_add($id);
   }
 
-dispatch('/memberships/add', 'membership_add');
   function membership_add($person_id)
   {
 	$webuser = loadWebUser();
