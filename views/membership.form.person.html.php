@@ -36,6 +36,10 @@
     <input type="text" name="Phonenumber" value="<?php echo $membership['phonenumber'] ?>" />
   </div>
   <div class='form-row'>
+    <label><?php echo TS::Person_Phonenumber; ?></label>
+    <input type="text" name="Phonenumber2" value="<?php echo $membership['phonenumber2'] ?>" />
+  </div>
+  <div class='form-row'>
     <label><?php echo TS::Person_ImageRights; ?></label>
     <select name="Imagerights">
       <option value=""><?php echo TS::Unknown; ?></option>

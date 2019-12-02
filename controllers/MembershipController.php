@@ -14,6 +14,7 @@
         'city' => null,
         'email' => null,
         'phonenumber' => null,
+        'phonenumber2' => null,
         'image_rights' => null,
         'membership_date' => date("Y-m-d"),
         'membership_type' => null,
@@ -42,6 +43,7 @@
     $membership['city'] = ($_POST['City'] != "" ? $_POST['City'] : null);
     $membership['email'] = $_POST['Email'];
     $membership['phonenumber'] = ($_POST['Phonenumber'] != "" ? $_POST['Phonenumber'] : null);
+    $membership['phonenumber2'] = ($_POST['Phonenumber2'] != "" ? $_POST['Phonenumber2'] : null);
     $membership['image_rights'] = ($_POST['Imagerights'] != "" ? $_POST['Imagerights'] : null);
     return $membership;
   }
@@ -79,6 +81,7 @@
     $person['city'] = $membership['city'];
     $person['email'] = $membership['email'];
     $person['phonenumber'] = $membership['phonenumber'];
+    $person['phonenumber2'] = $membership['phonenumber2'];
     $person['image_rights'] = $membership['image_rights'];
     return $person;
   }
@@ -105,7 +108,7 @@
   {
     $res = true;
 
-    $sql =  'SELECT id, person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, fiscal_year_id FROM membership WHERE id='.$membership_id;
+    $sql =  'SELECT id, person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, fiscal_year_id FROM membership WHERE id='.$membership_id;
     $stmt = $conn->prepare($sql);
     if($stmt){
         $res = $stmt->execute();
@@ -144,7 +147,7 @@
 
   function memberships_db_load_list_from_person_id($conn, $person_id, &$memberships, &$errors)
   {
-    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, person_id";
+    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";
     $sql .= " FROM membership";
     $sql .= " WHERE person_id=".$person_id;
     $sql .= " ORDER BY membership_date DESC";
@@ -153,7 +156,7 @@
 
   function memberships_db_load_list_from_fiscal_year_id($conn, $fiscal_year_id, &$memberships, &$errors)
   {
-    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, person_id";
+    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";
     $sql .= " FROM membership";
     $sql .= " WHERE fiscal_year_id=".$fiscal_year_id;
     $sql .= " ORDER BY membership_date DESC";
@@ -222,9 +225,9 @@
 
         if($bSavePerson){
             if($person_id == 0){
-            	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, date(\'now\'), 1)';
+            	$sql =  'INSERT INTO person (firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, creation_date, is_member) VALUES (:firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :phonenumber2, :image_rights, date(\'now\'), 1)';
 	        }else{
-            	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights WHERE id=:id';
+            	$sql =  'UPDATE person SET firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, phonenumber2=:phonenumber2, image_rights=:image_rights WHERE id=:id';
 	        }
 	        $stmt = $conn->prepare($sql);
 	        if($stmt){
@@ -240,6 +243,7 @@
 	            $stmt->bindParam(':city', $person['city'], PDO::PARAM_STR, 50);
 	            $stmt->bindParam(':email', $person['email'], PDO::PARAM_STR, 100);
 	            $stmt->bindParam(':phonenumber', $person['phonenumber'], PDO::PARAM_STR, 50);
+	            $stmt->bindParam(':phonenumber2', $person['phonenumber2'], PDO::PARAM_STR, 50);
 	            $stmt->bindParam(':image_rights', $person['image_rights'], PDO::PARAM_STR);
 	            $res = $stmt->execute();
                 if($res){
@@ -264,9 +268,9 @@
     if($res){
         // Prepare the query
         if($id==0){
-        	$sql =  'INSERT INTO membership (person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, fiscal_year_id) VALUES (:person_id, :firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :image_rights, :membership_date, :membership_type, :fiscal_year_id)';
+        	$sql =  'INSERT INTO membership (person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, fiscal_year_id) VALUES (:person_id, :firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :phonenumber2, :image_rights, :membership_date, :membership_type, :fiscal_year_id)';
 	    }else{
-        	$sql =  'UPDATE membership SET person_id=:person_id, firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, image_rights=:image_rights, membership_date=:membership_date, membership_type=:membership_type, fiscal_year_id=:fiscal_year_id WHERE id=:id';
+        	$sql =  'UPDATE membership SET person_id=:person_id, firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, phonenumber2=:phonenumber2, image_rights=:image_rights, membership_date=:membership_date, membership_type=:membership_type, fiscal_year_id=:fiscal_year_id WHERE id=:id';
 	    }
 
 	    $stmt = $conn->prepare($sql);
@@ -284,6 +288,7 @@
 	        $stmt->bindParam(':city', $membership['city'], PDO::PARAM_STR, 50);
 	        $stmt->bindParam(':email', $membership['email'], PDO::PARAM_STR, 100);
 	        $stmt->bindParam(':phonenumber', $membership['phonenumber'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':phonenumber2', $membership['phonenumber2'], PDO::PARAM_STR, 50);
 	        $stmt->bindParam(':image_rights', $membership['image_rights'], PDO::PARAM_STR);
 	        $stmt->bindParam(':membership_date', $membership['membership_date'], PDO::PARAM_STR, 10);
 	        $stmt->bindParam(':membership_type', $membership['membership_type'], PDO::PARAM_INT);
@@ -370,7 +375,7 @@ dispatch('/memberships', 'membership_list');
 
     // Load membership list
     if($res){
-        $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type
+        $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type
             FROM membership ORDER BY membership_date DESC';
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute();
@@ -441,7 +446,7 @@ dispatch('/memberships/add/member/:id', 'membership_add_old_member');
     // Load person
     if($res){
 	    if($person_id != null){
-	      $sql = 'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights
+	      $sql = 'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights
 			    FROM person
 			    WHERE id = '.$person_id;
 	      $stmt = $conn->prepare($sql);
@@ -457,6 +462,7 @@ dispatch('/memberships/add/member/:id', 'membership_add_old_member');
             $membership['city'] = $person['city'];
             $membership['email'] = $person['email'];
             $membership['phonenumber'] = $person['phonenumber'];
+            $membership['phonenumber2'] = $person['phonenumber2'];
             $membership['image_rights'] = $person['image_rights'];
           }
 	    }else{

@@ -93,7 +93,7 @@ class DatabaseController
 
     public function getMembershipListByFiscalYearId($iFiscalYearId, &$listMemberships)
     {
-        $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, person_id";
+        $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";
         $sql .= " FROM membership";
         $sql .= " WHERE fiscal_year_id=".$iFiscalYearId;
         $sql .= " ORDER BY lastname, firstname";
@@ -102,7 +102,7 @@ class DatabaseController
 
     public function getMembershipListByCotisationId($iCotisationId, &$listMemberships)
     {
-        $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, image_rights, membership_date, membership_type, person_id";
+        $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";
         $sql .= " FROM membership, membership_cotisation";
         $sql .= " WHERE membership.id=membership_id";
         $sql .= " AND cotisation_id=".$iCotisationId;

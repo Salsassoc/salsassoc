@@ -14,7 +14,7 @@
   <th><?php echo TS::Person_Zipcode; ?></th>
   <th><?php echo TS::Person_City; ?></th>
   <th><?php echo TS::Person_Email; ?></th>
-  <th><?php echo TS::Person_Phonenumber; ?></th>
+  <th colspan="2"><?php echo TS::Person_Phonenumber; ?></th>
   <th><?php echo TS::Person_ImageRights; ?></th>
   <th><?php echo TS::Membership_Date; ?></th>
   <th><?php echo TS::Membership_Type; ?></th>
@@ -44,6 +44,7 @@
   </td>
   <td align="center"><?php echo $membership['email'] ?></td>
   <td align="center"><?php echo $membership['phonenumber'] ?></td>
+  <td align="center"><?php echo $membership['phonenumber2'] ?></td>
   <td align="center"><?php echo TSHelper::getYesNoUnknownText($membership['image_rights']); ?></td>
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($membership['membership_date']); ?></td>
   <td align="center"><?php echo TSHelper::getMembershipType($membership['membership_type']) ?></td>

@@ -12,7 +12,7 @@
   <th><?php echo TS::Person_Birthdate; ?></th>
   <th><?php echo TS::Person_City; ?></th>
   <th><?php echo TS::Person_Email; ?></th>
-  <th><?php echo TS::Person_Phonenumber; ?></th>
+  <th colspan="2"><?php echo TS::Person_Phonenumber; ?></th>
   <th><?php echo TS::Person_ImageRights; ?></th>
   <th><?php echo TS::Person_DateCreated; ?></th>
   <th><?php echo TS::Person_YearCount; ?></th>
@@ -31,6 +31,7 @@
   <td align="center"><?php echo ($person['city'] ? $person['city']." (".$person['zipcode'].")" : "") ?></td>
   <td align="center"><?php echo $person['email'] ?></td>
   <td align="center"><?php echo $person['phonenumber'] ?></td>
+  <td align="center"><?php echo $person['phonenumber2'] ?></td>
   <td align="center"><?php echo TSHelper::getYesNoUnknownText($person['image_rights']); ?></td>
   <td align="center"><?php echo $person['creation_date'] ?></td>
   <td align="center">
