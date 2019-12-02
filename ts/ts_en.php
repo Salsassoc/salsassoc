@@ -70,6 +70,7 @@ class TS {
     const Membership_Num = "Membership #%d";
 	const Membership_MemberInfos = "Member informations";
 	const Membership_Membership = "Membership";
+	const Membership_Comments = "Comments";
 
     // Membership type
 	const MembershipType_MembershipStandard = "Standard";

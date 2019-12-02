@@ -18,6 +18,7 @@
         'image_rights' => null,
         'membership_date' => date("Y-m-d"),
         'membership_type' => null,
+        'comments' => null,
         'fiscal_year_id' => null,
         'listCotisation' => array(),
     );
@@ -31,6 +32,7 @@
     $membership['id'] = $_POST['MembershipId'];
     $membership['membership_date'] = $_POST['MembershipDate'];
     $membership['membership_type'] = $_POST['MembershipType'];
+    $membership['comments'] = ($_POST['Comments'] != "" ? $_POST['Comments'] : null);
     $membership['fiscal_year_id'] = $_POST['MembershipFiscalYearId'];
     // Member infos
     $membership['person_id'] = $_POST['PersonId'];
@@ -83,6 +85,7 @@
     $person['phonenumber'] = $membership['phonenumber'];
     $person['phonenumber2'] = $membership['phonenumber2'];
     $person['image_rights'] = $membership['image_rights'];
+    $person['comments'] = $membership['comments'];
     return $person;
   }
 
@@ -108,7 +111,7 @@
   {
     $res = true;
 
-    $sql =  'SELECT id, person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, fiscal_year_id FROM membership WHERE id='.$membership_id;
+    $sql =  'SELECT id, person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, fiscal_year_id FROM membership WHERE id='.$membership_id;
     $stmt = $conn->prepare($sql);
     if($stmt){
         $res = $stmt->execute();
@@ -147,7 +150,7 @@
 
   function memberships_db_load_list_from_person_id($conn, $person_id, &$memberships, &$errors)
   {
-    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";
+    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, person_id";
     $sql .= " FROM membership";
     $sql .= " WHERE person_id=".$person_id;
     $sql .= " ORDER BY membership_date DESC";
@@ -156,7 +159,7 @@
 
   function memberships_db_load_list_from_fiscal_year_id($conn, $fiscal_year_id, &$memberships, &$errors)
   {
-    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";
+    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, person_id";
     $sql .= " FROM membership";
     $sql .= " WHERE fiscal_year_id=".$fiscal_year_id;
     $sql .= " ORDER BY membership_date DESC";
@@ -268,9 +271,9 @@
     if($res){
         // Prepare the query
         if($id==0){
-        	$sql =  'INSERT INTO membership (person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, fiscal_year_id) VALUES (:person_id, :firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :phonenumber2, :image_rights, :membership_date, :membership_type, :fiscal_year_id)';
+        	$sql =  'INSERT INTO membership (person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, fiscal_year_id) VALUES (:person_id, :firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :phonenumber2, :image_rights, :membership_date, :membership_type, comments, :fiscal_year_id)';
 	    }else{
-        	$sql =  'UPDATE membership SET person_id=:person_id, firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, phonenumber2=:phonenumber2, image_rights=:image_rights, membership_date=:membership_date, membership_type=:membership_type, fiscal_year_id=:fiscal_year_id WHERE id=:id';
+        	$sql =  'UPDATE membership SET person_id=:person_id, firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, phonenumber2=:phonenumber2, image_rights=:image_rights, membership_date=:membership_date, membership_type=:membership_type, comments=:comments, fiscal_year_id=:fiscal_year_id WHERE id=:id';
 	    }
 
 	    $stmt = $conn->prepare($sql);
@@ -292,6 +295,7 @@
 	        $stmt->bindParam(':image_rights', $membership['image_rights'], PDO::PARAM_STR);
 	        $stmt->bindParam(':membership_date', $membership['membership_date'], PDO::PARAM_STR, 10);
 	        $stmt->bindParam(':membership_type', $membership['membership_type'], PDO::PARAM_INT);
+	        $stmt->bindParam(':comments', $membership['comments'], PDO::PARAM_STR);
 	        $stmt->bindParam(':fiscal_year_id', $membership['fiscal_year_id'], PDO::PARAM_INT);
 	        $res = $stmt->execute();
             if($res){
@@ -375,7 +379,7 @@ dispatch('/memberships', 'membership_list');
 
     // Load membership list
     if($res){
-        $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type
+        $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments
             FROM membership ORDER BY membership_date DESC';
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute();

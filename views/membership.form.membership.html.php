@@ -18,4 +18,9 @@
       <option value="4" <?php echo ($membership['membership_type'] == 4 ? 'selected' : '') ?>><?php echo TS::MembershipType_Professor; ?></option>
     </select>
   </div>
+  <div class='form-row'>
+    <label><?php echo TS::Membership_Comments; ?></label>
+    <textarea name="Comments" cols="50" rows="10"><?php echo $membership['comments']; ?></textarea>
+  </div>
+
 </fieldset>
