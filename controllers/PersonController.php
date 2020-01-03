@@ -103,19 +103,20 @@
     return persons_db_load_list($conn, $sql, $persons, $errors);
   }
 
-  function getPersonListQuery($bCurrentOnly, $fiscalyear)
+  function getPersonListQuery($bCurrentOnly, $currentDate)
   {
 	$filter = "";
 	if($bCurrentOnly){
 		//$filter .= " WHERE fiscal_year_id = (SELECT id FROM fiscal_year WHERE is_current IS 'true' ORDER BY end_date DESC LIMIT 1)";
-		$filter .= " WHERE '".$currentDate."' BETWEEN start_date AND end_date ";
+		$filter .= " AND '".$currentDate."' BETWEEN start_date AND end_date ";
 	}
 
-    $sql =  'SELECT person.id as id, firstname, lastname, birthdate, zipcode, city, email, phonenumber, phonenumber2, image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count
-        FROM person LEFT JOIN member_ship ON person.id=person_id';
+    $sql =  'SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.phonenumber2 AS phonenumber2, person.image_rights AS image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count';
+    $sql .= ' FROM person LEFT JOIN membership ON person.id=person_id, fiscal_year';
+    $sql .= ' WHERE fiscal_year.id = fiscal_year_id';
 	$sql .= $filter;
     $sql .= ' GROUP BY person.id';
-    $sql .= ' ORDER BY lastname, firstname';
+    $sql .= ' ORDER BY person.lastname, person.firstname';
 
     return $sql;
   }
@@ -184,7 +185,6 @@ dispatch('/members/all', 'person_list_all');
     $currentDate = date("Y-m-d");
 
     $sql = getPersonListQuery($bCurrentOnly, $currentDate);
-
     $stmt = $conn->prepare($sql);
     $res = $stmt->execute();
     if ($res) {
