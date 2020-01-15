@@ -265,13 +265,13 @@
         }
 
 	}
- 
+
     // Save the membership
 	$stmt = null;
     if($res){
         // Prepare the query
         if($id==0){
-        	$sql =  'INSERT INTO membership (person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, fiscal_year_id) VALUES (:person_id, :firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :phonenumber2, :image_rights, :membership_date, :membership_type, comments, :fiscal_year_id)';
+        	$sql =  'INSERT INTO membership (person_id, firstname, lastname, gender, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, fiscal_year_id) VALUES (:person_id, :firstname, :lastname, :gender, :birthdate, :address, :zipcode, :city, :email, :phonenumber, :phonenumber2, :image_rights, :membership_date, :membership_type, :comments, :fiscal_year_id)';
 	    }else{
         	$sql =  'UPDATE membership SET person_id=:person_id, firstname=:firstname, lastname=:lastname, gender=:gender, birthdate=:birthdate, address=:address, zipcode=:zipcode, city=:city, email=:email, phonenumber=:phonenumber, phonenumber2=:phonenumber2, image_rights=:image_rights, membership_date=:membership_date, membership_type=:membership_type, comments=:comments, fiscal_year_id=:fiscal_year_id WHERE id=:id';
 	    }
