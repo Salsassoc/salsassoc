@@ -88,8 +88,8 @@
   {
     $sql =  "SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.phonenumber2 AS phonenumber2, person.image_rights AS image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count";
     $sql .= " FROM person LEFT JOIN membership ON person.id=person_id";
-	$sql .= " WHERE fiscal_year_id=".$fiscalyear['id'];
     $sql .= ' GROUP BY person.id';
+	$sql .= " HAVING fiscal_year_id=".$fiscalyear['id'];
     $sql .= ' ORDER BY lastname, firstname';
     return persons_db_load_list($conn, $sql, $persons, $errors);
   }
