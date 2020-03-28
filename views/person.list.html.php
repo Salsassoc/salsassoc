@@ -21,8 +21,17 @@
 </thead>
 <tbody>
 <?php
+    // Compute associative array for fiscal year person count
+	$tabPersonYearCount = array();
+    foreach  ($listPersonYearCount as $personyearcount)
+    {
+        //echo "person:".$personyearcount['person_id']."=".$personyearcount['year_count']."<br/>";
+		$tabPersonYearCount[$personyearcount['person_id']] = $personyearcount['year_count'];
+	}
+
     foreach  ($personlist as $person)
     {
+       $person_id = $person['id'];
 ?> 
 <tr>
   <td align="left"><?php echo $person['lastname'] ?></td>
@@ -35,7 +44,7 @@
   <td align="center"><?php echo TSHelper::getYesNoUnknownText($person['image_rights']); ?></td>
   <td align="center"><?php echo $person['creation_date'] ?></td>
   <td align="center">
-	<?php echo sprintf(TS::Person_YearCountText, $person['year_count']);?>
+	<?php echo sprintf(TS::Person_YearCountText, $tabPersonYearCount[$person_id]); ?>
 	<!--(<?php echo $person['cotisation_count'] ?> cotis.)-->
   </td>
   <td align="center">

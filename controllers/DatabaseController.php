@@ -52,8 +52,55 @@ class DatabaseController
     }
 
     //////////////////////
+    // Around person
+    //////////////////////
+
+    public function getPersonYearCount(&$listPersonYearCount)
+    {
+        $sql = "SELECT person.id AS person_id, COUNT(DISTINCT fiscal_year_id) AS year_count";
+        $sql .= " FROM person LEFT JOIN membership ON person.id = membership.person_id";
+        $sql .= " GROUP BY person.id";
+        return $this->fetchAll($sql, $listPersonYearCount);
+    }
+
+    public function getPersonListByFiscalYear($fiscalyear, &$listPersons)
+    {
+        $sql =  "SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.phonenumber2 AS phonenumber2, person.image_rights AS image_rights, creation_date";
+        $sql .= " FROM person LEFT JOIN membership ON person.id=person_id";
+        $sql .= " WHERE fiscal_year_id=".$fiscalyear['id'];
+        $sql .= " AND person_id=person.id";
+        $sql .= " ORDER BY lastname, firstname";
+        return $this->fetchAll($sql, $listPersons);
+    }
+
+    function getPersonListAll(&$listPersons)
+    {
+        $sql =  "SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.phonenumber2 AS phonenumber2, person.image_rights AS image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count";
+        $sql .= " FROM person LEFT JOIN membership ON person.id=person_id";
+        $sql .= " GROUP BY person.id";
+        $sql .= " ORDER BY lastname, firstname";
+        return $this->fetchAll($sql, $listPersons);
+    }
+
+    //////////////////////
     // Around fiscal year
-    //////////////////////     
+    //////////////////////
+
+    public function getFiscalYearCurrent(&$fiscalyear)
+    {
+        $sql = "SELECT id, title, start_date, end_date, is_current";
+        $sql .= " FROM fiscal_year";
+        $sql .= " WHERE is_current = 'true'";
+        return $this->fetch($sql, $fiscalyear);
+    }
+
+    public function getFiscalYearById($fiscal_year_id, &$fiscalyear)
+    {
+        $sql = "SELECT id, title, start_date, end_date, is_current";
+        $sql .= " FROM fiscal_year";
+        $sql .= " WHERE id = ".$fiscal_year_id;
+        return $this->fetch($sql, $fiscalyear);
+    }
 
     public function getFiscalYearList(&$listFiscalYear)
     {

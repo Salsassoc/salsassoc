@@ -84,25 +84,6 @@
     return $res;
   }
 
-  function persons_db_load_list_from_fiscal_year($conn, $fiscalyear, &$persons, &$errors)
-  {
-    $sql =  "SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.phonenumber2 AS phonenumber2, person.image_rights AS image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count";
-    $sql .= " FROM person LEFT JOIN membership ON person.id=person_id";
-    $sql .= ' GROUP BY person.id';
-	$sql .= " HAVING fiscal_year_id=".$fiscalyear['id'];
-    $sql .= ' ORDER BY lastname, firstname';
-    return persons_db_load_list($conn, $sql, $persons, $errors);
-  }
-
-  function persons_db_load_list_all($conn, &$persons, &$errors)
-  {
-    $sql =  "SELECT person.id AS id, person.firstname AS firstname, person.lastname AS lastname, person.birthdate AS birthdate, person.zipcode AS zipcode, person.city AS city, person.email AS email, person.phonenumber AS phonenumber, person.phonenumber2 AS phonenumber2, person.image_rights AS image_rights, creation_date, COUNT(DISTINCT fiscal_year_id) AS year_count, COUNT(membership.id) AS membership_count";
-    $sql .= " FROM person LEFT JOIN membership ON person.id=person_id";
-    $sql .= ' GROUP BY person.id';
-    $sql .= ' ORDER BY lastname, firstname';
-    return persons_db_load_list($conn, $sql, $persons, $errors);
-  }
-
   function getPersonListQuery($bCurrentOnly, $currentDate)
   {
 	$filter = "";
@@ -128,28 +109,38 @@
 		redirect_to('/login'); return;
 	}
 
-    $conn = $GLOBALS['db_connexion'];
-
     $res = true;
 
-    // Load current fiscal year
+    $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
+
+    // Get current fiscal year
     $fiscalyear = null;
     if($res){
-       $res = fiscalyears_db_load_from_current($conn, $fiscalyear, $errors);
+       $res = $dbController->getFiscalYearCurrent($fiscalyear);
+    }
+
+	// Get list of years count
+    $listPersonYearCount = null;
+    if($res){
+        $res = $dbController->getPersonYearCount($listPersonYearCount);
     }
 
     // Load the list of persons
     $persons = null;
     if($res){
       if($bCurrentOnly){
-        $res = persons_db_load_list_from_fiscal_year($conn, $fiscalyear, $persons, $errors);
+        $res = $dbController->getPersonListByFiscalYear($fiscalyear, $persons);
       }else{
-        $res = persons_db_load_list_all($conn, $persons, $errors);
+        $res = $dbController->getPersonListAll($persons);
       }
     }
 
+    // Load list of year count
     if ($res) {
         set('personlist', $persons);
+        set('listPersonYearCount', $listPersonYearCount);
         set('page_id', "person_list");
         set('page_title', TS::Person_Members);
         set('page_submenus', getSubMenus("members"));
