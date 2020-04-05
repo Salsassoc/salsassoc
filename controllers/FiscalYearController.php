@@ -80,7 +80,6 @@ dispatch('/fiscalyears', 'fiscalyear_list');
     if($res){
         $res = $dbController->getFiscalYearList($listFiscalYear);
     }
-
 	// Get membership for each years
     $listMembershipCountPerFiscalYear = null;
     if($res){
@@ -93,11 +92,18 @@ dispatch('/fiscalyears', 'fiscalyear_list');
         $res = $dbController->getMembershipCotisationAmountCountPerFiscalYear($listAmountPerFiscalYear);
     }
 
+    // Load accounting operation fiscal year
+    $listAccountingOperationResume = null;
+    if($res){
+        $res = $dbController->getFiscalYearAccountingOperationResumeList($listAccountingOperationResume);
+    }
+
 	// Render data
 	if($res){
         set('listFiscalYear', $listFiscalYear);
         set('listMembershipCountPerFiscalYear', $listMembershipCountPerFiscalYear);
         set('listAmountPerFiscalYear', $listAmountPerFiscalYear);
+        set('listAccountingOperationResume', $listAccountingOperationResume);
         
         set('page_title', "Fiscal years");
         set('page_submenus', getSubMenus("fiscalyears"));

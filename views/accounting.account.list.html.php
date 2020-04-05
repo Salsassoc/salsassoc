@@ -22,7 +22,7 @@
     {
 		$account_id = $resume['account_id'];
 		$tabAccountingAccountIncomings[$account_id] = $resume['incomings'];
-		$tabAccountingAccountOutcomings[$account_id] = $resume['outcommings'];
+		$tabAccountingAccountOutcomings[$account_id] = $resume['outcomings'];
 	}
 
     foreach  ($listAccountingAccount as $account)

@@ -110,6 +110,14 @@ class DatabaseController
         return $this->fetchAll($sql, $listFiscalYear);
     }
 
+    public function getFiscalYearAccountingOperationResumeList(&$listAccountResume)
+    {
+        $sql =  "SELECT fiscalyear_id, SUM(amount_debit) as outcomings, SUM(amount_credit) as incomings";
+        $sql .= " FROM accounting_operation";
+        $sql .= " GROUP BY fiscalyear_id";
+        return $this->fetchAll($sql, $listAccountResume);
+    }
+
     //////////////////////
     // Around cotisations
     //////////////////////
@@ -209,7 +217,7 @@ class DatabaseController
 
     public function getAccountingAccountResumeList(&$listAccountResume)
     {
-        $sql =  "SELECT account_id, SUM(amount_debit) as outcommings, SUM(amount_credit) as incomings";
+        $sql =  "SELECT account_id, SUM(amount_debit) as outcomings, SUM(amount_credit) as incomings";
         $sql .= " FROM accounting_operation";
         $sql .= " GROUP BY account_id";
         return $this->fetchAll($sql, $listAccountResume);
