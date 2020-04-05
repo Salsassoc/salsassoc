@@ -82,21 +82,30 @@ dispatch('/accounting/accounts', 'accounting_account_list');
 		redirect_to('/login'); return;
 	}
 
+    $res = true;
+
     $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
 
-	// Get foperation list
-    $sql =  'SELECT id, label, type FROM accounting_account';
-	$sql .= ' ORDER BY type, label';
-    $stmt = $conn->prepare($sql);
-    $res = $stmt->execute();
-    if ($res) {
-        $results = $stmt->fetchAll();
-        set('accounts', $results);
+    // Load account list
+    $listAccountingAccount = null;
+    if($res){
+        $res = $dbController->getAccountingAccountList($listAccountingAccount);
+    }
 
-	}
+    // Load account list
+    $listAccountingAccountResume = null;
+    if($res){
+        $res = $dbController->getAccountingAccountResumeList($listAccountingAccountResume);
+    }
 
 	// Render data
 	if($res){
+        // Pass data
+        set('listAccountingAccountResume', $listAccountingAccountResume);
+        set('listAccountingAccount', $listAccountingAccount);
+
         set('page_title', TS::AccountingAccount_List);
         set('page_submenus', getSubMenus("accounting"));
         return html('accounting.account.list.html.php');

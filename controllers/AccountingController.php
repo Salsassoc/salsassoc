@@ -34,21 +34,44 @@ dispatch('/accounting/operations', 'accounting_operation_list');
 		redirect_to('/login'); return;
 	}
 
+    $res = true;
+
     $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
 
-	// Get foperation list
-    $sql =  'SELECT id, label, category, date_value, amount FROM accounting_operation';
-	$sql .= ' ORDER BY date_value DESC';
-    $stmt = $conn->prepare($sql);
-    $res = $stmt->execute();
-    if ($res) {
-        $results = $stmt->fetchAll();
-        set('operations', $results);
+    // Load fiscal year list
+    $listFiscalYear = null;
+    if($res){
+        $res = $dbController->getFiscalYearList($listFiscalYear);
+    }
 
-	}
+    // Load account list
+    $listAccountingAccount = null;
+    if($res){
+        $res = $dbController->getAccountingAccountList($listAccountingAccount);
+    }
+
+    // Load category list
+    $listAccountingOperationCategory = null;
+    if($res){
+        $res = $dbController->getAccountingOperationCategoryList($listAccountingOperationCategory);
+    }
+
+    // Load operation list
+    $listAccountingOperation = null;
+    if($res){
+        $res = $dbController->getAccountingOperationList($listAccountingOperation);
+    }
 
 	// Render data
 	if($res){
+        // Pass data
+        set('listFiscalYear', $listFiscalYear);
+        set('listAccountingAccount', $listAccountingAccount);
+        set('listAccountingOperationCategory', $listAccountingOperationCategory);
+        set('listAccountingOperation', $listAccountingOperation);
+
         set('page_title', "Accounting");
         set('page_submenus', getSubMenus("accounting"));
         return html('accounting.operation.list.html.php');

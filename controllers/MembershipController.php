@@ -430,8 +430,6 @@ dispatch('/memberships/add/member/:id', 'membership_add_old_member');
 
 	$membership = membership_create();
 
-    $res = true;
-
     // Load current fiscal year
     $fiscalyear = null;
     if($res){

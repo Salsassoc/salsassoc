@@ -116,10 +116,15 @@ class TS {
     // Accounting operation
     const AccountingOperation_OperationCount = "Nombre d'opération : %d";
     const AccountingOperation_Label = "Libellé";
+    const AccountingOperation_Number = "Numéro";
     const AccountingOperation_Category = "Catégorie";
     const AccountingOperation_DateValue = "Date";
+    const AccountingOperation_DateEffective = "Date effective";
     const AccountingOperation_Type = "Type";
     const AccountingOperation_Amount = "Montant";
+    const AccountingOperation_AmountDebit = "Débit";
+    const AccountingOperation_AmountCredit = "Crédit";
+    const AccountingOperation_FiscalYear = "Année fiscal";
     const AccountingOperation_View = "Voir";
 
     // Accounting operation type
@@ -135,13 +140,26 @@ class TS {
     const AccountingOperationCategory_Label = "Libellé";
     const AccountingOperationCategory_View = "Voir";
 
+    // Accountint operation method
+	const AccountingOperationMethod_Unknown = "Inconnu";
+	const AccountingOperationMethod_CheckDeposit = "Remise de chèque(s)";
+	const AccountingOperationMethod_CheckPayment = "Paiement par chèque";
+	const AccountingOperationMethod_CashDeposit = "Remise d'espèces";
+    const AccountingOperationMethod_CashWithdrawal = "Retrait d'espèce";
+    const AccountingOperationMethod_BankTransfertReceived = "Virement reçu";
+    const AccountingOperationMethod_BankTransfertIssued = "Virement emis";
+    const AccountingOperationMethod_BankDirectDebit = "Prélèvement";
+    const AccountingOperationMethod_BankInterest = "Intérêts";
+
     // Accountint account
     const AccountingAccount_List = "Liste des comptes";
 	const AccountingAccount_Form_GlobalInfo = "Informations globales";
     const AccountingAccount_AccountCount = "Nombre de compte: %d";
     const AccountingAccount_Label = "Libellé";
     const AccountingAccount_Type = "Type";
-    const AccountingAccount_Amount = "Montant";
+    const AccountingAccount_AmountIncomings = "Recettes";
+    const AccountingAccount_AmountOutcomings = "Dépenses";
+    const AccountingAccount_AmountBalance = "Balance";
     const AccountingAccount_View = "Voir";
 
 	// Payment

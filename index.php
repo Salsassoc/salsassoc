@@ -4,6 +4,8 @@ require_once 'lib/limonade/lib/limonade.php';
 
 require_once 'tools/tools.php';
 
+require_once 'model/OperationMethod.php';
+
 require_once 'controllers/PersonController.php';
 require_once 'controllers/MembershipController.php';
 require_once 'controllers/CotisationsController.php';

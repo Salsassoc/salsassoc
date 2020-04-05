@@ -196,6 +196,41 @@ class DatabaseController
         return $this->fetchAll($sql, $listMembershipSummaryPerCotisation);
     }
 
+    //////////////////////
+    // Around accounting
+    //////////////////////
+
+    public function getAccountingAccountList(&$listAccount)
+    {
+        $sql = "SELECT id, label, type ";
+        $sql .= " FROM accounting_account";
+        return $this->fetchAll($sql, $listAccount);
+    }
+
+    public function getAccountingAccountResumeList(&$listAccountResume)
+    {
+        $sql =  "SELECT account_id, SUM(amount_debit) as outcommings, SUM(amount_credit) as incomings";
+        $sql .= " FROM accounting_operation";
+        $sql .= " GROUP BY account_id";
+        return $this->fetchAll($sql, $listAccountResume);
+    }
+
+    public function getAccountingOperationCategoryList(&$listCategory)
+    {
+        $sql = "SELECT id, label ";
+        $sql .= " FROM accounting_operation_category";
+        $sql .= " GROUP BY label";
+        return $this->fetchAll($sql, $listCategory);
+    }
+
+    public function getAccountingOperationList(&$listOperation)
+    {
+        $sql =  'SELECT id, label, category, date_value, op_method, op_method_number, amount_debit, amount_credit, fiscalyear_id, account_id, date_effective';
+        $sql .= ' FROM accounting_operation';
+        $sql .= ' ORDER BY date_value DESC';
+        return $this->fetchAll($sql, $listOperation);
+    }
+
 }
 
 ?>

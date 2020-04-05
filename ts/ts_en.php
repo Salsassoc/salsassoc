@@ -115,10 +115,15 @@ class TS {
     // Accounting operation
     const AccountingOperation_OperationCount = "Operation count: %d";
     const AccountingOperation_Label = "Label";
+    const AccountingOperation_Number = "Number";
     const AccountingOperation_Category = "Category";
     const AccountingOperation_DateValue = "Date";
+    const AccountingOperation_DateEffective = "Date effective";
     const AccountingOperation_Type = "Type";
     const AccountingOperation_Amount = "Amount";
+    const AccountingOperation_AmountDebit = "Debit";
+    const AccountingOperation_AmountCredit = "Credit";
+    const AccountingOperation_FiscalYear = "Fiscal year";
     const AccountingOperation_View = "View";
 
     // Accounting operation type
@@ -134,13 +139,26 @@ class TS {
     const AccountingOperationCategory_Label = "Label";
     const AccountingOperationCategory_View = "View";
 
+    // Accountint operation method
+	const AccountingOperationMethod_Unknown = "Unknown";
+	const AccountingOperationMethod_CheckDeposit = "Check deposit";
+	const AccountingOperationMethod_CheckPayment = "Check payment";
+	const AccountingOperationMethod_CashDeposit = "Cash deposit";
+    const AccountingOperationMethod_CashWithdrawal = "Cash withdrawal";
+    const AccountingOperationMethod_BankTransfertReceived = "Transfert received";
+    const AccountingOperationMethod_BankTransfertIssued = "Transfert issued";
+    const AccountingOperationMethod_BankDirectDebit = "Direct debit";
+    const AccountingOperationMethod_BankInterest = "Interest";
+
     // Accountint account
     const AccountingAccount_List = "Account list";
 	const AccountingAccount_Form_GlobalInfo = "Global information";
     const AccountingAccount_AccountCount = "Account count: %d";
     const AccountingAccount_Label = "Label";
     const AccountingAccount_Type = "Type";
-    const AccountingAccount_Amount = "Amount";
+    const AccountingAccount_AmountIncomings = "Recettes";
+    const AccountingAccount_AmountOutcomings = "Dépenses";
+    const AccountingAccount_AmountBalance = "Balance";
     const AccountingAccount_View = "View";
 
 	// Payment
