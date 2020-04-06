@@ -80,7 +80,7 @@
 	?>
   </td>
   <td align="center">
-    <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'])?>"><?php echo TS::Cotisation_View; ?></a>
+    <a href="<?php echo url_for('/accounting/operations/', $operation['id'])?>"><?php echo TS::Cotisation_View; ?></a>
   </td>
 </tr>
 <?php

@@ -12,10 +12,9 @@ CREATE TABLE IF NOT EXISTS accounting_operation_category (
 
 CREATE TABLE IF NOT EXISTS accounting_operation (
    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+   date_value DATE NULL,
    label VARCHAR(100) NOT NULL,
-   label_bank TEXT NOT NULL,
    category INTEGER NULL,
-   date_value DATE NOT NULL,
    op_method INTEGER NULL,
    op_method_number VARCHAR(50) NULL,
    amount_debit FLOAT NULL,
@@ -24,7 +23,8 @@ CREATE TABLE IF NOT EXISTS accounting_operation (
    project_id INTEGER NULL,
    checked BOOLEAN NOT NULL,
    fiscalyear_id INTEGER NOT NULL,
-   account_id INTEGER NULL
+   account_id INTEGER NULL,
+   label_bank TEXT NOT NULL
 );
 
 

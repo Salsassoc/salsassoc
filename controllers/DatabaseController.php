@@ -235,7 +235,8 @@ class DatabaseController
     {
         $sql =  'SELECT id, label, category, date_value, op_method, op_method_number, amount_debit, amount_credit, fiscalyear_id, account_id, date_effective';
         $sql .= ' FROM accounting_operation';
-        $sql .= ' ORDER BY date_value DESC';
+        //$sql .= ' ORDER BY date_value DESC';
+        $sql .= ' ORDER BY id DESC';
         return $this->fetchAll($sql, $listOperation);
     }
 
