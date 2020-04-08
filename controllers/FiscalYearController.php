@@ -80,10 +80,17 @@ dispatch('/fiscalyears', 'fiscalyear_list');
     if($res){
         $res = $dbController->getFiscalYearList($listFiscalYear);
     }
+
 	// Get membership for each years
     $listMembershipCountPerFiscalYear = null;
     if($res){
         $res = $dbController->getMembershipCountPerFiscalYear($listMembershipCountPerFiscalYear);
+    }
+
+	// Get operation for each years
+    $listOperationCountPerFiscalYear = null;
+    if($res){
+        $res = $dbController->getAccountingOperationCountPerFiscalYear($listOperationCountPerFiscalYear);
     }
 
 	// Get members for each years
@@ -102,6 +109,7 @@ dispatch('/fiscalyears', 'fiscalyear_list');
 	if($res){
         set('listFiscalYear', $listFiscalYear);
         set('listMembershipCountPerFiscalYear', $listMembershipCountPerFiscalYear);
+        set('listOperationCountPerFiscalYear', $listOperationCountPerFiscalYear);
         set('listAmountPerFiscalYear', $listAmountPerFiscalYear);
         set('listAccountingOperationResume', $listAccountingOperationResume);
         
@@ -293,6 +301,66 @@ dispatch('/fiscalyears/:id/memberships', 'fiscalyear_memberships_list');
 
     set('page_title', "Bad request");
     set('errors', $errors);
+    return html('error.html.php');
+}
+
+dispatch('/fiscalyears/:id/operations', 'fiscalyear_operation_list');
+  function fiscalyear_operation_list()
+  {
+    $webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $res = true;
+
+    $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
+    
+    // Load URL params
+    $fiscal_year_id = params('id');
+
+    // Load fiscal year list
+    $listFiscalYear = null;
+    if($res){
+        $filters = array("id" => $fiscal_year_id);
+        $res = $dbController->getFiscalYearList($listFiscalYear, $filters);
+    }
+
+    // Load account list
+    $listAccountingAccount = null;
+    if($res){
+        $res = $dbController->getAccountingAccountList($listAccountingAccount);
+    }
+
+    // Load category list
+    $listAccountingOperationCategory = null;
+    if($res){
+        $res = $dbController->getAccountingOperationCategoryList($listAccountingOperationCategory);
+    }
+
+    // Load operation list
+    $listAccountingOperation = null;
+    if($res){
+        $filters = array("fiscal_year_id" => $fiscal_year_id);
+        $res = $dbController->getAccountingOperationList($listAccountingOperation, $filters);
+    }
+
+	// Render data
+	if($res){
+        // Pass data
+        set('listFiscalYear', $listFiscalYear);
+        set('listAccountingAccount', $listAccountingAccount);
+        set('listAccountingOperationCategory', $listAccountingOperationCategory);
+        set('listAccountingOperation', $listAccountingOperation);
+
+        set('page_title', "Accounting");
+        set('page_submenus', getSubMenus("accounting"));
+        return html('accounting.operation.list.html.php');
+    }
+
+    set('page_title', "Bad request");
     return html('error.html.php');
 }
 

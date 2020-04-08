@@ -10,6 +10,7 @@
   <th><?php echo TS::FiscalYear_EndDate; ?></th>
   <th><?php echo TS::FiscalYear_Members; ?></th>
   <th><?php echo TS::FiscalYear_MembershipAmount; ?></th>
+  <th><?php echo TS::AccountingAccount_Operations; ?></th>
   <th><?php echo TS::AccountingAccount_AmountIncomings; ?></th>
   <th><?php echo TS::AccountingAccount_AmountOutcomings; ?></th>
   <th><?php echo TS::AccountingAccount_AmountBalance; ?></th>
@@ -23,6 +24,13 @@
     foreach  ($listMembershipCountPerFiscalYear as $fiscalyearmemberscount)
     {
 		$tabFiscalYearsMembersCount[$fiscalyearmemberscount['fiscal_year_id']] = $fiscalyearmemberscount['membership_count'];
+	}
+
+	// Compute associative array for fiscal year oepration count
+	$tabFiscalYearsOperationCount = array();
+    foreach  ($listOperationCountPerFiscalYear as $fiscalyearoperationcount)
+    {
+		$tabFiscalYearsOperationCount[$fiscalyearoperationcount['fiscalyear_id']] = $fiscalyearoperationcount['operation_count'];
 	}
 
 	// Compute associative array for fiscal year amount
@@ -76,6 +84,17 @@
 		}
 		echo TSHelper::getCurrencyText($totalamount);
 	?>
+  </td>
+  <td align="center">
+    <a href="<?php echo url_for('/fiscalyears', $fiscalyear['id'], 'operations')?>">
+		<?php
+			$operationcount=0;
+			if(isset($tabFiscalYearsOperationCount[$fiscalyear_id])){
+				$operationcount=$tabFiscalYearsOperationCount[$fiscalyear_id];
+			}
+			printf(TS::FiscalYear_OperationsCount, $operationcount);
+		?>
+	</a>
   </td>
   <td align="center">
 	<?php

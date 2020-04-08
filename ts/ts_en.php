@@ -38,6 +38,7 @@ class TS {
 	const FiscalYear_EditFiscalYear = "Edit fiscal year";
 	const FiscalYear_Members_CotisationsAmount = "Cotisations amount";
 	const FiscalYear_Members_CotisationsPaymentMethod = "Payment method";
+    const FiscalYear_OperationsCount = "%d operations";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
@@ -156,6 +157,7 @@ class TS {
     const AccountingAccount_AccountCount = "Account count: %d";
     const AccountingAccount_Label = "Label";
     const AccountingAccount_Type = "Type";
+    const AccountingAccount_Operations = "Operations";
     const AccountingAccount_AmountIncomings = "Recettes";
     const AccountingAccount_AmountOutcomings = "Dépenses";
     const AccountingAccount_AmountBalance = "Balance";

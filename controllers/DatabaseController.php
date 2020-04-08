@@ -51,6 +51,15 @@ class DatabaseController
         return $res;
     }
 
+    public function addWhere($szCurrentWhere, $cond)
+    {
+        if($szCurrentWhere != ""){
+            return $szCurrentWhere." AND ".$cond;
+        }else{
+            return " WHERE ".$cond;
+        }
+    }
+
     //////////////////////
     // Around person
     //////////////////////
@@ -102,11 +111,22 @@ class DatabaseController
         return $this->fetch($sql, $fiscalyear);
     }
 
-    public function getFiscalYearList(&$listFiscalYear)
+    public function getFiscalYearList(&$listFiscalYear, $filters = null)
     {
         $sql = "SELECT id, title, start_date, end_date, is_current";
         $sql .= " FROM fiscal_year";
+
+        // filters
+        if($filters != null){
+            $szWhere = "";
+            if(array_key_exists("id", $filters)){
+                $szWhere .= $this->addWhere($szWhere, "id=".$filters['id']);
+            }
+            $sql .= $szWhere;
+        }
+
         $sql .= " ORDER BY start_date DESC";
+
         return $this->fetchAll($sql, $listFiscalYear);
     }
 
@@ -231,13 +251,31 @@ class DatabaseController
         return $this->fetchAll($sql, $listCategory);
     }
 
-    public function getAccountingOperationList(&$listOperation)
+    public function getAccountingOperationList(&$listOperation, $filters = null)
     {
         $sql =  'SELECT id, label, category, date_value, op_method, op_method_number, amount_debit, amount_credit, fiscalyear_id, account_id, date_effective';
         $sql .= ' FROM accounting_operation';
+
+        // filters
+        if($filters != null){
+            $szWhere = "";
+            if(array_key_exists("fiscal_year_id", $filters)){
+                $szWhere .= $this->addWhere($szWhere, "fiscalyear_id=".$filters['fiscal_year_id']);
+            }
+            $sql .= $szWhere;
+        }
+
         //$sql .= ' ORDER BY date_value DESC';
         $sql .= ' ORDER BY id DESC';
         return $this->fetchAll($sql, $listOperation);
+    }
+
+    public function getAccountingOperationCountPerFiscalYear(&$listOperationCountPerFiscalYear)
+    {
+        $sql = 'SELECT fiscalyear_id, count(DISTINCT id) AS operation_count';
+        $sql .= ' FROM accounting_operation';
+        $sql .= ' GROUP BY fiscalyear_id';
+        return $this->fetchAll($sql, $listOperationCountPerFiscalYear);
     }
 
 }

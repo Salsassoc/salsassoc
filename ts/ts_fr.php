@@ -39,6 +39,7 @@ class TS {
 	const FiscalYear_Members_CotisationsAmount = "Montant cotisations";
 	const FiscalYear_Members_CotisationsPaymentMethod = "Mode de paiement";
 	const FiscalYears_FiscalYears = "Années fiscales";
+    const FiscalYear_OperationsCount = "%d opérations";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
@@ -157,6 +158,7 @@ class TS {
     const AccountingAccount_AccountCount = "Nombre de compte: %d";
     const AccountingAccount_Label = "Libellé";
     const AccountingAccount_Type = "Type";
+    const AccountingAccount_Operations = "Opérations";
     const AccountingAccount_AmountIncomings = "Recettes";
     const AccountingAccount_AmountOutcomings = "Dépenses";
     const AccountingAccount_AmountBalance = "Balance";
