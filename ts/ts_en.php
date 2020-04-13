@@ -116,6 +116,7 @@ class TS {
     // Accounting operation
     const AccountingOperation_OperationCount = "Operation count: %d";
     const AccountingOperation_Label = "Label";
+    const AccountingOperation_LabelBank = "Bank label";
     const AccountingOperation_Number = "Number";
     const AccountingOperation_Category = "Category";
     const AccountingOperation_DateValue = "Date";
@@ -125,7 +126,12 @@ class TS {
     const AccountingOperation_AmountDebit = "Debit";
     const AccountingOperation_AmountCredit = "Credit";
     const AccountingOperation_FiscalYear = "Fiscal year";
+    const AccountingOperation_Account = "Account";
     const AccountingOperation_View = "View";
+	const AccountingOperation_Form_GlobalInfo = "Global information";
+	const AccountingOperation_Form_Transaction = "Transaction";
+	const AccountingOperation_Form_Account = "Account";
+
 
     // Accounting operation type
     const AccountingOperationType_Debit = "Debit";

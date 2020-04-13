@@ -253,12 +253,15 @@ class DatabaseController
 
     public function getAccountingOperationList(&$listOperation, $filters = null)
     {
-        $sql =  'SELECT id, label, category, date_value, op_method, op_method_number, amount_debit, amount_credit, fiscalyear_id, account_id, date_effective';
+        $sql =  'SELECT id, label, category, date_value, op_method, op_method_number, amount_debit, amount_credit, fiscalyear_id, account_id, date_effective, label_bank';
         $sql .= ' FROM accounting_operation';
 
         // filters
         if($filters != null){
             $szWhere = "";
+            if(array_key_exists("id", $filters)){
+                $szWhere .= $this->addWhere($szWhere, "id=".$filters['id']);
+            }
             if(array_key_exists("fiscal_year_id", $filters)){
                 $szWhere .= $this->addWhere($szWhere, "fiscalyear_id=".$filters['fiscal_year_id']);
             }
@@ -269,6 +272,86 @@ class DatabaseController
         $sql .= ' ORDER BY id DESC';
         return $this->fetchAll($sql, $listOperation);
     }
+
+    public function getAccountingOperationById($id, &$operation)
+    {
+        $listOperation = null;
+        $filters = array("id" => $id);
+        $bRes = $this->getAccountingOperationList($listOperation, $filters);
+        if($bRes){
+            $operation = $listOperation[0];
+        }
+        return $bRes;
+    }
+
+    public function saveAccountingOperation(&$operation)
+    {
+        $res = true;
+
+        $id = $operation['id'];
+
+        // Check data
+        if($operation['label'] == ""){
+            $this->_errors[] = "Label cannot be empty";
+            $res = false;
+        }
+
+        // Check data
+        if($operation['amount_credit'] == "" && $operation['amount_debit'] == ""){
+            $this->_errors[] = "Amount credit and debit cannot be empty";
+            $res = false;
+        }
+
+        // Prepare the query
+        $stmt = null;
+        if($res){
+            if($id==0){
+            	$sql = 'INSERT INTO accounting_operation (label, category, date_value, op_method, op_method_number, amount_debit, amount_credit, fiscalyear_id, account_id, date_effective, label_bank, checked) VALUES (:label, :category, :date_value, :op_method, :op_method_number, :amount_debit, :amount_credit, :fiscalyear_id, :account_id, :date_effective, :label_bank, :checked)';
+            }else{
+            	$sql = 'UPDATE accounting_operation SET label=:label, category=:category, date_value=:date_value, op_method=:op_method, op_method_number=:op_method_number, amount_debit=:amount_debit, amount_credit=:amount_credit, fiscalyear_id=:fiscalyear_id, account_id=:account_id, date_effective=:date_effective, label_bank=:label_bank, checked=:checked WHERE id=:id';
+            }
+
+            $stmt = $this->_conn->prepare($sql);
+            if(!$stmt){
+		        $res = false;
+	            $this->_errors[] = TSHelper::pdoErrorText($this->_conn->errorInfo());
+            }
+
+        }
+
+        // Execute the query
+        if($res){
+            if($id!=0){
+	            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+            }else{
+	            //$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
+            }
+            $stmt->bindParam(':label', $operation['label'], PDO::PARAM_STR, 50);
+            $stmt->bindParam(':category', $operation['category'], PDO::PARAM_INT);
+            $stmt->bindParam(':date_value', $operation['date_value'], PDO::PARAM_STR, 10);
+            $stmt->bindParam(':op_method', $operation['op_method'], PDO::PARAM_INT);
+            $stmt->bindParam(':op_method_number', $operation['op_method_number'], PDO::PARAM_STR, 50);
+            $stmt->bindParam(':amount_debit', $operation['amount_debit'], PDO::PARAM_STR);
+            $stmt->bindParam(':amount_credit', $operation['amount_credit'], PDO::PARAM_STR);
+            $stmt->bindParam(':fiscalyear_id', $operation['fiscalyear_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':account_id', $operation['account_id'], PDO::PARAM_INT);
+            $stmt->bindParam(':date_effective', $operation['date_effective'], PDO::PARAM_STR, 10);
+            $stmt->bindParam(':label_bank', $operation['label_bank'], PDO::PARAM_STR, 100);
+            $stmt->bindParam(':checked', $operation['checked'], PDO::PARAM_BOOL);
+
+            $res = $stmt->execute();
+            if($res){
+                if($id==0){
+	                $operation["id"] = $conn->lastInsertId();
+                }
+            }else{
+                $this->_errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+            }
+        }
+
+        return $res;
+    }
+
 
     public function getAccountingOperationCountPerFiscalYear(&$listOperationCountPerFiscalYear)
     {
