@@ -251,7 +251,7 @@ class DatabaseController
         return $this->fetchAll($sql, $listCategory);
     }
 
-    public function getAccountingOperationList(&$listOperation, $filters = null)
+    public function getAccountingOperationList(&$listOperation, $filters = null, $order = null)
     {
         $sql =  'SELECT id, label, category, date_value, op_method, op_method_number, amount_debit, amount_credit, fiscalyear_id, account_id, date_effective, label_bank';
         $sql .= ' FROM accounting_operation';
@@ -270,11 +270,21 @@ class DatabaseController
             }
             if(array_key_exists("account_id", $filters)){
                 $szWhere = $this->addWhere($szWhere, "account_id=".$filters['account_id']);
+                $szWhere = $this->addWhere($szWhere, "date_effective IS NOT NULL");
             }
             $sql .= $szWhere;
         }
+        
+        if($order != null){
+            if($order == "sort_by_account_date"){
+                $sql .= ' ORDER BY date_effective, id';
+            }else{
+                $sql .= ' ORDER BY fiscalyear_id DESC, date_value DESC, id DESC';
+            }
+        }else{
+            $sql .= ' ORDER BY fiscalyear_id DESC, date_value DESC, id DESC';
+        }
 
-        $sql .= ' ORDER BY fiscalyear_id DESC, date_value DESC, id DESC';
         //$sql .= ' ORDER BY id DESC';
         return $this->fetchAll($sql, $listOperation);
     }
@@ -375,6 +385,15 @@ class DatabaseController
         $sql .= ' FROM accounting_operation';
         $sql .= ' GROUP BY fiscalyear_id';
         return $this->fetchAll($sql, $listOperationCountPerFiscalYear);
+    }
+
+
+    public function getAccountingOperationCountPerAccount(&$listOperationCountPerAccount)
+    {
+        $sql = 'SELECT account_id, count(DISTINCT id) AS operation_count';
+        $sql .= ' FROM accounting_operation';
+        $sql .= ' GROUP BY account_id';
+        return $this->fetchAll($sql, $listOperationCountPerAccount);
     }
 
 }

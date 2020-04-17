@@ -91,13 +91,19 @@ dispatch('/accounting/accounts', 'accounting_account_list');
     // Load account list
     $listAccountingAccount = null;
     if($res){
-        $res = $dbController->getAccountingAccountList($listAccountingAccount);
+	$res = $dbController->getAccountingAccountList($listAccountingAccount);
     }
 
     // Load account list
     $listAccountingAccountResume = null;
     if($res){
-        $res = $dbController->getAccountingAccountResumeList($listAccountingAccountResume);
+	$res = $dbController->getAccountingAccountResumeList($listAccountingAccountResume);
+    }
+
+	// Get operation for each years
+    $listOperationCountPerAccount = null;
+    if($res){
+	$res = $dbController->getAccountingOperationCountPerAccount($listOperationCountPerAccount);
     }
 
 	// Render data
@@ -105,6 +111,7 @@ dispatch('/accounting/accounts', 'accounting_account_list');
         // Pass data
         set('listAccountingAccountResume', $listAccountingAccountResume);
         set('listAccountingAccount', $listAccountingAccount);
+        set('listOperationCountPerAccount', $listOperationCountPerAccount);
 
         set('page_title', TS::AccountingAccount_List);
         set('page_submenus', getSubMenus("accounting"));
@@ -189,5 +196,66 @@ dispatch_post('/accounting/accounts/:id/edit', 'account_edit');
         return html('accounting.account.html.php');
 	}
   }
+
+
+dispatch('/accounting/accounts/:id/operations', 'accounting_account_operation_list');
+  function accounting_account_operation_list()
+  {
+    $webuser = loadWebUser();
+	if($webuser->is_anonymous){
+		redirect_to('/login'); return;
+	}
+
+    $res = true;
+
+    $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
+    
+    // Load URL params
+    $account_id = params('id');
+
+    // Load fiscal year list
+    $listFiscalYear = null;
+    if($res){
+        $res = $dbController->getFiscalYearList($listFiscalYear);
+    }
+
+    // Load account list
+    $listAccountingAccount = null;
+    if($res){
+        $filters = array("id" => $account_id);
+        $res = $dbController->getAccountingAccountList($listAccountingAccount, $filters);
+    }
+
+    // Load category list
+    $listAccountingOperationCategory = null;
+    if($res){
+        $res = $dbController->getAccountingOperationCategoryList($listAccountingOperationCategory);
+    }
+
+    // Load operation list
+    $listAccountingOperation = null;
+    if($res){
+        $filters = array("account_id" => $account_id);
+        $res = $dbController->getAccountingOperationList($listAccountingOperation, $filters, "sort_by_account_date");
+    }
+
+	// Render data
+	if($res){
+        // Pass data
+        set('listFiscalYear', $listFiscalYear);
+        set('listAccountingAccount', $listAccountingAccount);
+        set('listAccountingOperationCategory', $listAccountingOperationCategory);
+        set('listAccountingOperation', $listAccountingOperation);
+
+        set('page_title', "Accounting");
+        set('page_submenus', getSubMenus("accounting"));
+        return html('accounting.operation.list.html.php');
+    }
+
+    set('page_title', "Bad request");
+    return html('error.html.php');
+}
 
 ?>

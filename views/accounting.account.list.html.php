@@ -7,6 +7,7 @@
 <tr>
   <th><?php echo TS::AccountingAccount_Label; ?></th>
   <th><?php echo TS::AccountingAccount_Type; ?></th>
+  <th><?php echo TS::AccountingAccount_Operations; ?></th>
   <th><?php echo TS::AccountingAccount_AmountIncomings; ?></th>
   <th><?php echo TS::AccountingAccount_AmountOutcomings; ?></th>
   <th><?php echo TS::AccountingAccount_AmountBalance; ?></th>
@@ -15,6 +16,14 @@
 </thead>
 <tbody>
 <?php
+
+	// Compute associative array for fiscal year oepration count
+	$tabAccountOperationCount = array();
+    foreach  ($listOperationCountPerAccount as $accountoperationcount)
+    {
+		$tabAccountOperationCount[$accountoperationcount['account_id']] = $accountoperationcount['operation_count'];
+	}
+
     // Compute associative array for category
 	$tabAccountingAccountIncomings = array();
 	$tabAccountingAccountOutcomings = array();
@@ -36,6 +45,17 @@
 	?>
   </td>
   <td align="center"><?php echo TSHelper::getAccountType($account['type']) ?></td>
+  <td align="center">
+    <a href="<?php echo url_for('/accounting/accounts/', $account_id, 'operations')?>">
+		<?php
+			$operationcount=0;
+			if(isset($tabAccountOperationCount[$account_id])){
+				$operationcount=$tabAccountOperationCount[$account_id];
+			}
+			printf(TS::FiscalYear_OperationsCount, $operationcount);
+		?>
+	</a>
+  </td>
   <td align="center">
 	<?php
         $amount_debit = 0;
