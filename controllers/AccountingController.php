@@ -28,8 +28,8 @@
         'category' => $_POST['CategoryId'],
         'op_method' => $_POST['OpMethod'],
         'op_method_number' => $_POST['OpMethodNumber'],
-        'amount_debit' => $_POST['AmountDebit'],
-        'amount_credit' => $_POST['AmountCredit'],
+        'amount_debit' => formatFloat($_POST['AmountDebit']),
+        'amount_credit' => formatFloat($_POST['AmountCredit']),
         'fiscalyear_id' => $_POST['FiscalYearId'],
         'date_effective' => $_POST['DateEffective'],
         'label_bank' => $_POST['LabelBank'],
@@ -42,6 +42,7 @@
 
 dispatch('/accounting', 'accounting_operation_list');
 dispatch('/accounting/operations', 'accounting_operation_list');
+dispatch_post('/accounting/operations', 'accounting_operation_list');
   function accounting_operation_list()
   {
 	$webuser = loadWebUser();
@@ -54,6 +55,20 @@ dispatch('/accounting/operations', 'accounting_operation_list');
     $conn = $GLOBALS['db_connexion'];
     $errors = array();
     $dbController = new DatabaseController($conn, $errors);
+
+    // Load data
+    $iAccountId = null;
+    if(isset($_POST['AccountId'])){
+        $iAccountId = $_POST['AccountId'];
+    }
+    $iFiscalYearId = null;
+    if(isset($_POST['FiscalYearId'])){
+        $iFiscalYearId = $_POST['FiscalYearId'];
+    }
+    $iCategoryId = null;
+    if(isset($_POST['CategoryId'])){
+        $iCategoryId = $_POST['CategoryId'];
+    }
 
     // Load fiscal year list
     $listFiscalYear = null;
@@ -73,10 +88,22 @@ dispatch('/accounting/operations', 'accounting_operation_list');
         $res = $dbController->getAccountingOperationCategoryList($listAccountingOperationCategory);
     }
 
+    // Load filters
+    $filters = array();
+    if($iAccountId != null){
+       $filters['account_id'] = $iAccountId;
+    }
+    if($iFiscalYearId != null){
+       $filters['fiscal_year_id'] = $iFiscalYearId;
+    }
+    if($iCategoryId != null){
+       $filters['category_id'] = $iCategoryId;
+    }
+
     // Load operation list
     $listAccountingOperation = null;
     if($res){
-        $res = $dbController->getAccountingOperationList($listAccountingOperation);
+        $res = $dbController->getAccountingOperationList($listAccountingOperation, $filters);
     }
 
 	// Render data
@@ -86,6 +113,7 @@ dispatch('/accounting/operations', 'accounting_operation_list');
         set('listAccountingAccount', $listAccountingAccount);
         set('listAccountingOperationCategory', $listAccountingOperationCategory);
         set('listAccountingOperation', $listAccountingOperation);
+        set('filters', $filters);
 
         set('page_title', "Accounting");
         set('page_submenus', getSubMenus("accounting"));

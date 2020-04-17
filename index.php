@@ -44,6 +44,7 @@ function getSubMenus($menu)
 		$submenus["/accounting/accounts/add"] = TS::Accounting_AccountAdd;
 		$submenus["/accounting/operationcategories"] = TS::Accounting_OperationCategoryList;
 		$submenus["/accounting/operationcategories/add"] = TS::Accounting_OperationCategoryAdd;
+		$submenus["/accounting/operations/add"] = TS::Accounting_OperationAdd;
 	}
 	if($menu == "fiscalyears"){
 		//$submenus["/fiscalyears"] = TS::FiscalYears_FiscalYears;

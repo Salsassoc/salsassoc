@@ -120,7 +120,7 @@ class DatabaseController
         if($filters != null){
             $szWhere = "";
             if(array_key_exists("id", $filters)){
-                $szWhere .= $this->addWhere($szWhere, "id=".$filters['id']);
+                $szWhere = $this->addWhere($szWhere, "id=".$filters['id']);
             }
             $sql .= $szWhere;
         }
@@ -260,16 +260,22 @@ class DatabaseController
         if($filters != null){
             $szWhere = "";
             if(array_key_exists("id", $filters)){
-                $szWhere .= $this->addWhere($szWhere, "id=".$filters['id']);
+                $szWhere = $this->addWhere($szWhere, "id=".$filters['id']);
+            }
+            if(array_key_exists("category_id", $filters)){
+                $szWhere = $this->addWhere($szWhere, "category=".$filters['category_id']);
             }
             if(array_key_exists("fiscal_year_id", $filters)){
-                $szWhere .= $this->addWhere($szWhere, "fiscalyear_id=".$filters['fiscal_year_id']);
+                $szWhere = $this->addWhere($szWhere, "fiscalyear_id=".$filters['fiscal_year_id']);
+            }
+            if(array_key_exists("account_id", $filters)){
+                $szWhere = $this->addWhere($szWhere, "account_id=".$filters['account_id']);
             }
             $sql .= $szWhere;
         }
 
-        //$sql .= ' ORDER BY date_value DESC';
-        $sql .= ' ORDER BY id DESC';
+        $sql .= ' ORDER BY fiscalyear_id DESC, date_value DESC, id DESC';
+        //$sql .= ' ORDER BY id DESC';
         return $this->fetchAll($sql, $listOperation);
     }
 
@@ -319,6 +325,8 @@ class DatabaseController
 
         }
 
+        $valueNull = NULL;
+
         // Execute the query
         if($res){
             if($id!=0){
@@ -331,8 +339,16 @@ class DatabaseController
             $stmt->bindParam(':date_value', $operation['date_value'], PDO::PARAM_STR, 10);
             $stmt->bindParam(':op_method', $operation['op_method'], PDO::PARAM_INT);
             $stmt->bindParam(':op_method_number', $operation['op_method_number'], PDO::PARAM_STR, 50);
-            $stmt->bindParam(':amount_debit', $operation['amount_debit'], PDO::PARAM_STR);
-            $stmt->bindParam(':amount_credit', $operation['amount_credit'], PDO::PARAM_STR);
+            if($operation['amount_debit'] != ""){
+                $stmt->bindParam(':amount_debit', $operation['amount_debit'], PDO::PARAM_STR);
+            }else{
+                $stmt->bindParam(':amount_debit', $valueNull, PDO::PARAM_NULL);
+            }
+            if($operation['amount_credit'] != ""){
+                $stmt->bindParam(':amount_credit', $operation['amount_credit'], PDO::PARAM_STR);
+            }else{
+                $stmt->bindParam(':amount_credit', $valueNull, PDO::PARAM_NULL);
+            }
             $stmt->bindParam(':fiscalyear_id', $operation['fiscalyear_id'], PDO::PARAM_INT);
             $stmt->bindParam(':account_id', $operation['account_id'], PDO::PARAM_INT);
             $stmt->bindParam(':date_effective', $operation['date_effective'], PDO::PARAM_STR, 10);
@@ -342,7 +358,7 @@ class DatabaseController
             $res = $stmt->execute();
             if($res){
                 if($id==0){
-	                $operation["id"] = $conn->lastInsertId();
+	                $operation["id"] = $this->_conn->lastInsertId();
                 }
             }else{
                 $this->_errors[] = TSHelper::pdoErrorText($stmt->errorInfo());

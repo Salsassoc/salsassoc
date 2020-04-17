@@ -114,7 +114,7 @@ if(isset($operation['id'])){
 
     <div class='form-row'>
       <label><?php echo TS::AccountingOperation_LabelBank; ?></label>
-      <input type="text" name="LabelBank" value="<?php echo $operation['label_bank'] ?>" />
+      <textarea name="LabelBank" rows="5"><?php echo $operation['label_bank'] ?></textarea>
     </div>
 
   </fieldset>

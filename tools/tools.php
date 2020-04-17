@@ -21,4 +21,9 @@ function findItemInListById($list, $key, $value)
     return null;
 }
 
+function formatFloat($value)
+{
+    return str_replace(',', '.', $value);
+}
+
 ?>

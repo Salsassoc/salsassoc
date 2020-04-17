@@ -112,6 +112,7 @@ class TS {
     const Accounting_AccountAdd = "Add account";
     const Accounting_OperationCategoryList = "Categories";
     const Accounting_OperationCategoryAdd = "Add a catogory";
+    const Accounting_OperationAdd = "Add an operation";
 
     // Accounting operation
     const AccountingOperation_OperationCount = "Operation count: %d";
