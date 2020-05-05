@@ -133,7 +133,9 @@ class DatabaseController
     public function getFiscalYearAccountingOperationResumeList(&$listAccountResume)
     {
         $sql =  "SELECT fiscalyear_id, SUM(amount_debit) as outcomings, SUM(amount_credit) as incomings";
-        $sql .= " FROM accounting_operation";
+        $sql .= " FROM accounting_operation, accounting_operation_category";
+        $sql .= " WHERE accounting_operation.category = accounting_operation_category.id";
+        $sql .= " AND is_internal_move = false";
         $sql .= " GROUP BY fiscalyear_id";
         return $this->fetchAll($sql, $listAccountResume);
     }
@@ -232,22 +234,25 @@ class DatabaseController
     {
         $sql = "SELECT id, label, type ";
         $sql .= " FROM accounting_account";
+        $sql .= " ORDER BY type DESC, id";
         return $this->fetchAll($sql, $listAccount);
     }
 
     public function getAccountingAccountResumeList(&$listAccountResume)
     {
         $sql =  "SELECT account_id, SUM(amount_debit) as outcomings, SUM(amount_credit) as incomings";
-        $sql .= " FROM accounting_operation";
+        $sql .= " FROM accounting_operation, accounting_operation_category";
+        $sql .= " WHERE accounting_operation.category = accounting_operation_category.id";
+        //$sql .= " AND is_internal_move = false";
         $sql .= " GROUP BY account_id";
         return $this->fetchAll($sql, $listAccountResume);
     }
 
     public function getAccountingOperationCategoryList(&$listCategory)
     {
-        $sql = "SELECT id, label ";
+        $sql = "SELECT id, label, account_number, account_name, account_type ";
         $sql .= " FROM accounting_operation_category";
-        $sql .= " GROUP BY label";
+        $sql .= " ORDER BY account_type, label";
         return $this->fetchAll($sql, $listCategory);
     }
 

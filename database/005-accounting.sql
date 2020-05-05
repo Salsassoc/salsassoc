@@ -28,5 +28,7 @@ CREATE TABLE IF NOT EXISTS accounting_operation (
 );
 
 
-
+ALTER TABLE accounting_operation_category ADD COLUMN account_name VARCHAR(100) NULL;
+ALTER TABLE accounting_operation_category ADD COLUMN account_type INTEGER NOT NULL DEFAULT 0;
+ALTER TABLE accounting_operation_category ADD COLUMN is_internal_move BOOLEAN NOT NULL DEFAULT FALSE;
 

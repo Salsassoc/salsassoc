@@ -55,8 +55,9 @@ $formAction=url_for('/accounting/operations');
   <th><?php echo TS::AccountingOperation_DateEffective; ?></th>
   <th><?php echo TS::AccountingOperation_Label; ?></th>
   <th><?php echo TS::AccountingOperation_Number; ?></th>
-  <th><?php echo TS::AccountingOperation_Category; ?></th>
+  <th colspan="2"><?php echo TS::AccountingOperation_Category; ?></th>
   <th><?php echo TS::AccountingOperation_Type; ?></th>
+  <th><?php echo TS::AccountingOperation_Amount; ?></th>
   <th><?php echo TS::AccountingOperation_Amount; ?></th>
   <th><?php echo TS::AccountingOperation_FiscalYear; ?></th>
   <th><?php echo TS::AccountingOperation_View; ?></th>
@@ -80,11 +81,13 @@ $formAction=url_for('/accounting/operations');
 	$tabAccountingOperationCategory = array();
     foreach  ($listAccountingOperationCategory as $category)
     {
-		$tabAccountingOperationCategory[$category['id']] = $category['label'];
+		$tabAccountingOperationCategory[$category['id']] = $category;
 	}
 
     $totalIncomings = 0.0;
     $totalOutcomings = 0.0;
+
+    $sum = 0.0;
 
     foreach  ($listAccountingOperation as $operation)
     {
@@ -101,8 +104,14 @@ $formAction=url_for('/accounting/operations');
      ?>
   <td align="center">
      <?php
-       $category = $operation['category'];
-       echo $tabAccountingOperationCategory[$category];
+       $category_id = $operation['category'];
+       $category = $tabAccountingOperationCategory[$category_id];
+       echo $category['label'];
+     ?>
+  </td>
+  <td align="center">
+     <?php
+       echo $category['account_number'];
      ?>
   </td>
   <td align="center"><?php echo TSHelper::getAccountingOperationMethod($operation['op_method']) ?></td>
@@ -111,16 +120,35 @@ $formAction=url_for('/accounting/operations');
 		$amount = $operation['amount_credit'];
         if($amount != ''){
             $color = "green";
-            $totalIncomings += $amount;
+            if($category['id'] != 21){
+                $totalIncomings += $amount;
+            }
         }else{
 		    $amount = $operation['amount_debit'];
             $color = "red";
-            $totalOutcomings += $amount;
+            if($category['id'] != 21){
+                $totalOutcomings += $amount;
+            }
         }
+        $sum += $amount;
     ?>
     <span style="color:<?php echo $color; ?>">
     <?php
 		echo TSHelper::getCurrencyText($amount);
+	?>
+    </span>
+  </td>
+  <td align="center">
+	<?php
+        if($sum < 0){
+            $color = "red";
+        }else{
+            $color = "black";
+        }
+    ?>
+    <span style="color:<?php echo $color; ?>">
+    <?php
+		echo TSHelper::getCurrencyText($sum);
 	?>
     </span>
   </td>

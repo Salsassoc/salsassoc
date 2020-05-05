@@ -36,7 +36,7 @@ if(isset($operation['id'])){
         <?php
             foreach($listAccountingOperationCategory as $category){
         ?>
-              <option value="<?php echo $category['id']; ?>" <?php echo ($operation['category'] == $category['id'] ? 'selected' : '')?> ><?php echo $category['label']; ?></option>
+              <option value="<?php echo $category['id']; ?>" <?php echo ($operation['category'] == $category['id'] ? 'selected' : '')?> ><?php echo $category['account_number'].' - '.$category['label']; ?></option>
         <?php
             }
         ?>
