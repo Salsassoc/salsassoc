@@ -43,12 +43,48 @@ $formAction=url_for('/accounting/operations');
   <input type="submit" />
 </form>
 
+<?php
+    // Compute associative array for fiscal year
+	$tabFiscalYear = array();
+    foreach  ($listFiscalYear as $fiscalyear)
+    {
+		$tabFiscalYear[$fiscalyear['id']] = $fiscalyear['title'];
+	}
+
+    // Compute associative array for account
+	$tabAccount = array();
+    foreach  ($listAccountingAccount as $account)
+    {
+		$tabAccount[$account['id']] = $account['label'];
+	}
+
+    // Compute associative array for category
+	$tabAccountingOperationCategory = array();
+    foreach  ($listAccountingOperationCategory as $category)
+    {
+		$tabAccountingOperationCategory[$category['id']] = $category;
+	}
+
+    $totalIncomings = 0.0;
+    $totalOutcomings = 0.0;
+
+    set('tabAccountingOperationCategory', $tabAccountingOperationCategory);
+
+?>
+
+<br/>
 
 <?php include("accounting.operation.list.table.html.php"); ?>
 
 <br/>
 
-<?php include("accounting.operation.list.summary.php"); ?>
+<?php include("accounting.operation.list.summary.html.php"); ?>
+
+<br/>
+
+<?php include("accounting.operation.list.reports.html.php"); ?>
+
+<br/>
 
 <br/>
 <br/>

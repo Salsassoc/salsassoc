@@ -19,28 +19,6 @@
 </thead>
 <tbody>
 <?php
-    // Compute associative array for fiscal year
-	$tabFiscalYear = array();
-    foreach  ($listFiscalYear as $fiscalyear)
-    {
-		$tabFiscalYear[$fiscalyear['id']] = $fiscalyear['title'];
-	}
-    // Compute associative array for account
-	$tabAccount = array();
-    foreach  ($listAccountingAccount as $account)
-    {
-		$tabAccount[$account['id']] = $account['label'];
-	}
-    // Compute associative array for category
-	$tabAccountingOperationCategory = array();
-    foreach  ($listAccountingOperationCategory as $category)
-    {
-		$tabAccountingOperationCategory[$category['id']] = $category;
-	}
-
-    $totalIncomings = 0.0;
-    $totalOutcomings = 0.0;
-
     $sum = 0.0;
 
     foreach  ($listAccountingOperation as $operation)
