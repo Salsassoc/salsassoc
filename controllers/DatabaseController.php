@@ -282,7 +282,7 @@ class DatabaseController
         
         if($order != null){
             if($order == "sort_by_account_date"){
-                $sql .= ' ORDER BY date_effective, id';
+                $sql .= ' ORDER BY date_effective IS NULL DESC, date_effective, id';
             }else{
                 $sql .= ' ORDER BY fiscalyear_id DESC, date_value DESC, id DESC';
             }
@@ -351,7 +351,11 @@ class DatabaseController
             }
             $stmt->bindParam(':label', $operation['label'], PDO::PARAM_STR, 50);
             $stmt->bindParam(':category', $operation['category'], PDO::PARAM_INT);
-            $stmt->bindParam(':date_value', $operation['date_value'], PDO::PARAM_STR, 10);
+            if($operation['date_value'] != ""){
+                $stmt->bindParam(':date_value', $operation['date_value'], PDO::PARAM_STR, 10);
+            }else{
+                $stmt->bindParam(':date_value', $valueNull, PDO::PARAM_NULL);
+            }
             $stmt->bindParam(':op_method', $operation['op_method'], PDO::PARAM_INT);
             $stmt->bindParam(':op_method_number', $operation['op_method_number'], PDO::PARAM_STR, 50);
             if($operation['amount_debit'] != ""){
@@ -366,7 +370,11 @@ class DatabaseController
             }
             $stmt->bindParam(':fiscalyear_id', $operation['fiscalyear_id'], PDO::PARAM_INT);
             $stmt->bindParam(':account_id', $operation['account_id'], PDO::PARAM_INT);
-            $stmt->bindParam(':date_effective', $operation['date_effective'], PDO::PARAM_STR, 10);
+            if($operation['date_effective'] != ""){
+                $stmt->bindParam(':date_effective', $operation['date_effective'], PDO::PARAM_STR, 10);
+            }else{
+                $stmt->bindParam(':date_effective', $valueNull, PDO::PARAM_NULL);
+            }
             $stmt->bindParam(':label_bank', $operation['label_bank'], PDO::PARAM_STR, 100);
             $stmt->bindParam(':checked', $operation['checked'], PDO::PARAM_BOOL);
 
