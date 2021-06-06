@@ -10,6 +10,8 @@
   <th><?php echo TS::Person_ImageRights; ?></th>
   <th><?php echo TS::Membership_Date; ?></th>
   <th><?php echo TS::Membership_Type; ?></th>
+  <th><?php echo TS::Cotisation_AmountCollected; ?></th>
+  <th><?php echo TS::Payment_Payment; ?></th>
   <th><?php echo TS::Membership_View; ?></th>
 </tr>
 </thead>
@@ -29,6 +31,8 @@
   <td align="center"><?php echo TSHelper::getYesNoUnknownText($membership['image_rights']); ?></td>
   <td align="center"><?php echo TSHelper::getShortDateTextFromDBDate($membership['membership_date']) ?></td>
   <td align="center"><?php echo TSHelper::getMembershipType($membership['membership_type']) ?></td>
+  <td align="center"><?php echo ($membership['total_amount'] ? $membership['total_amount'] : 0) ?> EUR</td>
+  <td align="center"><?php echo TSHelper::getPaymentMethod($membership['payment_method']); ?></td>
   <td align="center">
     <a href="<?php echo url_for('/memberships', $membership['id'], 'edit')?>"><?php echo TS::Membership_View; ?></a>
   </td>

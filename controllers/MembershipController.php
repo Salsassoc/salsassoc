@@ -379,8 +379,11 @@ dispatch('/memberships', 'membership_list');
 
     // Load membership list
     if($res){
-        $sql =  'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments
-            FROM membership ORDER BY membership_date DESC';
+        $sql = 'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, SUM(amount) AS total_amount, MIN(payment_method) AS payment_method';
+        $sql .= ' FROM membership';
+        $sql .= ' LEFT JOIN  membership_cotisation ON membership.id = membership_cotisation.membership_id';
+        $sql .= ' GROUP BY membership.id';
+        $sql .= ' ORDER BY membership_date DESC';
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute();
         if($res){
