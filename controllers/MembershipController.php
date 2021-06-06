@@ -364,6 +364,7 @@
     return $res;
   }
 
+dispatch_post('/memberships', 'membership_list');
 dispatch('/memberships', 'membership_list');
   function membership_list()
   {
@@ -373,17 +374,43 @@ dispatch('/memberships', 'membership_list');
 	}
 
     $conn = $GLOBALS['db_connexion'];
+    $dbController = new DatabaseController($conn, $errors);
 
     $res = true;
     $memberships = null;
+
+    // Load data
+    $iFiscalYearId = null;
+    if(isset($_POST['FiscalYearId'])){
+        $iFiscalYearId = $_POST['FiscalYearId'];
+    }
+
+    // Load fiscal year list
+    $listFiscalYear = null;
+    if($res){
+        $res = $dbController->getFiscalYearList($listFiscalYear);
+    }
+
+    // Load filters
+    $filters = array();
+    if($iFiscalYearId != null){
+       $filters['fiscal_year_id'] = $iFiscalYearId;
+    }
 
     // Load membership list
     if($res){
         $sql = 'SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, SUM(amount) AS total_amount, MIN(payment_method) AS payment_method';
         $sql .= ' FROM membership';
         $sql .= ' LEFT JOIN  membership_cotisation ON membership.id = membership_cotisation.membership_id';
+        if($iFiscalYearId != null){
+            $sql .= ' WHERE fiscal_year_id='.$iFiscalYearId;
+        }
         $sql .= ' GROUP BY membership.id';
-        $sql .= ' ORDER BY membership_date DESC';
+        if($iFiscalYearId != null){
+            $sql .= ' ORDER BY lastname, firstname';
+        }else{
+            $sql .= ' ORDER BY membership_date DESC';
+        }
         $stmt = $conn->prepare($sql);
         $res = $stmt->execute();
         if($res){
@@ -393,7 +420,10 @@ dispatch('/memberships', 'membership_list');
 
     // Render
     if ($res) {
+        // Pass data
+        set('listFiscalYear', $listFiscalYear);
         set('listMembership', $memberships);
+        set('filters', $filters);
 
         set('page_title', TS::Membership_Memberships);
         set('page_submenus', getSubMenus("memberships"));
