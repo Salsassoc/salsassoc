@@ -168,6 +168,19 @@ class DatabaseController
     // Around membership
     //////////////////////
 
+
+    public function getMembershipListByPersonId($iPersonId, &$listMemberships)
+    {
+        $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, person_id";
+        $sql .= ", SUM(amount) AS total_amount, MIN(payment_method) AS payment_method";
+        $sql .= " FROM membership";
+        $sql .= ' LEFT JOIN  membership_cotisation ON membership.id = membership_cotisation.membership_id';
+        $sql .= " WHERE person_id=".$iPersonId;
+        $sql .= ' GROUP BY membership.id';
+        $sql .= " ORDER BY membership_date DESC";
+        return $this->fetchAll($sql, $listMemberships);
+    }
+
     public function getMembershipListByFiscalYearId($iFiscalYearId, &$listMemberships)
     {
         $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";

@@ -224,6 +224,8 @@ dispatch('/members/:id', 'person_view');
 
     $id = params('id');
     $conn = $GLOBALS['db_connexion'];
+    $errors = array();
+    $dbController = new DatabaseController($conn, $errors);
 
     $res = true;
 
@@ -234,14 +236,14 @@ dispatch('/members/:id', 'person_view');
     }
 
     // Load memberships
-    $memberships = null;
+    $listMembership = null;
     if($res){
-       $res = memberships_db_load_list_from_person_id($conn, $person['id'], $memberships, $errors);
+        $res = $dbController->getMembershipListByPersonId($id, $listMembership);
     }
  
     if($res){
         set('person', $person);
-        set('listMembership', $memberships);
+        set('listMembership', $listMembership);
 
         set('page_title', sprintf(TS::Person_MemberNum, $id));
         set('page_submenus', getSubMenus("members"));

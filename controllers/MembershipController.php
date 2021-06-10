@@ -148,15 +148,6 @@
     return $res;
   }
 
-  function memberships_db_load_list_from_person_id($conn, $person_id, &$memberships, &$errors)
-  {
-    $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, person_id";
-    $sql .= " FROM membership";
-    $sql .= " WHERE person_id=".$person_id;
-    $sql .= " ORDER BY membership_date DESC";
-    return memberships_db_load_list($conn, $sql, $memberships, $errors);
-  }
-
   function memberships_db_load_list_from_fiscal_year_id($conn, $fiscal_year_id, &$memberships, &$errors)
   {
     $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, comments, person_id";
