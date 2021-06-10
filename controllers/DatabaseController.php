@@ -180,6 +180,7 @@ class DatabaseController
     public function getMembershipListByCotisationId($iCotisationId, &$listMemberships)
     {
         $sql = "SELECT id, firstname, lastname, birthdate, address, zipcode, city, email, phonenumber, phonenumber2, image_rights, membership_date, membership_type, person_id";
+        $sql .= " , amount AS total_amount, payment_method";
         $sql .= " FROM membership, membership_cotisation";
         $sql .= " WHERE membership.id=membership_id";
         $sql .= " AND cotisation_id=".$iCotisationId;
