@@ -65,6 +65,10 @@ dispatch_post('/accounting/operations', 'accounting_operation_list');
     if(isset($_POST['FiscalYearId'])){
         $iFiscalYearId = $_POST['FiscalYearId'];
     }
+    $iCalendarYear = null;
+    if(isset($_POST['CalendarYear'])){
+        $iCalendarYear = $_POST['CalendarYear'];
+    }
     $iCategoryId = null;
     if(isset($_POST['CategoryId'])){
         $iCategoryId = $_POST['CategoryId'];
@@ -90,11 +94,16 @@ dispatch_post('/accounting/operations', 'accounting_operation_list');
 
     // Load filters
     $filters = array();
+    $order = null;
     if($iAccountId != null){
        $filters['account_id'] = $iAccountId;
     }
     if($iFiscalYearId != null){
        $filters['fiscal_year_id'] = $iFiscalYearId;
+    }
+    if($iCalendarYear != null){
+       $filters['calendar_year'] = $iCalendarYear;
+       $order = "sort_by_account_date";
     }
     if($iCategoryId != null){
        $filters['category_id'] = $iCategoryId;
@@ -103,7 +112,7 @@ dispatch_post('/accounting/operations', 'accounting_operation_list');
     // Load operation list
     $listAccountingOperation = null;
     if($res){
-        $res = $dbController->getAccountingOperationList($listAccountingOperation, $filters);
+        $res = $dbController->getAccountingOperationList($listAccountingOperation, $filters, $order);
     }
 
 	// Render data

@@ -127,6 +127,7 @@ class TS {
     const AccountingOperation_AmountDebit = "Debit";
     const AccountingOperation_AmountCredit = "Credit";
     const AccountingOperation_FiscalYear = "Fiscal year";
+    const AccountingOperation_CalendarYear = "Calendar year";
     const AccountingOperation_Account = "Account";
     const AccountingOperation_View = "View";
 	const AccountingOperation_Form_GlobalInfo = "Global information";

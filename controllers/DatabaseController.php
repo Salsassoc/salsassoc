@@ -287,6 +287,9 @@ class DatabaseController
             if(array_key_exists("fiscal_year_id", $filters)){
                 $szWhere = $this->addWhere($szWhere, "fiscalyear_id=".$filters['fiscal_year_id']);
             }
+            if(array_key_exists("calendar_year", $filters)){
+                $szWhere = $this->addWhere($szWhere, "date_effective BETWEEN '".$filters['calendar_year']."-01-01' AND '".$filters['calendar_year']."-12-31'");
+            }
             if(array_key_exists("account_id", $filters)){
                 $szWhere = $this->addWhere($szWhere, "account_id=".$filters['account_id']);
                 $szWhere = $this->addWhere($szWhere, "date_effective IS NOT NULL");

@@ -16,6 +16,20 @@ $formAction=url_for('/accounting/operations');
     ?>
   </select>
 
+  <select name="CalendarYear">
+     <option value="">-- <?php echo TS::AccountingOperation_CalendarYear; ?> --</option>
+    <?php
+        $current_year = intval(date('Y'));
+        $selected_year = $filters['calendar_year'];
+        for($i=$current_year; $i>=1999; $i--)
+        {
+    ?>
+          <option value="<?php echo $i; ?>" <?php echo ($i == $selected_year ? 'selected' : '')?> ><?php echo $i; ?></option>
+    <?php
+        }
+    ?>
+  </select>
+
   <select name="AccountId">
      <option value="">-- <?php echo TS::AccountingOperation_Account; ?> --</option>
     <?php
