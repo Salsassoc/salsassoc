@@ -30,7 +30,7 @@
     <th align="left" colspan="2">
       <?php
         $category = $tabAccountingOperationCategory[$category_id];
-        echo $category['label'];
+        echo $category['label']." - ".$category['account_number'];
       ?>
     </th>
     <th align="right" nowrap>
