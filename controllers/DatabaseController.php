@@ -258,6 +258,8 @@ class DatabaseController
         $sql .= " FROM accounting_operation, accounting_operation_category";
         $sql .= " WHERE accounting_operation.category = accounting_operation_category.id";
         //$sql .= " AND is_internal_move = false";
+        $sql .= " AND date_effective IS NOT NULL";
+        //$sql .= " AND date_effective <= '2020-12-31'";
         $sql .= " GROUP BY account_id";
         return $this->fetchAll($sql, $listAccountResume);
     }
