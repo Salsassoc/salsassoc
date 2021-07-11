@@ -51,6 +51,25 @@ class DatabaseController
         return $res;
     }
 
+    public function prepare($sql)
+    {
+        $stmt = $this->_conn->prepare($sql);
+	    if(!$stmt){
+		    $this->_errors[] = TSHelper::pdoErrorText($this->_conn->errorInfo());
+	    }
+
+        return $stmt;
+    }
+
+    public function execute($stmt)
+    {
+        $res = $stmt->execute();
+        if(!$res){
+            $this->_errors[] = TSHelper::pdoErrorText($stmt->errorInfo());
+        }
+        return $res;
+    }
+
     public function addWhere($szCurrentWhere, $cond)
     {
         if($szCurrentWhere != ""){
@@ -144,6 +163,14 @@ class DatabaseController
     // Around cotisations
     //////////////////////
 
+    public function getCotisationById($id, &$cotisation)
+    {
+        $sql = "SELECT id, label, amount, start_date, end_date, fiscal_year_id, type";
+        $sql .= " FROM cotisation";
+        $sql .= " WHERE id = '$id'";
+        return $this->fetch($sql, $cotisation);
+    }
+
     public function getCotisationList($bMembershipOnly, &$listCotisation)
     {
         $sql = "SELECT id, label, type, amount, start_date, end_date, fiscal_year_id";
@@ -162,6 +189,46 @@ class DatabaseController
         $sql .= " WHERE fiscal_year_id=".$iFiscalYearId;
         $sql .= " ORDER BY type";
         return $this->fetchAll($sql, $listCotisation);
+    }
+
+    public function saveCotisation($id, &$cotisation)
+    {
+        $res = true;
+
+        if($id==0){
+        	$sql =  'INSERT INTO cotisation (label, amount, start_date, end_date, fiscal_year_id, type) VALUES (:label, :amount, :start_date, :end_date, :fiscal_year_id, :type)';
+	    }else{
+        	$sql =  'UPDATE cotisation SET label=:label, amount=:amount, start_date=:start_date, end_date=:end_date, fiscal_year_id=:fiscal_year_id, type=:type WHERE id=:id';
+	    }
+
+        // Prepare the query
+	    $stmt = $this->prepare($sql);
+	    if(!$stmt){
+			$res = false;
+	    }
+
+	    // Execute the query
+	    if($res){
+	        if($id!=0){
+		        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+	        }else{
+		        //$stmt->bindParam(':creation_date', $id, PDO::PARAM_INT);
+	        }
+	        $stmt->bindParam(':label', $cotisation['label'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':amount', $cotisation['amount'], PDO::PARAM_STR, 50);
+	        $stmt->bindParam(':start_date', $cotisation['start_date'], PDO::PARAM_STR, 10);
+	        $stmt->bindParam(':end_date', $cotisation['end_date'], PDO::PARAM_STR, 10);
+	        $stmt->bindParam(':fiscal_year_id', $cotisation['fiscal_year_id'], PDO::PARAM_INT);
+	        $stmt->bindParam(':type', $cotisation['type'], PDO::PARAM_INT);
+            $res = $this->execute($stmt);
+            if($res){
+                if($id==0){
+		            $cotisation["id"] = $this->_conn->lastInsertId();
+                }
+            }
+        }
+
+        return $res;
     }
 
     //////////////////////

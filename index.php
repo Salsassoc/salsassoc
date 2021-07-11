@@ -37,6 +37,7 @@ function getSubMenus($menu)
 	if($menu == "cotisations"){
 		$submenus["/cotisations"] = TS::Cotisation_CotisationAll;
 		$submenus["/cotisations/membership"] = TS::Cotisation_CotisationMembership;
+		$submenus["/cotisations/add"] = TS::Cotisation_Add;
 	}
 	if($menu == "accounting"){
 		$submenus["/accounting/operations"] = TS::Accounting_OperationAll;

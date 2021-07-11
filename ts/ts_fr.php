@@ -43,23 +43,30 @@ class TS {
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
+	const Cotisation_CotisationTitle = "Cotisation #%d";
 	const Cotisation_CotisationAll = "Toutes les cotisations";
 	const Cotisation_CotisationMembership = "Adhésions uniquement";
 	const Cotisation_CotisationRegister = "Enregistrer une adhésion";
 	const Cotisation_NewRegister = "Nouvelle adhésion";
+	const Cotisation_Form_GlobalInfo = "Informations globales";
 	const Cotisation_CotisationCount = "Nombre de cotisation : %d";
 	const Cotisation_Label = "Libellé";
 	const Cotisation_Type = "Type";
 	const Cotisation_StartDate = "Date début";
 	const Cotisation_EndDate = "Date de fin";
 	const Cotisation_BasicPrice = "Tarif de base";
+	const Cotisation_FiscalYear = "Année";
 	const Cotisation_Members = "Membres";
 	const Cotisation_AmountCollected = "Montant perçu";
+	const Cotisation_Add = "Ajouter";
 	const Cotisation_View = "Voir";
 	const Cotisation_MembersCount = "%d membres";
 	const Cotisation_Type_Membership = "Adhésion";
 	const Cotisation_Type_Course = "Cours";
+	const Cotisation_Type_Gift = "Don";
+	const Cotisation_Type_Credit = "Avoir";
 	const Cotisation_CotisationList = "Liste des cotisations";
+	const Cotisation_AddNew = "Ajouter une cotisation";
 
     // Membership
 	const Membership_Memberships = "Adhésions";

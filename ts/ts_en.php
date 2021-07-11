@@ -38,27 +38,34 @@ class TS {
 	const FiscalYear_EditFiscalYear = "Edit fiscal year";
 	const FiscalYear_Members_CotisationsAmount = "Cotisations amount";
 	const FiscalYear_Members_CotisationsPaymentMethod = "Payment method";
-    const FiscalYear_OperationsCount = "%d operations";
+	const FiscalYear_OperationsCount = "%d operations";
 
 	// Cotisation
 	const Cotisation_Cotisation = "Cotisation";
+	const Cotisation_CotisationTitle = "Cotisation #%d";
 	const Cotisation_CotisationAll = "All cotisations";
 	const Cotisation_CotisationMembership = "Membership only";
 	const Cotisation_CotisationRegister = "Register a membership";
 	const Cotisation_NewRegister = "New membership";
+	const Cotisation_Form_GlobalInfo = "Global information";
 	const Cotisation_CotisationCount = "Cotisation count: %d";
 	const Cotisation_Label = "Label";
 	const Cotisation_Type = "Type";
 	const Cotisation_StartDate = "Start date";
 	const Cotisation_EndDate = "End date";
 	const Cotisation_BasicPrice = "Basic price";
+	const Cotisation_FiscalYear = "Year";
 	const Cotisation_Members = "Members";
 	const Cotisation_AmountCollected = "Amount collected";
+	const Cotisation_Add = "Add";
 	const Cotisation_View = "View";
 	const Cotisation_MembersCount = "%d members";
 	const Cotisation_Type_Membership = "Membership";
 	const Cotisation_Type_Course = "Course";
+	const Cotisation_Type_Gift = "Gift";
+	const Cotisation_Type_Credit = "Credit";
 	const Cotisation_CotisationList = "Cotisations list";
+	const Cotisation_AddNew = "Add a cotisation";
 
     // Membership
 	const Membership_Memberships = "Memberships";

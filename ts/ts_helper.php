@@ -45,6 +45,8 @@ class TSHelper
 		switch($type){
 		case 1: return TS::Cotisation_Type_Membership;
 		case 2: return TS::Cotisation_Type_Course;
+		case 3: return TS::Cotisation_Type_Gift;
+		case 4: return TS::Cotisation_Type_Credit;
 		default: break;
 		}
 		return "";
