@@ -13,9 +13,10 @@
 
   function fiscalyear_load()
   {
+    $id = params('id');
     $title = ($_POST['Title'] != "" ? $_POST['Title'] : null);
     $fiscalyear = array(
-        'id' => $_POST['FiscalYearId'],
+        'id' => $id,
         'title' => $title,
         'start_date' => $_POST['StartDate'],
         'end_date' => $_POST['EndDate'],
